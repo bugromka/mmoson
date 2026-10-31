@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ММОСО’Н — Модуль моделирования орбитальной станции О’Нилла</title>
+<meta name="description" content="ММОСО’Н — расчётная модель обитаемой орбитальной станции О’Нилла в точке L1: два встречновращающихся цилиндра, 1 000 000 жителей, полный инженерный и биосферный баланс.">
+<meta name="theme-color" content="#8f7ed6">
+<meta property="og:title" content="ММОСО’Н — орбитальная станция О’Нилла">
+<meta property="og:description" content="Два встречновращающихся цилиндра в точке L1. Расчётная модель мира на миллион человек.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+<noscript><style>.fade-in{opacity:1!important;transform:none!important}.nav-links{display:flex!important}</style></noscript>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%238f7ed6'/%3E%3Ccircle cx='32' cy='24' r='9' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Ccircle cx='32' cy='44' r='9' fill='none' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav-wrap">
+  <nav class="nav" aria-label="Основная навигация">
+    <a href="#top" class="nav-brand">
+      <svg class="nav-mark" viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="15" r="8" fill="none" stroke="currentColor" stroke-width="2.6"/>
+        <circle cx="24" cy="33" r="8" fill="none" stroke="currentColor" stroke-width="2.6"/>
+        <line x1="24" y1="6" x2="24" y2="42" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 4" opacity=".7"/>
+      </svg>
+      <span>ММОСО’Н</span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#about">О проекте</a></li>
+      <li><a href="#params">Параметры</a></li>
+      <li><a href="#engineering">Инженерия</a></li>
+      <li><a href="#verification">Проверки</a></li>
+      <li><a href="#gallery">Иллюстрации</a></li>
+      <li><a href="#edition">Издание</a></li>
+      <li><a href="#authors">Авторы</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="page" id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-field" aria-hidden="true">
+      <div class="stars stars-a"></div>
+      <div class="stars stars-b"></div>
+      <div class="orbit orbit-1"></div>
+      <div class="orbit orbit-2"></div>
+      <div class="glow"></div>
+    </div>
+
+    <div class="container hero-content">
+      <p class="eyebrow fade-in">МХ «КРЯК» · Курское региональное отделение · проект «Уютные регионы»</p>
+
+      <div class="emblem fade-in" aria-hidden="true">
+        <svg viewBox="0 0 220 220" role="img">
+          <defs>
+            <linearGradient id="embGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="55%" stop-color="#e6e1ff"/>
+              <stop offset="100%" stop-color="#4ecdc4"/>
+            </linearGradient>
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ff6b6b"/>
+              <stop offset="100%" stop-color="#4ecdc4"/>
+            </linearGradient>
+          </defs>
+          <circle cx="110" cy="110" r="96" fill="none" stroke="url(#ringGrad)" stroke-width="1.4" opacity=".55" stroke-dasharray="3 7"/>
+          <ellipse cx="110" cy="110" rx="104" ry="38" fill="none" stroke="url(#ringGrad)" stroke-width="1.2" opacity=".35"/>
+          <g stroke="url(#embGrad)" fill="none" stroke-width="3.2" stroke-linecap="round">
+            <rect x="44" y="48" width="132" height="48" rx="24"/>
+            <rect x="44" y="124" width="132" height="48" rx="24"/>
+            <line x1="20" y1="72" x2="44" y2="72"/>
+            <line x1="176" y1="72" x2="200" y2="72"/>
+            <line x1="20" y1="148" x2="44" y2="148"/>
+            <line x1="176" y1="148" x2="200" y2="148"/>
+          </g>
+          <g stroke="#ffffff" stroke-width="1.6" opacity=".75" fill="none">
+            <path d="M54 72 h30"/><path d="M136 72 h30"/>
+            <path d="M54 148 h30"/><path d="M136 148 h30"/>
+          </g>
+          <circle cx="110" cy="72" r="4.5" fill="#ffd166"/>
+          <circle cx="110" cy="148" r="4.5" fill="#4ecdc4"/>
+        </svg>
+      </div>
+
+      <h1 class="hero-title" id="hero-title">ММОСО’Н</h1>
+      <p class="hero-subtitle">Модуль моделирования орбитальной станции О’Нилла</p>
+      <p class="hero-lead">Два встречновращающихся цилиндра в точке L1. Расчётная модель мира на миллион человек — от несущей оболочки до правового устройства.</p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#params">Ключевые параметры</a>
+        <a class="btn btn-ghost" href="#gallery">Смотреть иллюстрации</a>
+      </div>
+
+      <dl class="hero-stats">
+        <div class="hero-stat"><dt>Полная длина</dt><dd>49 <span>км</span></dd></div>
+        <div class="hero-stat"><dt>Площадь поверхности</dt><dd>3 100,2 <span>км²</span></dd></div>
+        <div class="hero-stat"><dt>Население</dt><dd>1 000 000 <span>человек</span></dd></div>
+        <div class="hero-stat"><dt>Электроснабжение</dt><dd>721,4 <span>ГВт</span></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="card-section" id="about">
+    <div class="container">
+      <div class="section-title">
+        <h2>О проекте</h2>
+        <p class="section-kicker">Island Three · точка Лагранжа L1 системы Земля — Солнце</p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-text fade-in">
+          <p>ММОСО’Н — личный инженерный и научно-исследовательский проект: расчётная модель обитаемой орбитальной станции цилиндрического типа, рассчитанная от первооснов. Не иллюстрация будущего, а свод чисел, которые сходятся между собой.</p>
+          <p>Конфигурация — классическая <strong>Island Three</strong>: два встречновращающихся цилиндра радиусом 5 км. Вращение даёт на ободе тяжесть 1,0 g. Цилиндры не соединены по боковым поверхностям — это физически невозможно при встречном вращении: связь идёт только по осям через подшипниковые узлы.</p>
+          <p>Ось станции неподвижна в инерциальном пространстве. Всё внешнее оборудование — причалы, радиаторы, антенны, солнечные крылья — размещено только на двух торцевых рамах. Внутренний объём освещается реакторными осевыми светотепловыми балками; зеркал и солнечного паруса нет.</p>
+
+          <ul class="check-list">
+            <li><span class="check-ico" aria-hidden="true">✓</span>Обитаемая поверхность 3 100,2 км² — четыре климатические зоны по длине цилиндра</li>
+            <li><span class="check-ico" aria-hidden="true">✓</span>Замкнутые продовольственный, водный и кислородный балансы, рассчитанные на столетия</li>
+            <li><span class="check-ico" aria-hidden="true">✓</span>Транспорт «ось — обод»: фуникулёр как основной путь, лестница как обязательный дубль</li>
+            <li><span class="check-ico" aria-hidden="true">✓</span>Публикация из 43 документов: инженерия, биосфера, право, экономика замкнутого мира</li>
+          </ul>
+        </div>
+
+        <aside class="about-side fade-in">
+          <div class="mini-card">
+            <h3>Расположение</h3>
+            <p>Точка L1, 1,5 млн км от Земли. Постоянная связь, защищённый тепловой режим, отсутствие затенений.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Гравитация</h3>
+            <p>0,423 об/мин · 0,04429 рад/с · период 141,9 с. Кориолисовы эффекты учтены в расчётах быта и спорта.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Материал оболочки</h3>
+            <p>Сталь 18Ni(300), силовой пояс 850 мм. Пакет обшивки 2 м: гермооболочка, пояс, изоляция, радиационная защита, грунт.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PARAMS ============ -->
+  <section class="card-section" id="params">
+    <div class="container">
+      <div class="section-title">
+        <h2>Ключевые параметры</h2>
+        <p class="section-kicker">Канон модели, сверенный по расчётным модулям и документу</p>
+      </div>
+
+      <div class="params-grid">
+        <article class="param-card fade-in">
+          <span class="param-value" data-count="5000" data-suffix=" м">5 000 м</span>
+          <h3>Радиус цилиндра</h3>
+          <p>Диаметр 10 км. При такой геометрии обеспечивается 1,0 g при приемлемой скорости вращения.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value" data-count="49" data-suffix=" км">49 км</span>
+          <h3>Полная длина</h3>
+          <p>Цилиндрическая часть 40 км, две полусферы по 4,5 км.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value">0,423 <small>об/мин</small></span>
+          <h3>Скорость вращения</h3>
+          <p>0,04429 рад/с, период 141,9 с. Два цилиндра вращаются встречно.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value">1,0 <small>g</small></span>
+          <h3>Тяжесть на ободе</h3>
+          <p>Линейная скорость обода 221,5 м/с. Приосевая зона r &lt; 2 500 м закрыта для людей.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value">3 100,2 <small>км²</small></span>
+          <h3>Обитаемая площадь</h3>
+          <p>По 1 550,1 км² на цилиндр. Четыре климатические зоны: 0–10, 10–22, 22–32, 32–40 км.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value">46,70 <small>млрд т</small></span>
+          <h3>Масса станции</h3>
+          <p>Суммарная масса конструкции и наполнения при стальном силовом поясе.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value">721,4 <small>ГВт</small></span>
+          <h3>Электрическая мощность</h3>
+          <p>1 603 ГВт тепловых при КПД 45 %. Освещение внутреннего объёма — только реакторное.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value">1 022 <small>км²</small></span>
+          <h3>Площадь радиаторов</h3>
+          <p>Низкотемпературный контур 677 ГВт при 60 °C; располагаемая площадь 1 477 км², запас 1,45.</p>
+        </article>
+      </div>
+
+      <div class="table-wrap fade-in">
+        <table class="spec-table">
+          <caption>Пакет обшивки, снаружи внутрь</caption>
+          <thead>
+            <tr><th>Слой</th><th>Материал</th><th>Толщина</th><th>Масса</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Грунт растительный</td><td>почвенный профиль</td><td>1,50 м</td><td>4,060 млрд т</td></tr>
+            <tr><td>Радиационная защита</td><td>реголит + боросиликат</td><td>1,00 м</td><td>2,325 млрд т</td></tr>
+            <tr><td>Теплоизоляция</td><td>коммуникации, экраны</td><td>0,10 м</td><td>0,078 млрд т</td></tr>
+            <tr><td>Силовой пояс</td><td>сталь 18Ni(300)</td><td>0,85 м</td><td>10,343 млрд т</td></tr>
+            <tr><td>Гермооболочка</td><td>нержавеющая сталь</td><td>0,05 м</td><td>0,608 млрд т</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ENGINEERING ============ -->
+  <section class="card-section" id="engineering">
+    <div class="container">
+      <div class="section-title">
+        <h2>Инженерные решения</h2>
+        <p class="section-kicker">Шесть контуров, каждый из которых замкнут на расчёт</p>
+      </div>
+
+      <div class="cards-grid">
+        <article class="feature-card fade-in">
+          <span class="feature-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="5"/><circle cx="12" cy="16" r="5"/><path d="M12 1v22" stroke-dasharray="2 3"/></svg>
+          </span>
+          <h3>Несущая оболочка</h3>
+          <p>Наружное давление 152,6 кПа, с собственным весом 222,4 кПа. Кольцевое напряжение 1 308 МПа, запас к пределу прочности 1,53.</p>
+        </article>
+        <article class="feature-card fade-in">
+          <span class="feature-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="7" width="18" height="3" rx="1.5"/><rect x="3" y="14" width="18" height="3" rx="1.5"/><path d="M6 10v4M12 10v4M18 10v4"/></svg>
+          </span>
+          <h3>Терморегулирование</h3>
+          <p>Два контура: высокотемпературный сброс реакторов 882 ГВт при 800 °C на 12,4 км² и низкотемпературный 677 ГВт при 60 °C на 1 022 км².</p>
+        </article>
+        <article class="feature-card fade-in">
+          <span class="feature-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/></svg>
+          </span>
+          <h3>Энергетика</h3>
+          <p>Реакторная генерация 721,4 ГВт электрических. Осевые светотепловые балки — единственный источник света внутри объёма.</p>
+        </article>
+        <article class="feature-card fade-in">
+          <span class="feature-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 20l7-16 4 9 3-4 4 11z"/></svg>
+          </span>
+          <h3>Транспорт «ось — обод»</h3>
+          <p>Фуникулёр как основной путь, лестница как обязательный дубль, лифт для срочных и грузовых задач. Две наклонные шахты на цилиндр, трасса 7 429 м, 17,8 мин от причала до обода при постоянном наклоне 10°.</p>
+        </article>
+        <article class="feature-card fade-in">
+          <span class="feature-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 3c3 3 3 15 0 18M3 12h18"/></svg>
+          </span>
+          <h3>Причал и шлюзы</h3>
+          <p>Стыковка на неподвижной раме при нулевой скорости: причал → шлюзы и карантин → вращающийся гермопереход → полый осевой вал → наклонные шахты → жилая поверхность.</p>
+        </article>
+        <article class="feature-card fade-in">
+          <span class="feature-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21c5-3 8-7 8-12a8 8 0 10-16 0c0 5 3 9 8 12z"/><path d="M12 3v18M6 9h12"/></svg>
+          </span>
+          <h3>Биосфера и продовольствие</h3>
+          <p>Зональное распределение культур, продовольственный баланс, кислородный цикл на столетия, почвенный профиль как инженерная система, генетика замкнутой популяции.</p>
+        </article>
+      </div>
+
+      <div class="callout fade-in">
+        <h3>Почему цилиндры не соединены между собой</h3>
+        <p>Боковые поверхности вращаются встречно. Любая жёсткая связь между ними невозможна: связь идёт только по осям через подшипниковые узлы. Межосевое расстояние 21 км, свободный вакуумный зазор 11 км, продольных элементов между оболочками нет.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VERIFICATION ============ -->
+  <section class="card-section" id="verification">
+    <div class="container">
+      <div class="section-title">
+        <h2>Расчётная верификация</h2>
+        <p class="section-kicker">Проверки воспроизводимы: код лежит рядом с документом</p>
+      </div>
+
+      <div class="verify-grid">
+        <div class="verify-item fade-in">
+          <div class="verify-num">243/243</div>
+          <div class="verify-body">
+            <h3>Независимый пересчёт</h3>
+            <p><code>verify_all.py</code> заново выводит каждую величину публикации от первооснов и сверяет с документом.</p>
+          </div>
+        </div>
+        <div class="verify-item fade-in">
+          <div class="verify-num">PASS</div>
+          <div class="verify-body">
+            <h3>Сверка корпуса</h3>
+            <p><code>crosscheck.py</code> склеивает 43 документа в один корпус и проверяет согласованность чисел и единиц.</p>
+          </div>
+        </div>
+        <div class="verify-item fade-in">
+          <div class="verify-num">0</div>
+          <div class="verify-body">
+            <h3>Дефектов вёрстки</h3>
+            <p><code>check_overlap.py</code> ищет наложения объектов и разрывов в иллюстрациях; результат — ноль.</p>
+          </div>
+        </div>
+        <div class="verify-item fade-in">
+          <div class="verify-num">1,53</div>
+          <div class="verify-body">
+            <h3>Запас прочности</h3>
+            <p>Кольцевое напряжение 1 308 МПа при суммарном давлении 222,4 кПа.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="open-list fade-in">
+        <h3>Что остаётся открытым</h3>
+        <p class="open-note">Эти задачи не объявлены решёнными — они честно висят в проекте и ждут следующих расчётов.</p>
+        <ul>
+          <li>Малоцикловая усталость пояса при 1 290 МПа на горизонте столетий</li>
+          <li>Активные магнитные подшипниковые узлы: электромагнитный и тепловой расчёт</li>
+          <li>Металлургический цикл 18Ni(300): ресурсный риск и обогащение никеля</li>
+          <li>Динамическая модель биосферы и поглощение кислорода конструкциями</li>
+          <li>Противометеороидный пакет и роботизированная герметизация секций</li>
+          <li>Политико-правовая рамка: суверенитет, гражданство, признание</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section class="card-section" id="gallery">
+    <div class="container">
+      <div class="section-title">
+        <h2>Иллюстрации</h2>
+        <p class="section-kicker">Листы из публикации — нажмите, чтобы открыть крупно</p>
+      </div>
+
+      <div class="gallery-grid">
+        <button class="gallery-item fade-in" data-full="assets/fig/fig01_layout.png" data-title="Компоновка станции: два встречно вращающихся цилиндра">
+          <img src="assets/fig/fig01_layout.png" alt="Компоновка станции: два встречно вращающихся цилиндра" loading="lazy">
+          <span class="gallery-caption">Компоновка станции</span>
+        </button>
+        <button class="gallery-item fade-in" data-full="assets/fig/fig02_section.png" data-title="Поперечное сечение и пакет обшивки">
+          <img src="assets/fig/fig02_section.png" alt="Поперечное сечение цилиндра и пакет обшивки" loading="lazy">
+          <span class="gallery-caption">Сечение и обшивка</span>
+        </button>
+        <button class="gallery-item fade-in" data-full="assets/fig/fig15_transport.png" data-title="Трасса от причала до жилой поверхности">
+          <img src="assets/fig/fig15_transport.png" alt="Трасса от причала до жилой поверхности" loading="lazy">
+          <span class="gallery-caption">Трасса «ось — обод»</span>
+        </button>
+        <button class="gallery-item fade-in" data-full="assets/fig/fig10_energy.png" data-title="Энергетический и тепловой баланс">
+          <img src="assets/fig/fig10_energy.png" alt="Энергетический и тепловой баланс станции" loading="lazy">
+          <span class="gallery-caption">Энергия и тепло</span>
+        </button>
+        <button class="gallery-item fade-in" data-full="assets/fig/fig04_climate.png" data-title="Климатические зоны">
+          <img src="assets/fig/fig04_climate.png" alt="Климатическое зонирование цилиндра" loading="lazy">
+          <span class="gallery-caption">Климатические зоны</span>
+        </button>
+        <button class="gallery-item fade-in" data-full="assets/fig/fig16_resources.png" data-title="Ресурсная база программы">
+          <img src="assets/fig/fig16_resources.png" alt="Ресурсная база программы" loading="lazy">
+          <span class="gallery-caption">Ресурсы</span>
+        </button>
+        <button class="gallery-item fade-in" data-full="assets/fig/fig17_food.png" data-title="Продовольственный баланс">
+          <img src="assets/fig/fig17_food.png" alt="Продовольственный баланс станции" loading="lazy">
+          <span class="gallery-caption">Продовольствие</span>
+        </button>
+        <button class="gallery-item fade-in" data-full="assets/fig/fig18_land.png" data-title="Использование обитаемой площади">
+          <img src="assets/fig/fig18_land.png" alt="Распределение обитаемой площади" loading="lazy">
+          <span class="gallery-caption">Землепользование</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EDITION ============ -->
+  <section class="card-section" id="edition">
+    <div class="container">
+      <div class="section-title">
+        <h2>Издание</h2>
+        <p class="section-kicker">43 документа · 34 раздела · две языковые редакции</p>
+      </div>
+
+      <div class="edition-grid">
+        <div class="edition-main fade-in">
+          <p>Публикация существует не одним файлом, а набором документов: каждый раздел — отдельный <code>.docx</code> с титульным блоком, русским и английским текстом, таблицами, рисунками и своим списком литературы.</p>
+          <div class="edition-facts">
+            <div><strong>34</strong><span>раздела</span></div>
+            <div><strong>43</strong><span>документа</span></div>
+            <div><strong>23</strong><span>рисунка</span></div>
+            <div><strong>5</strong><span>приложений</span></div>
+          </div>
+          <a class="btn btn-primary" href="https://github.com/bugromka/mmoson" target="_blank" rel="noopener">Репозиторий проекта</a>
+        </div>
+
+        <ul class="edition-list fade-in">
+          <li><span>01–19</span> Концепция, физика, биоразнообразие, инженерия, биосфера, право</li>
+          <li><span>20–27</span> Носовые купола, аварийная потеря вращения, химия воздуха, почва, связь из L1</li>
+          <li><span>28–34</span> Генетика, сельское хозяйство, промышленность, стыковка, города</li>
+          <li><span>Б–Е</span> Обоснование расчётов, сокращения, источники, литература, матрица проверок</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AUTHORS ============ -->
+  <section class="card-section" id="authors">
+    <div class="container">
+      <div class="section-title">
+        <h2>Авторы</h2>
+        <p class="section-kicker">Человек и расчётная линия</p>
+      </div>
+
+      <div class="team-grid">
+        <article class="team-card fade-in">
+          <div class="team-avatar" aria-hidden="true">РБ</div>
+          <h3>Бугаенко Роман Сергеевич</h3>
+          <p class="team-role">Автор и руководитель проекта</p>
+          <p>Концепция и архитектура станции, климатическое зонирование, состав биоценозов, инженерные решения, продовольственный и водный балансы.</p>
+        </article>
+        <article class="team-card fade-in">
+          <div class="team-avatar team-avatar-alt" aria-hidden="true">НИК</div>
+          <h3>НИК</h3>
+          <p class="team-role">Нить искренности в Континууме</p>
+          <p>Расчётная верификация, независимый пересчёт прочности и балансов, оформление документа и проверка согласованности.</p>
+        </article>
+      </div>
+
+      <div class="license-note fade-in">
+        <h3>Лицензия</h3>
+        <p>Проект распространяется по проприетарному уведомлению «Все права защищены / All rights reserved». Свободное чтение и ознакомление разрешены. Любое иное использование, копирование, распространение, перевод, переработка или публикация материалов требуют предварительного письменного согласия автора.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>
+      <p class="footer-title">ММОСО’Н</p>
+      <p class="footer-sub">Модуль моделирования орбитальной станции О’Нилла · МХ «КРЯК»</p>
+    </div>
+    <p class="footer-copy">© 2026 Бугаенко Роман Сергеевич. Все права защищены.</p>
+  </div>
+</footer>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Просмотр иллюстрации">
+  <button class="lightbox-close" aria-label="Закрыть">×</button>
+  <figure>
+    <img id="lightbox-img" src="" alt="">
+    <figcaption id="lightbox-caption"></figcaption>
+  </figure>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
