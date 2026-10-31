@@ -140,8 +140,11 @@
   let lastFocused = null;
 
   function openLightbox(item) {
-    const full = item.dataset.full;
-    const title = item.dataset.title || '';
+    /* В одностраничной сборке data-full может отсутствовать: тогда полноразмерной
+       служит сама картинка карточки — она уже встроена в файл. */
+    const inner = item.querySelector('img');
+    const full = item.dataset.full || (inner ? inner.src : '');
+    const title = item.dataset.title || (inner ? inner.alt : '');
     if (!lightbox || !full) return;
     lastFocused = item;
     lightboxImg.src = full;

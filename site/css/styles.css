@@ -863,6 +863,16 @@ code {
   .footer-inner { flex-direction: column; align-items: flex-start; }
 }
 
+/* Встраивание: во фрейме Google Sites высота окна ограничена.
+   На низких окнах первый экран сжимается, чтобы не съедать весь обзор. */
+@media (max-height: 760px) and (min-width: 769px) {
+  .hero { padding: 44px 0 34px; }
+  .emblem { width: 120px; margin-bottom: 14px; }
+  .hero-actions { margin-bottom: 28px; }
+  .hero-lead { margin-bottom: 20px; }
+  .card-section { padding: 56px 0; }
+}
+
 @media (max-width: 560px) {
   body { padding: 10px; }
   .container { padding: 0 16px; }
