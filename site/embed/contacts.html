@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контакты — ММОСО’Н</title>
+<meta name="description" content="Связаться с автором проекта ММОСО’Н: почта, Макс, ВКонтакте, Добро.рф. Реквизиты проекта, статус, адрес и порядок цитирования.">
+<meta name="theme-color" content="#8f7ed6">
+<!-- ============================================================
+     ММОСО’Н · страница «Контакты»
+     Один самодостаточный файл: разметка, стили, скрипт и иллюстрации
+     этой страницы внутри. Внешних файлов нет, кроме шрифтов Google Fonts.
+
+     Страница-визитка: своя таблица стилей, без общей шапки и подвала.
+     Навигация — меню сайта.
+
+     Собрано site/build_pages.py из content/, css/styles.css и js/app.js.
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%238f7ed6'/%3E%3Ccircle cx='32' cy='24' r='9' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Ccircle cx='32' cy='44' r='9' fill='none' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E">
+<style>
+/* ============================================================
+   Страница «Контакты» — оформление по образцу личной страницы
+   МХ «КРЯК»: крупная карточка-шапка, контактные пилюли,
+   секции-карточки с градиентным подчёркиванием.
+   Стиль самодостаточный: не опирается на styles.css.
+   ============================================================ */
+
+:root {
+  --primary: #8f7ed6;
+  --primary-dark: #7260c2;
+  --primary-darker: #5a4a9e;
+  --primary-light: #a897e8;
+  --secondary: #ff6b6b;
+  --accent: #4ecdc4;
+  --light: #ffffff;
+  --text: #333333;
+  --background: #8f7ed6;
+  --shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  --shadow-strong: 0 12px 25px rgba(0, 0, 0, 0.15);
+  --shadow-hover: 0 15px 30px rgba(0, 0, 0, 0.18);
+  --transition: all 0.3s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Raleway', 'Segoe UI', system-ui, sans-serif;
+  background: var(--background);
+  background-image:
+    radial-gradient(900px 600px at 12% 0%, #9d8ce4 0%, transparent 55%),
+    radial-gradient(800px 600px at 90% 20%, #7a68ca 0%, transparent 50%);
+  background-attachment: fixed;
+  color: white;
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+  padding: 20px;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+/* ---------- шапка ---------- */
+.header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-strong);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  margin-bottom: 40px;
+}
+
+.main-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.logo-mark {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: var(--shadow);
+  display: grid;
+  place-items: center;
+  padding: 14px;
+}
+.logo-mark svg { width: 100%; height: 100%; }
+
+.title-text h1 {
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.5px;
+}
+.title-text p { font-size: 1.3rem; opacity: 0.95; font-weight: 500; }
+
+.contacts-section { margin-top: 30px; }
+.contacts-title {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 40px;
+  text-decoration: none;
+  transition: var(--transition);
+  backdrop-filter: blur(2px);
+  font-weight: 500;
+}
+.contact-link:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+.contact-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: #fff;
+}
+.contact-icon svg { width: 100%; height: 100%; display: block; }
+
+/* ---------- секции ---------- */
+.content-section {
+  background: white;
+  border-radius: 28px;
+  box-shadow: var(--shadow-strong);
+  padding: 40px;
+  margin-bottom: 40px;
+  color: var(--text);
+  transition: transform 0.2s;
+}
+
+.section-title { text-align: center; margin-bottom: 40px; position: relative; }
+.section-title h2 {
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
+}
+.section-title h2::after {
+  content: '';
+  position: absolute;
+  width: 70%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+  bottom: -10px;
+  left: 15%;
+  border-radius: 3px;
+}
+
+.info-text { font-size: 1.05rem; line-height: 1.7; margin-bottom: 20px; }
+.info-text:last-child { margin-bottom: 0; }
+
+/* бейджи */
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+  justify-content: center;
+}
+.skill-badge {
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  color: white;
+  padding: 8px 20px;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow);
+}
+
+/* карточки-поводы */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+.project-card {
+  background: var(--background);
+  color: white;
+  border-radius: 24px;
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+.project-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+.project-icon { font-size: 3rem; margin-bottom: 15px; }
+.project-title { font-size: 1.4rem; margin-bottom: 12px; font-weight: 700; }
+.project-desc { font-size: 0.95rem; opacity: 0.9; line-height: 1.5; }
+
+/* строки состояния */
+.current-item {
+  background: #f8f9ff;
+  border-left: 5px solid var(--primary);
+  padding: 18px 24px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.current-item:last-child { margin-bottom: 0; }
+.current-item:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+.current-title {
+  font-weight: 800;
+  color: var(--primary-darker);
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+.current-desc { font-size: 0.95rem; color: var(--text); opacity: 0.85; }
+
+/* ценности */
+.values-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.value-card {
+  flex: 1;
+  min-width: 180px;
+  background: #f0efff;
+  padding: 20px;
+  border-radius: 20px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow);
+}
+.value-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); background: #e9e7ff; }
+.value-icon {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 12px;
+  color: var(--primary);
+}
+.value-icon svg { width: 100%; height: 100%; }
+.value-card h3 {
+  font-size: 1.1rem;
+  color: var(--primary-darker);
+  margin-bottom: 8px;
+}
+.value-card p { font-size: 0.92rem; color: var(--text); opacity: 0.85; }
+
+/* карта и адрес */
+.map-section { margin-top: 30px; }
+.map-container {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-top: 20px;
+}
+.map-container iframe { width: 100%; height: 350px; border: none; display: block; }
+.address {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1rem;
+  color: var(--text);
+  font-weight: 500;
+}
+.address p + p { margin-top: 6px; }
+.address .address-note { font-size: 0.9rem; font-weight: 400; opacity: 0.8; }
+
+/* таблица реквизитов */
+.facts-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.facts-table th,
+.facts-table td {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  border-bottom: 1px solid rgba(143, 126, 214, 0.18);
+  vertical-align: top;
+}
+.facts-table th {
+  width: 38%;
+  color: var(--primary-darker);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.facts-table td { color: var(--text); }
+.facts-table tr:last-child th,
+.facts-table tr:last-child td { border-bottom: none; }
+.facts-table a { color: var(--primary-dark); text-decoration: none; border-bottom: 1px solid rgba(114, 96, 194, 0.35); }
+.facts-table a:hover { border-bottom-color: var(--primary-dark); }
+
+/* сноска */
+.foot-note {
+  margin-top: 22px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: rgba(143, 126, 214, 0.08);
+  border: 1px dashed rgba(143, 126, 214, 0.4);
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+/* появление при скролле */
+.fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 768px) {
+  body { padding: 15px; }
+  .header { padding: 30px 20px; }
+  .title-text h1 { font-size: 2rem; }
+  .title-text p { font-size: 1rem; }
+  .logo-mark { width: 100px; height: 100px; }
+  .contact-links { flex-direction: column; align-items: center; }
+  .contact-link { width: 90%; justify-content: center; }
+  .content-section { padding: 25px; }
+  .section-title h2 { font-size: 1.6rem; }
+  .values-grid { flex-direction: column; }
+  .current-item { padding: 16px 20px; }
+  .facts-table th { width: auto; white-space: normal; }
+}
+
+@media (max-width: 480px) {
+  .content-section { padding: 20px; }
+  .project-card { padding: 20px; }
+  .project-icon { font-size: 2.4rem; }
+  .facts-table th, .facts-table td { padding: 10px 8px; font-size: 0.9rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in { opacity: 1; transform: none; }
+  *, *::before, *::after { transition-duration: 0.001ms !important; }
+}
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+</style>
+<noscript><style>.fade-in{opacity:1!important;transform:none!important}</style></noscript>
+</head>
+<body>
+
+<div class="container">
+<header class="header">
+  <div class="main-title">
+    <div class="logo-mark" aria-hidden="true">
+      <svg viewBox="0 0 120 120" role="img">
+        <g fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round">
+          <rect x="18" y="24" width="84" height="30" rx="15"/>
+          <rect x="18" y="66" width="84" height="30" rx="15"/>
+          <line x1="4" y1="39" x2="18" y2="39"/>
+          <line x1="102" y1="39" x2="116" y2="39"/>
+          <line x1="4" y1="81" x2="18" y2="81"/>
+          <line x1="102" y1="81" x2="116" y2="81"/>
+        </g>
+        <circle cx="60" cy="39" r="4" fill="#ffd166"/>
+        <circle cx="60" cy="81" r="4" fill="#4ecdc4"/>
+      </svg>
+    </div>
+    <div class="title-text">
+      <h1>ММОСО’Н</h1>
+      <p>Модуль моделирования орбитальной станции О’Нилла</p>
+    </div>
+  </div>
+
+  <div class="contacts-section">
+    <h3 class="contacts-title">Связаться с автором проекта</h3>
+    <div class="contact-links">
+      <a href="https://max.ru/channel_bugromka_pc" target="_blank" rel="noopener" class="contact-link">
+        <span class="contact-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H7l-4 3v-4.6A8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5z"/>
+            <path d="M8.5 10h7M8.5 13.5h4.5"/>
+          </svg>
+        </span>
+        <span>Макс</span>
+      </a>
+      <a href="https://vk.ru/bugromka" target="_blank" rel="noopener" class="contact-link">
+        <span class="contact-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M13.2 17.3c-6 0-9.4-4.1-9.5-10.9h3c.1 5 2.3 7.1 4 7.5V6.4h2.8v4.3c1.7-.2 3.4-2.1 4-4.3h2.8a8.6 8.6 0 0 1-3.9 5.4 8.9 8.9 0 0 1 4.5 5.5h-3.1c-.6-1.9-2.2-3.4-4.3-3.6v3.6z"/>
+          </svg>
+        </span>
+        <span>ВКонтакте</span>
+      </a>
+      <a href="mailto:kryak_kursk@mail.ru" class="contact-link">
+        <span class="contact-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2.5" y="4.5" width="19" height="15" rx="3"/>
+            <path d="M3.5 6.5 12 13l8.5-6.5"/>
+          </svg>
+        </span>
+        <span>kryak_kursk@mail.ru</span>
+      </a>
+      <a href="https://dobro.ru/volunteers/96228201/about" target="_blank" rel="noopener" class="contact-link">
+        <span class="contact-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20s-7-4.3-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.7-7 9-7 9z"/>
+          </svg>
+        </span>
+        <span>Добро.рф</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<section class="content-section fade-in">
+  <div class="section-title">
+    <h2>О чём писать</h2>
+  </div>
+  <p class="info-text">ММОСО’Н — личный инженерный и научно-исследовательский проект. Открыты вопросы по расчётам, замечания к публикации и предложения о сотрудничестве. Ниже — четыре повода, по которым стоит писать, и то, что можно получить в ответ.</p>
+
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-icon">🛰️</div>
+      <div class="project-title">Расчёты и проверки</div>
+      <div class="project-desc">Вопросы по прочности оболочки, тепловому и энергетическому балансу, транспорту «ось — обод», биосфере и продовольствию. Отвечу по существу или покажу, где в модели пробел.</div>
+    </div>
+    <div class="project-card">
+      <div class="project-icon">🤝</div>
+      <div class="project-title">Сотрудничество</div>
+      <div class="project-desc">Совместные исследования, студенческие и школьные работы по теме станции, популяризация, издательские и медийные предложения.</div>
+    </div>
+    <div class="project-card">
+      <div class="project-icon">📄</div>
+      <div class="project-title">Использование материалов</div>
+      <div class="project-desc">Проект распространяется по условию «Все права защищены». На цитирование, перепечатку, перевод и включение в другие проекты нужно письменное согласие автора — запрос присылайте на почту.</div>
+    </div>
+    <div class="project-card">
+      <div class="project-icon">🔍</div>
+      <div class="project-title">Ошибки и замечания</div>
+      <div class="project-desc">Нашли несогласованность чисел, единиц или ссылок в публикации — сообщите. Замечание с указанием документа и раздела разбирается быстрее всего.</div>
+    </div>
+  </div>
+</section>
+
+<section class="content-section fade-in">
+  <div class="section-title">
+    <h2>Что можно обсудить</h2>
+  </div>
+  <div class="skills-list">
+    <span class="skill-badge">🛠️ Несущая оболочка и прочность</span>
+    <span class="skill-badge">🌡️ Теплосброс и энергетика</span>
+    <span class="skill-badge">🚡 Транспорт и стыковка</span>
+    <span class="skill-badge">🌱 Биосфера и продовольствие</span>
+    <span class="skill-badge">⚖️ Право и устройство станции</span>
+    <span class="skill-badge">📚 Публикация и цитирование</span>
+  </div>
+  <p class="info-text" style="margin-top: 26px;">Проект открыт для содержательной критики: расчёт, который не сходится, важнее комплимента. Но границы утверждений держу честно — станция остаётся расчётной моделью, а не согласованным и построенным объектом.</p>
+</section>
+
+<section class="content-section fade-in">
+  <div class="section-title">
+    <h2>Статус проекта</h2>
+  </div>
+
+  <div class="current-item">
+    <div class="current-title">🔹 Расчётная верификация завершена</div>
+    <div class="current-desc">Независимый пересчёт даёт 243 из 243 совпадений, сверка корпуса публикации проходит, дефектов вёрстки нет. Это внутренний аудит согласованности, а не сертификация конструкции.</div>
+  </div>
+
+  <div class="current-item">
+    <div class="current-title">🔹 Публикация существует в 43 документах</div>
+    <div class="current-desc">34 раздела, две языковые редакции, приложения с обоснованием расчётов, источниками и матрицей проверок. Каждый раздел — отдельный документ со своим списком литературы.</div>
+  </div>
+
+  <div class="current-item">
+    <div class="current-title">🔹 Открытые задачи названы прямо</div>
+    <div class="current-desc">Усталость силового пояса, магнитные подшипниковые узлы, металлургический цикл, динамика биосферы, противометеороидная защита, правовая рамка. Ни одна из них не объявлена решённой.</div>
+  </div>
+
+  <div class="current-item">
+    <div class="current-title">🔹 Автор и расчётная линия</div>
+    <div class="current-desc">Концепция и архитектура станции — Бугаенко Роман Сергеевич. Расчётная верификация, независимый пересчёт и оформление документа — НИК (Нить искренности в Континууме).</div>
+  </div>
+</section>
+
+<section class="content-section fade-in">
+  <div class="section-title">
+    <h2>Реквизиты проекта</h2>
+  </div>
+
+  <table class="facts-table">
+    <tbody>
+      <tr><th>Проект</th><td>ММОСО’Н — модуль моделирования орбитальной станции О’Нилла</td></tr>
+      <tr><th>Автор</th><td>Бугаенко Роман Сергеевич</td></tr>
+      <tr><th>Организация</th><td>Молодёжный холдинг «Межрегиональный картографический Я-кластер» (МХ «КРЯК»), Курское региональное отделение</td></tr>
+      <tr><th>Город</th><td>Курск, Россия</td></tr>
+      <tr><th>Почта</th><td><a href="mailto:kryak_kursk@mail.ru">kryak_kursk@mail.ru</a></td></tr>
+      <tr><th>Репозиторий</th><td><a href="https://github.com/bugromka/mmoson" target="_blank" rel="noopener">github.com/bugromka/mmoson</a></td></tr>
+      <tr><th>Сайт холдинга</th><td><a href="https://www.yacluster-kryak.ru" target="_blank" rel="noopener">yacluster-kryak.ru</a></td></tr>
+      <tr><th>Лицензия</th><td>«Все права защищены / All rights reserved». Чтение и ознакомление разрешены, иное использование — с письменного согласия автора</td></tr>
+      <tr><th>Год</th><td>2026</td></tr>
+    </tbody>
+  </table>
+
+  <div class="foot-note">Для ссылки на публикацию: Бугаенко Р. С. ММОСО’Н: модуль моделирования орбитальной станции О’Нилла. — Курск: МХ «КРЯК», 2026.</div>
+</section>
+
+<section class="content-section fade-in">
+  <div class="section-title">
+    <h2>Как отвечаю</h2>
+  </div>
+
+  <div class="values-grid">
+    <div class="value-card">
+      <div class="value-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+        </svg>
+      </div>
+      <h3>В срок</h3>
+      <p>Обычно отвечаю в течение нескольких дней. Если вопрос требует расчёта — скажу, сколько его займёт.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/>
+        </svg>
+      </div>
+      <h3>По существу</h3>
+      <p>Отделяю расчёт от предположения и не выдаю одно за другое. Если ответа нет — говорю, что ответа нет.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l7 3v6c0 5-3.5 7.6-7 9-3.5-1.4-7-4-7-9V6z"/><path d="M9 12l2 2 4-4"/>
+        </svg>
+      </div>
+      <h3>С уважением к данным</h3>
+      <p>Без выдуманных цифр и без обещаний, которых проект не выдержит. Ошибку признаю прямо.</p>
+    </div>
+  </div>
+</section>
+
+<section class="content-section fade-in">
+  <div class="section-title">
+    <h2>Точка на карте</h2>
+  </div>
+  <div class="map-section">
+    <div class="map-container">
+      <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Acba835d10496ef8c2b7bbe4bd5a2cfdf7fb21ecc0afee83bab98864397000d4a&amp;width=100%&amp;height=350&amp;lang=ru_RU&amp;scroll=true"></script>
+    </div>
+    <div class="address">
+      <p><strong>📍 Центр работы над проектом — офис МХ «КРЯК»</strong></p>
+      <p>Курск, проспект Дружбы, д. 2 (Центр детского творчества)</p>
+      <p class="address-note">Здесь проходят встречи команды. Встречи по проекту — по предварительной договорённости.</p>
+    </div>
+  </div>
+</section>
+</div>
+
+<script>
+/* ММОСО’Н — поведение страницы.
+   Без зависимостей: появление при скролле, счётчики, меню, лайтбокс. */
+(function () {
+  'use strict';
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- 1. Появление элементов ---------- */
+  const fadeEls = document.querySelectorAll('.fade-in');
+
+  function showAll() {
+    fadeEls.forEach((el) => el.classList.add('visible'));
+  }
+
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    showAll();
+  } else {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          const siblings = Array.from(el.parentElement.children).filter((n) =>
+            n.classList.contains('fade-in')
+          );
+          const index = Math.max(0, siblings.indexOf(el));
+          el.style.transitionDelay = Math.min(index * 60, 300) + 'ms';
+          el.classList.add('visible');
+          io.unobserve(el);
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -60px 0px' }
+    );
+    fadeEls.forEach((el) => io.observe(el));
+    /* Страховка: если наблюдатель почему-то не сработал, контент не должен остаться невидимым */
+    window.setTimeout(() => {
+      fadeEls.forEach((el) => {
+        if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('visible');
+      });
+    }, 1200);
+  }
+
+  /* ---------- 2. Счётчики в карточках параметров ---------- */
+  const counters = document.querySelectorAll('[data-count]');
+
+  function formatNumber(value) {
+    return value.toLocaleString('ru-RU').replace(/\u00A0/g, ' ');
+  }
+
+  function animateCounter(el) {
+    const target = parseFloat(el.dataset.count);
+    const suffix = el.dataset.suffix || '';
+    if (!isFinite(target)) return;
+
+    if (reduceMotion) {
+      el.textContent = formatNumber(target) + suffix;
+      return;
+    }
+
+    const duration = 1200;
+    const start = performance.now();
+
+    function frame(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(target * eased);
+      el.textContent = formatNumber(current) + suffix;
+      if (progress < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  if (counters.length) {
+    if (!('IntersectionObserver' in window) || reduceMotion) {
+      counters.forEach((c) => {
+        c.textContent = formatNumber(parseFloat(c.dataset.count)) + (c.dataset.suffix || '');
+      });
+    } else {
+      const counterObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            animateCounter(entry.target);
+            counterObserver.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.5 }
+      );
+      counters.forEach((c) => counterObserver.observe(c));
+    }
+  }
+
+  /* ---------- 3. Мобильное меню ---------- */
+  const navToggle = document.querySelector('.nav-toggle');
+  const navLinks = document.getElementById('nav-links');
+
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(open));
+    });
+    navLinks.addEventListener('click', (e) => {
+      if (e.target.closest('a')) {
+        navLinks.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  /* ---------- 4. Подсветка активного пункта меню ---------- */
+  const sections = Array.from(document.querySelectorAll('main section[id]'));
+  const linkMap = new Map();
+  document.querySelectorAll('.nav-links a').forEach((a) => {
+    const id = a.getAttribute('href').replace('#', '');
+    linkMap.set(id, a);
+  });
+
+  if ('IntersectionObserver' in window && sections.length) {
+    const navObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const link = linkMap.get(entry.target.id);
+          if (!link) return;
+          if (entry.isIntersecting) {
+            document.querySelectorAll('.nav-links a.active').forEach((a) => a.classList.remove('active'));
+            link.classList.add('active');
+          }
+        });
+      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
+    );
+    sections.forEach((s) => navObserver.observe(s));
+  }
+
+  /* ---------- 5. Лайтбокс для иллюстраций ---------- */
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+  const lightboxClose = lightbox ? lightbox.querySelector('.lightbox-close') : null;
+  let lastFocused = null;
+
+  function openLightbox(item) {
+    /* В сборке без отдельного файла data-full может не быть: тогда
+       полноразмерной служит сама картинка карточки — она уже внутри файла. */
+    const inner = item.querySelector('img');
+    const full = item.dataset.full || (inner ? inner.src : '');
+    const title = item.dataset.title || (inner ? inner.alt : '');
+    if (!lightbox || !full) return;
+    lastFocused = item;
+    lightboxImg.src = full;
+    lightboxImg.alt = title;
+    lightboxCaption.textContent = title;
+    lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if (lightboxClose) lightboxClose.focus();
+  }
+
+  function closeLightbox() {
+    if (!lightbox) return;
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    lightboxImg.src = '';
+    document.body.style.overflow = '';
+    if (lastFocused) lastFocused.focus();
+  }
+
+  document.querySelectorAll('.gallery-item').forEach((item) => {
+    item.addEventListener('click', () => openLightbox(item));
+  });
+
+  if (lightbox) {
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox || e.target === lightboxClose) closeLightbox();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+    });
+  }
+
+  /* ---------- 7. Ссылки между страницами ----------
+     В версии для хостинга переходы относительные: файлы лежат рядом.
+     В файлах каталога embed/ ссылки заданы как href="#" с атрибутом data-page,
+     а навигацию даёт меню Google Sites. Если нужно, чтобы карточки внутри
+     страницы тоже вели на страницы Sites, перед </head> кладут карту адресов:
+       <script>window.MMOSON_LINKS = { engineering: "https://sites.google.com/…" };</script>
+     Скрипт подменит href и откроет переход в родительском окне. */
+  const pageMap = window.MMOSON_LINKS || {};
+  document.querySelectorAll('a[data-page]').forEach((a) => {
+    const key = a.dataset.page;
+    if (!pageMap[key]) return;
+    a.href = pageMap[key];
+    a.target = '_top';
+    a.rel = 'noopener';
+  });
+
+  /* ---------- 6. Плавная прокрутка с поправкой на липкую навигацию ---------- */
+  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (!id || id === '#') return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      const offset = window.innerWidth > 900 ? 84 : 110;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
+      history.replaceState(null, '', id);
+    });
+  });
+})();
+
+</script>
+</body>
+</html>

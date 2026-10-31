@@ -140,8 +140,11 @@
   let lastFocused = null;
 
   function openLightbox(item) {
-    const full = item.dataset.full;
-    const title = item.dataset.title || '';
+    /* В сборке без отдельного файла data-full может не быть: тогда
+       полноразмерной служит сама картинка карточки — она уже внутри файла. */
+    const inner = item.querySelector('img');
+    const full = item.dataset.full || (inner ? inner.src : '');
+    const title = item.dataset.title || (inner ? inner.alt : '');
     if (!lightbox || !full) return;
     lastFocused = item;
     lightboxImg.src = full;
@@ -174,6 +177,22 @@
       if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
     });
   }
+
+  /* ---------- 7. Ссылки между страницами ----------
+     В версии для хостинга переходы относительные: файлы лежат рядом.
+     В файлах каталога embed/ ссылки заданы как href="#" с атрибутом data-page,
+     а навигацию даёт меню Google Sites. Если нужно, чтобы карточки внутри
+     страницы тоже вели на страницы Sites, перед </head> кладут карту адресов:
+       <script>window.MMOSON_LINKS = { engineering: "https://sites.google.com/…" };</script>
+     Скрипт подменит href и откроет переход в родительском окне. */
+  const pageMap = window.MMOSON_LINKS || {};
+  document.querySelectorAll('a[data-page]').forEach((a) => {
+    const key = a.dataset.page;
+    if (!pageMap[key]) return;
+    a.href = pageMap[key];
+    a.target = '_top';
+    a.rel = 'noopener';
+  });
 
   /* ---------- 6. Плавная прокрутка с поправкой на липкую навигацию ---------- */
   document.querySelectorAll('a[href^="#"]').forEach((a) => {

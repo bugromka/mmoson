@@ -1,0 +1,345 @@
+/* ============================================================
+   Страница «Контакты» — оформление по образцу личной страницы
+   МХ «КРЯК»: крупная карточка-шапка, контактные пилюли,
+   секции-карточки с градиентным подчёркиванием.
+   Стиль самодостаточный: не опирается на styles.css.
+   ============================================================ */
+
+:root {
+  --primary: #8f7ed6;
+  --primary-dark: #7260c2;
+  --primary-darker: #5a4a9e;
+  --primary-light: #a897e8;
+  --secondary: #ff6b6b;
+  --accent: #4ecdc4;
+  --light: #ffffff;
+  --text: #333333;
+  --background: #8f7ed6;
+  --shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  --shadow-strong: 0 12px 25px rgba(0, 0, 0, 0.15);
+  --shadow-hover: 0 15px 30px rgba(0, 0, 0, 0.18);
+  --transition: all 0.3s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Raleway', 'Segoe UI', system-ui, sans-serif;
+  background: var(--background);
+  background-image:
+    radial-gradient(900px 600px at 12% 0%, #9d8ce4 0%, transparent 55%),
+    radial-gradient(800px 600px at 90% 20%, #7a68ca 0%, transparent 50%);
+  background-attachment: fixed;
+  color: white;
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+  padding: 20px;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+/* ---------- шапка ---------- */
+.header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-strong);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  margin-bottom: 40px;
+}
+
+.main-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.logo-mark {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: var(--shadow);
+  display: grid;
+  place-items: center;
+  padding: 14px;
+}
+.logo-mark svg { width: 100%; height: 100%; }
+
+.title-text h1 {
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.5px;
+}
+.title-text p { font-size: 1.3rem; opacity: 0.95; font-weight: 500; }
+
+.contacts-section { margin-top: 30px; }
+.contacts-title {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 40px;
+  text-decoration: none;
+  transition: var(--transition);
+  backdrop-filter: blur(2px);
+  font-weight: 500;
+}
+.contact-link:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+.contact-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: #fff;
+}
+.contact-icon svg { width: 100%; height: 100%; display: block; }
+
+/* ---------- секции ---------- */
+.content-section {
+  background: white;
+  border-radius: 28px;
+  box-shadow: var(--shadow-strong);
+  padding: 40px;
+  margin-bottom: 40px;
+  color: var(--text);
+  transition: transform 0.2s;
+}
+
+.section-title { text-align: center; margin-bottom: 40px; position: relative; }
+.section-title h2 {
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
+}
+.section-title h2::after {
+  content: '';
+  position: absolute;
+  width: 70%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+  bottom: -10px;
+  left: 15%;
+  border-radius: 3px;
+}
+
+.info-text { font-size: 1.05rem; line-height: 1.7; margin-bottom: 20px; }
+.info-text:last-child { margin-bottom: 0; }
+
+/* бейджи */
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+  justify-content: center;
+}
+.skill-badge {
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  color: white;
+  padding: 8px 20px;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow);
+}
+
+/* карточки-поводы */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+.project-card {
+  background: var(--background);
+  color: white;
+  border-radius: 24px;
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+.project-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+.project-icon { font-size: 3rem; margin-bottom: 15px; }
+.project-title { font-size: 1.4rem; margin-bottom: 12px; font-weight: 700; }
+.project-desc { font-size: 0.95rem; opacity: 0.9; line-height: 1.5; }
+
+/* строки состояния */
+.current-item {
+  background: #f8f9ff;
+  border-left: 5px solid var(--primary);
+  padding: 18px 24px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.current-item:last-child { margin-bottom: 0; }
+.current-item:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+.current-title {
+  font-weight: 800;
+  color: var(--primary-darker);
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+.current-desc { font-size: 0.95rem; color: var(--text); opacity: 0.85; }
+
+/* ценности */
+.values-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.value-card {
+  flex: 1;
+  min-width: 180px;
+  background: #f0efff;
+  padding: 20px;
+  border-radius: 20px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow);
+}
+.value-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); background: #e9e7ff; }
+.value-icon {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 12px;
+  color: var(--primary);
+}
+.value-icon svg { width: 100%; height: 100%; }
+.value-card h3 {
+  font-size: 1.1rem;
+  color: var(--primary-darker);
+  margin-bottom: 8px;
+}
+.value-card p { font-size: 0.92rem; color: var(--text); opacity: 0.85; }
+
+/* карта и адрес */
+.map-section { margin-top: 30px; }
+.map-container {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-top: 20px;
+}
+.map-container iframe { width: 100%; height: 350px; border: none; display: block; }
+.address {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1rem;
+  color: var(--text);
+  font-weight: 500;
+}
+.address p + p { margin-top: 6px; }
+.address .address-note { font-size: 0.9rem; font-weight: 400; opacity: 0.8; }
+
+/* таблица реквизитов */
+.facts-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.facts-table th,
+.facts-table td {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  border-bottom: 1px solid rgba(143, 126, 214, 0.18);
+  vertical-align: top;
+}
+.facts-table th {
+  width: 38%;
+  color: var(--primary-darker);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.facts-table td { color: var(--text); }
+.facts-table tr:last-child th,
+.facts-table tr:last-child td { border-bottom: none; }
+.facts-table a { color: var(--primary-dark); text-decoration: none; border-bottom: 1px solid rgba(114, 96, 194, 0.35); }
+.facts-table a:hover { border-bottom-color: var(--primary-dark); }
+
+/* сноска */
+.foot-note {
+  margin-top: 22px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: rgba(143, 126, 214, 0.08);
+  border: 1px dashed rgba(143, 126, 214, 0.4);
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+/* появление при скролле */
+.fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 768px) {
+  body { padding: 15px; }
+  .header { padding: 30px 20px; }
+  .title-text h1 { font-size: 2rem; }
+  .title-text p { font-size: 1rem; }
+  .logo-mark { width: 100px; height: 100px; }
+  .contact-links { flex-direction: column; align-items: center; }
+  .contact-link { width: 90%; justify-content: center; }
+  .content-section { padding: 25px; }
+  .section-title h2 { font-size: 1.6rem; }
+  .values-grid { flex-direction: column; }
+  .current-item { padding: 16px 20px; }
+  .facts-table th { width: auto; white-space: normal; }
+}
+
+@media (max-width: 480px) {
+  .content-section { padding: 20px; }
+  .project-card { padding: 20px; }
+  .project-icon { font-size: 2.4rem; }
+  .facts-table th, .facts-table td { padding: 10px 8px; font-size: 0.9rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in { opacity: 1; transform: none; }
+  *, *::before, *::after { transition-duration: 0.001ms !important; }
+}
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
