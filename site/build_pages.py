@@ -97,6 +97,19 @@ PAGES = [
         "img": {"max_width": 1200, "quality": 82},
     },
     {
+        "slug": "contacts",
+        "nav": "Контакты",
+        "title": "Контакты — ММОСО’Н",
+        "desc": "Связаться с автором проекта ММОСО’Н: почта, Макс, ВКонтакте, Добро.рф. Реквизиты проекта, статус, адрес и порядок цитирования.",
+        "kicker": "",
+        "h1": "",
+        "sub": "",
+        "page_head": False,
+        "shell": False,
+        "css": "css/contacts.css",
+        "img": {"max_width": 1200, "quality": 82},
+    },
+    {
         "slug": "authors",
         "nav": "Авторы",
         "title": "Авторы и лицензия — ММОСО’Н",
@@ -212,6 +225,13 @@ def embed_links(html: str) -> str:
 
 def build(page: dict, css: str, js: str, embed: bool) -> tuple[str, int]:
     fragment = (CONTENT / f'{page["slug"]}.html').read_text(encoding="utf-8").strip()
+    shell = page.get("shell", True)
+
+    if not shell:
+        # Страница-визитка со своим оформлением: без общей шапки, переходов и
+        # подвала — только содержимое в контейнере, как в образце.
+        body = '<div class="container">\n' + fragment + "\n</div>"
+        return finish(page, body, css, js, embed)
 
     parts = []
     if not embed:
@@ -238,7 +258,16 @@ def build(page: dict, css: str, js: str, embed: bool) -> tuple[str, int]:
     )
     body = "\n\n".join(parts)
 
-    if embed:
+    return finish(page, body, css, js, embed)
+
+
+def finish(page: dict, body: str, css: str, js: str, embed: bool) -> tuple[str, int]:
+    if not page.get("shell", True):
+        mode_note = (
+            "     Страница-визитка: своя таблица стилей, без общей шапки и подвала.\n"
+            "     Навигация — меню сайта.\n"
+        )
+    elif embed:
         mode_note = (
             "     Версия для встраивания: Вставка → Встроить → Код вставки.\n"
             "     Шапки-меню и переходов «назад/дальше» здесь нет — навигацию даёт\n"
@@ -316,20 +345,22 @@ def build(page: dict, css: str, js: str, embed: bool) -> tuple[str, int]:
 
 
 def main() -> int:
-    css = CSS.read_text(encoding="utf-8")
+    default_css = CSS.read_text(encoding="utf-8")
     js = JS.read_text(encoding="utf-8")
     EMBED.mkdir(exist_ok=True)
-    print(f"стили: {len(css)/1024:.0f} КБ · скрипт: {len(js)/1024:.0f} КБ\n")
+    print(f"стили: {len(default_css)/1024:.0f} КБ · скрипт: {len(js)/1024:.0f} КБ\n")
 
     rows = []
     for page in PAGES:
+        css_path = ROOT / page.get("css", "css/styles.css")
+        css = css_path.read_text(encoding="utf-8")
         for embed, folder in ((False, ROOT), (True, EMBED)):
             html, inlined = build(page, css, js, embed)
             out = folder / f'{page["slug"]}.html'
             out.write_text(html, encoding="utf-8")
             left = [
                 x
-                for x in re.findall(r'(?:src|href)="(?!https://|data:|#)([^"]+)"', html)
+                for x in re.findall(r'(?:src|href)="(?!https://|data:|#|mailto:|tel:)([^"]+)"', html)
                 if not x.endswith(".html")
             ]
             rows.append((str(out.relative_to(ROOT)), out.stat().st_size, inlined, left, len(html)))
