@@ -234,28 +234,14 @@ def build(page: dict, css: str, js: str, embed: bool) -> tuple[str, int]:
         return finish(page, body, css, js, embed)
 
     parts = []
-    if not embed:
-        parts.append(nav_html(page["slug"], False))
+    # Навигация, пагинатор и подвал убраны со всех страниц —
+    # навигация и подвал делаются в меню Google Sites.
     parts.append('<main class="page" id="top">')
     head_block = page_head_html(page)
     if head_block:
         parts.append(head_block)
     parts.append(fragment)
     parts.append("</main>")
-    pager = pager_html(page["slug"], embed)
-    if pager:
-        parts.append(pager)
-    parts.append(
-        '<footer class="footer">\n'
-        '  <div class="container footer-inner">\n'
-        "    <div>\n"
-        '      <p class="footer-title">ММОСО’Н</p>\n'
-        '      <p class="footer-sub">Модуль моделирования орбитальной станции О’Нилла · МХ «КРЯК»</p>\n'
-        "    </div>\n"
-        '    <p class="footer-copy">© 2026 Бугаенко Роман Сергеевич. Все права защищены.</p>\n'
-        "  </div>\n"
-        "</footer>"
-    )
     body = "\n\n".join(parts)
 
     return finish(page, body, css, js, embed)
@@ -327,8 +313,7 @@ def finish(page: dict, body: str, css: str, js: str, embed: bool) -> tuple[str, 
 </html>
 """
 
-    if embed:
-        html = embed_links(html)
+    html = embed_links(html)
 
     settings = page.get("img", {})
     inlined = 0
