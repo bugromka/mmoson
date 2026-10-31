@@ -1,0 +1,64 @@
+================================================================================
+        ALL RIGHTS RESERVED / ВСЕ ПРАВА ЗАЩИЩЕНЫ — PROPRIETARY NOTICE
+================================================================================
+
+Project / Проект: MMOSON — technical description of a personal research project
+Author / Автор: Roman Sergeevich Bugaenko / Бугаенко Роман Сергеевич
+Year / Год: 2026
+
+PUBLIC READING / ПУБЛИЧНОЕ ОЗНАКОМЛЕНИЕ
+
+Public reading and review of the project are permitted.
+Публичное чтение и ознакомление с проектом разрешены.
+
+No permission is granted for any other use.
+Никакого иного разрешения на использование не предоставляется.
+
+RESTRICTION / ОГРАНИЧЕНИЕ ИСПОЛЬЗОВАНИЯ
+
+Without the author's prior written permission, no person or organization may
+copy, reproduce, distribute, publish, publicly display, translate, adapt,
+modify, create derivative works from, commercialize, or otherwise use the
+project or any part of it, including its text, calculations, tables, figures,
+diagrams, source code, design solutions and documentation.
+
+Без предварительного письменного разрешения автора запрещаются копирование,
+воспроизведение, распространение, публикация, публичный показ, перевод,
+переработка, адаптация, создание производных материалов, коммерческое и
+некоммерческое использование проекта или любой его части, включая текст,
+расчёты, таблицы, рисунки, схемы, исходный код, проектные решения и
+документацию.
+
+STANDARD COPYRIGHT FORMULA / СТАНДАРТНАЯ ФОРМУЛА ОХРАНЫ ПРАВ
+
+Copyright © 2026 Roman Sergeevich Bugaenko. All rights reserved.
+© 2026 Бугаенко Роман Сергеевич. Все права защищены.
+
+This is a commonly used all-rights-reserved copyright notice, not an
+open-source or Creative Commons license. Public access is provided for
+reading and review only. Any permission to reuse the work must be granted in
+writing by the author and may define the permitted purpose, scope, duration,
+territory and attribution requirements.
+
+Это распространённая формула резервирования авторских прав, а не лицензия
+open source или Creative Commons. Публичный доступ предоставляется только
+dля чтения и ознакомления. Любое разрешение на повторное использование
+выдаётся автором в письменной форме и может устанавливать цель, объём,
+срок, территорию и требования к указанию авторства.
+
+MANDATORY LAW / ИМПЕРАТИВНЫЕ НОРМЫ
+
+Nothing in this notice limits rights that cannot be restricted under
+mandatory applicable law.
+
+Настоящее уведомление не ограничивает права, которые не могут быть
+ограничены императивными нормами применимого законодательства.
+
+CONTACT / КОНТАКТ
+
+Requests for permission should be addressed to the author through the
+official repository or another contact channel published by the author.
+
+Запросы на разрешение следует направлять автору через официальный
+репозиторий или иной опубликованный автором канал связи.
+================================================================================
