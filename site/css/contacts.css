@@ -26,10 +26,6 @@
 body {
   font-family: 'Raleway', 'Segoe UI', system-ui, sans-serif;
   background: var(--background);
-  background-image:
-    radial-gradient(900px 600px at 12% 0%, #9d8ce4 0%, transparent 55%),
-    radial-gradient(800px 600px at 90% 20%, #7a68ca 0%, transparent 50%);
-  background-attachment: fixed;
   color: white;
   line-height: 1.6;
   overflow-x: hidden;
@@ -115,6 +111,20 @@ h1, h2, h3, h4, h5 {
   flex-shrink: 0;
   display: block;
 }
+
+/* плашка ограничения Роскомнадзора */
+.rsn-note {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid rgba(255, 107, 107, 0.35);
+  color: #fff;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
 .contact-icon {
   width: 24px;
   height: 24px;
