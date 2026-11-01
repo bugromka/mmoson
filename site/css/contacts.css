@@ -61,31 +61,19 @@ h1, h2, h3, h4, h5 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 16px;
   margin-bottom: 30px;
   text-align: center;
 }
 
-.logo-mark {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  border: 4px solid rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: var(--shadow);
-  display: grid;
-  place-items: center;
-  padding: 14px;
-}
-.logo-mark svg { width: 100%; height: 100%; }
-
-.title-text h1 {
+.author-name {
   font-size: 2.8rem;
-  margin-bottom: 10px;
+  margin: 0;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   letter-spacing: -0.5px;
+  font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+  font-weight: 700;
 }
-.title-text p { font-size: 1.3rem; opacity: 0.95; font-weight: 500; }
 
 .contacts-section { margin-top: 30px; }
 .contacts-title {
@@ -317,9 +305,7 @@ h1, h2, h3, h4, h5 {
 @media (max-width: 768px) {
   body { padding: 15px; }
   .header { padding: 30px 20px; }
-  .title-text h1 { font-size: 2rem; }
-  .title-text p { font-size: 1rem; }
-  .logo-mark { width: 100px; height: 100px; }
+  .author-name { font-size: 2rem; }
   .contact-links { flex-direction: column; align-items: center; }
   .contact-link { width: 90%; justify-content: center; }
   .content-section { padding: 25px; }
