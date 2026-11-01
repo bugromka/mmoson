@@ -32,12 +32,7 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Raleway', 'Segoe UI', system-ui, sans-serif;
-  background:
-    radial-gradient(1200px 800px at 15% 0%, #9d8ce4 0%, transparent 55%),
-    radial-gradient(900px 700px at 90% 15%, #7a68ca 0%, transparent 50%),
-    radial-gradient(1000px 900px at 50% 100%, #6d5cc0 0%, transparent 55%),
-    var(--primary);
-  background-attachment: fixed;
+  background: var(--primary);
   color: #fff;
   line-height: 1.6;
   overflow-x: hidden;
