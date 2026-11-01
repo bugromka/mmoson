@@ -199,6 +199,17 @@ PAGES = [
         "page_head": True,
         "img": {"max_width": 1200, "quality": 82},
     },
+    {
+        "slug": "title",
+        "nav": "Титульная",
+        "title": "ММОСО'Н — Титульная страница",
+        "desc": "Титульная страница проекта ММОСО'Н: двуязычный обзор (русский / английский) со ссылками на все разделы сайта.",
+        "kicker": "",
+        "h1": "",
+        "sub": "",
+        "page_head": False,
+        "img": {"max_width": 1200, "quality": 82},
+    },
 ]
 
 MARK = """<svg class="nav-mark" viewBox="0 0 48 48" aria-hidden="true">
