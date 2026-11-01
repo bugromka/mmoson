@@ -6,23 +6,14 @@
 <title>Издание — ММОСО’Н</title>
 <meta name="description" content="43 документа, 34 раздела, две языковые редакции, приложения с обоснованием расчётов и матрицей проверок.">
 <meta name="theme-color" content="#8f7ed6">
-<!-- ============================================================
-     ММОСО’Н · страница «Издание»
-     Один самодостаточный файл: разметка, стили, скрипт и иллюстрации
-     этой страницы внутри. Внешних файлов нет, кроме шрифтов Google Fonts.
-
-     Версия для хостинга и локального просмотра: переходы между
-     страницами относительные, файлы лежат рядом.
-
-     Собрано site/build_pages.py из content/, css/styles.css и js/app.js.
-     ============================================================ -->
+<!-- ММОСО’Н · страница «Издание». Один самодостаточный файл: разметка, стили, скрипт и иллюстрации внутри.  Версия для хостинга: переходы между страницами относительные. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%238f7ed6'/%3E%3Ccircle cx='32' cy='24' r='9' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Ccircle cx='32' cy='44' r='9' fill='none' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E">
 <style>
 /* ============================================================
-   ММОСО’Н — визуальный язык по референсу МХ «КРЯК»
+   ММОСО’Н — визуальный язык (КРЯК-дизайн)
    Лавандовый фон, белые «стеклянные» секции-карточки,
    Montserrat + Raleway, градиентные подчёркивания.
    ============================================================ */
@@ -1238,12 +1229,8 @@ code {
   }
 
   /* ---------- 7. Ссылки между страницами ----------
-     В версии для хостинга переходы относительные: файлы лежат рядом.
-     В файлах каталога embed/ ссылки заданы как href="#" с атрибутом data-page,
-     а навигацию даёт меню Google Sites. Если нужно, чтобы карточки внутри
-     страницы тоже вели на страницы Sites, перед </head> кладут карту адресов:
-       <script>window.MMOSON_LINKS = { engineering: "https://sites.google.com/…" };</script>
-     Скрипт подменит href и откроет переход в родительском окне. */
+     В файлах каталога embed/ ссылки заданы как href="#" с атрибутом data-page.
+     Навигацию даёт меню Google Sites. */
   const pageMap = window.MMOSON_LINKS || {};
   document.querySelectorAll('a[data-page]').forEach((a) => {
     const key = a.dataset.page;

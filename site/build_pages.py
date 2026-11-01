@@ -248,34 +248,13 @@ def build(page: dict, css: str, js: str, embed: bool) -> tuple[str, int]:
 
 
 def finish(page: dict, body: str, css: str, js: str, embed: bool) -> tuple[str, int]:
+    mode_note = ""
     if not page.get("shell", True):
-        mode_note = (
-            "     Страница-визитка: своя таблица стилей, без общей шапки и подвала.\n"
-            "     Навигация — меню сайта.\n"
-        )
+        mode_note = " Страница-визитка: своя таблица стилей, без общей шапки и подвала. Навигация — меню сайта."
     elif embed:
-        mode_note = (
-            "     Версия для встраивания: Вставка → Встроить → Код вставки.\n"
-            "     Шапки-меню и переходов «назад/дальше» здесь нет — навигацию даёт\n"
-            "     меню самого Google Sites. Карточки внутри страницы ведут на href=\"#\".\n"
-            "     Чтобы они открывали нужные страницы Sites, вставьте перед </style>\n"
-            "     или сразу после <body> карту адресов:\n\n"
-            "       <script>\n"
-            "         window.MMOSON_LINKS = {\n"
-            '           index: "https://sites.google.com/view/…",\n'
-            '           engineering: "https://sites.google.com/view/…",\n'
-            '           verification: "https://sites.google.com/view/…",\n'
-            '           gallery: "https://sites.google.com/view/…",\n'
-            '           edition: "https://sites.google.com/view/…",\n'
-            '           authors: "https://sites.google.com/view/…"\n'
-            "         };\n"
-            "       </script>\n"
-        )
+        mode_note = " Версия для встраивания в Google Sites: навигация — меню самого Sites. Внутренние ссылки ведут на href=\"#\"."
     else:
-        mode_note = (
-            "     Версия для хостинга и локального просмотра: переходы между\n"
-            "     страницами относительные, файлы лежат рядом.\n"
-        )
+        mode_note = " Версия для хостинга: переходы между страницами относительные."
 
     html = f"""<!DOCTYPE html>
 <html lang="ru">
@@ -285,14 +264,7 @@ def finish(page: dict, body: str, css: str, js: str, embed: bool) -> tuple[str, 
 <title>{page["title"]}</title>
 <meta name="description" content="{page["desc"]}">
 <meta name="theme-color" content="#8f7ed6">
-<!-- ============================================================
-     ММОСО’Н · страница «{page["nav"]}»
-     Один самодостаточный файл: разметка, стили, скрипт и иллюстрации
-     этой страницы внутри. Внешних файлов нет, кроме шрифтов Google Fonts.
-
-{mode_note}
-     Собрано site/build_pages.py из content/, css/styles.css и js/app.js.
-     ============================================================ -->
+<!-- ММОСО’Н · страница «{page["nav"]}». Один самодостаточный файл: разметка, стили, скрипт и иллюстрации внутри. {mode_note} -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
