@@ -6,7 +6,16 @@
 <title>Контакты — ММОСО’Н</title>
 <meta name="description" content="Связаться с автором проекта ММОСО’Н: почта, Макс, ВКонтакте, Добро.рф. Реквизиты проекта, статус, адрес и порядок цитирования.">
 <meta name="theme-color" content="#8f7ed6">
+<!-- ============================================================
+     ММОСО’Н · страница «Контакты»
+     Один самодостаточный файл: разметка, стили, скрипт и иллюстрации
+     этой страницы внутри. Внешних файлов нет, кроме шрифтов Google Fonts.
 
+     Страница-визитка: своя таблица стилей, без общей шапки и подвала.
+     Навигация — меню сайта.
+
+     Собрано site/build_pages.py из content/, css/styles.css и js/app.js.
+     ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
@@ -583,6 +592,13 @@ h1, h2, h3, h4, h5 {
 
   /* ---------- 1. Появление элементов ---------- */
   const fadeEls = document.querySelectorAll('.fade-in');
+
+  /* Скрываем элементы через JS — если скрипт не запустился (например, в
+     Google Sites embed), контент остаётся видимым благодаря CSS (opacity: 1). */
+  fadeEls.forEach((el) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(26px)';
+  });
 
   function showAll() {
     fadeEls.forEach((el) => el.classList.add('visible'));

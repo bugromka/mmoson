@@ -8,6 +8,13 @@
   /* ---------- 1. Появление элементов ---------- */
   const fadeEls = document.querySelectorAll('.fade-in');
 
+  /* Скрываем элементы через JS — если скрипт не запустился (например, в
+     Google Sites embed), контент остаётся видимым благодаря CSS (opacity: 1). */
+  fadeEls.forEach((el) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(26px)';
+  });
+
   function showAll() {
     fadeEls.forEach((el) => el.classList.add('visible'));
   }

@@ -6,7 +6,16 @@
 <title>Издание — ММОСО’Н</title>
 <meta name="description" content="43 документа, 34 раздела, две языковые редакции, приложения с обоснованием расчётов и матрицей проверок.">
 <meta name="theme-color" content="#8f7ed6">
+<!-- ============================================================
+     ММОСО’Н · страница «Издание»
+     Один самодостаточный файл: разметка, стили, скрипт и иллюстрации
+     этой страницы внутри. Внешних файлов нет, кроме шрифтов Google Fonts.
 
+     Версия для хостинга и локального просмотра: переходы между
+     страницами относительные, файлы лежат рядом.
+
+     Собрано site/build_pages.py из content/, css/styles.css и js/app.js.
+     ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
@@ -824,7 +833,7 @@ code {
 .footer-sub, .footer-copy { font-size: 0.82rem; color: rgba(255, 255, 255, 0.78); }
 
 /* ================= ANIMATIONS ================= */
-.fade-in { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-in { opacity: 1; transform: none; transition: opacity 0.7s ease, transform 0.7s ease; }
 .fade-in.visible { opacity: 1; transform: none; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -1050,6 +1059,13 @@ code {
 
   /* ---------- 1. Появление элементов ---------- */
   const fadeEls = document.querySelectorAll('.fade-in');
+
+  /* Скрываем элементы через JS — если скрипт не запустился (например, в
+     Google Sites embed), контент остаётся видимым благодаря CSS (opacity: 1). */
+  fadeEls.forEach((el) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(26px)';
+  });
 
   function showAll() {
     fadeEls.forEach((el) => el.classList.add('visible'));
