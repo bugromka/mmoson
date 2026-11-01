@@ -273,21 +273,30 @@ def pager_html(slug: str, embed: bool) -> str:
 
 def encode_image(path: Path, max_width: int = 1200, quality: int = 80) -> tuple[str, int]:
     raw = path.read_bytes()
+    # SVG не конвертируем через PIL — возвращаем как есть (base64)
+    if path.suffix.lower() == ".svg":
+        return f"data:image/svg+xml;base64,{base64.b64encode(raw).decode('ascii')}", len(raw)
     try:
         from PIL import Image  # noqa: PLC0415
     except ImportError:
         return f"data:image/png;base64,{base64.b64encode(raw).decode('ascii')}", len(raw)
 
-    img = Image.open(io.BytesIO(raw)).convert("RGB")
+    img = Image.open(io.BytesIO(raw))
+    has_alpha = img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info)
+    img = img.convert("RGBA" if has_alpha else "RGB")
     width, height = img.size
     if width > max_width:
         img = img.resize((max_width, round(height * max_width / width)), Image.LANCZOS)
     buf = io.BytesIO()
-    img.save(buf, "WEBP", quality=quality, method=6)
+    if has_alpha:
+        img.save(buf, "PNG", optimize=True)
+    else:
+        img.save(buf, "WEBP", quality=quality, method=6)
     packed = buf.getvalue()
     if len(packed) >= len(raw):
         return f"data:image/png;base64,{base64.b64encode(raw).decode('ascii')}", len(raw)
-    return f"data:image/webp;base64,{base64.b64encode(packed).decode('ascii')}", len(packed)
+    mime = "image/png" if has_alpha else "image/webp"
+    return f"data:{mime};base64,{base64.b64encode(packed).decode('ascii')}", len(packed)
 
 
 def embed_links(html: str) -> str:
