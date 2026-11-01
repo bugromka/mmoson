@@ -1074,6 +1074,70 @@ code {
   .lang-column h2 { font-size: 1.4rem; }
 }
 
+/* Титульная страница — подложка (фоновая панель) */
+.title-page {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%),
+    var(--primary);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-strong);
+  padding: 74px 0 66px;
+  margin-bottom: 40px;
+}
+
+.title-page::before {
+  content: '';
+  position: absolute;
+  inset: -20% -10% -30% auto;
+  width: 560px; height: 560px;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.16), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.title-page .container {
+  position: relative;
+  z-index: 1;
+}
+
+.title-page h2 {
+  color: #fff;
+}
+
+.title-page p {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.title-page .check-list li {
+  background: rgba(255, 255, 255, 0.10);
+  border-left: 4px solid var(--accent);
+  color: #fff;
+}
+
+.title-page .section-list li {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: #fff;
+}
+
+.title-page .section-list li a {
+  color: #fff;
+}
+
+.title-page .section-list li a:hover {
+  color: var(--accent);
+}
+
+.title-page .btn-primary,
+.title-page .btn-ghost {
+  color: #fff;
+}
+
 </style>
 <noscript><style>.fade-in{opacity:1!important;transform:none!important}</style></noscript>
 </head>
@@ -1081,14 +1145,7 @@ code {
 
 <main class="page" id="top">
 
-<header class="header">
-  <div class="main-title">
-    <h1 class="author-name">ММОСО'Н</h1>
-    <p class="eyebrow">Модуль моделирования орбитальной станции О'Нилла · O'Neill Station Modeling Module</p>
-  </div>
-</header>
-
-<section class="content-section fade-in">
+<section class="content-section fade-in title-page">
   <div class="container">
     <div class="bilingual-grid">
       <div class="lang-column lang-ru">
