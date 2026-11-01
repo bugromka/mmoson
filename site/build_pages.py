@@ -53,6 +53,17 @@ PAGES = [
         "img": {"max_width": 1200, "quality": 82},
     },
     {
+        "slug": "index-en",
+        "nav": "EN",
+        "title": "MMOSON — O'Neill Station Modeling Module",
+        "desc": "Calculable model of a habitable O'Neill orbital station at L1 point: two counter-rotating cylinders, 1,000,000 inhabitants, full engineering and biosphere balance.",
+        "kicker": "",
+        "h1": "",
+        "sub": "",
+        "page_head": False,
+        "img": {"max_width": 1200, "quality": 82},
+    },
+    {
         "slug": "engineering",
         "nav": "Инженерия",
         "title": "Инженерные решения — ММОСО’Н",
