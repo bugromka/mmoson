@@ -43,6 +43,8 @@ EMBED = ROOT / "embed"
 PAGES = [
     {
         "slug": "index",
+        "lang": "ru",
+        "pair": "index-en",
         "nav": "Главная",
         "title": "ММОСО’Н — Модуль моделирования орбитальной станции О’Нилла",
         "desc": "Расчётная модель обитаемой орбитальной станции О’Нилла в точке L1: два встречновращающихся цилиндра, 1 000 000 жителей, полный инженерный и биосферный баланс.",
@@ -54,6 +56,8 @@ PAGES = [
     },
     {
         "slug": "index-en",
+        "lang": "en",
+        "pair": "index",
         "nav": "EN",
         "title": "MMOSON — O'Neill Station Modeling Module",
         "desc": "Calculable model of a habitable O'Neill orbital station at L1 point: two counter-rotating cylinders, 1,000,000 inhabitants, full engineering and biosphere balance.",
@@ -65,6 +69,8 @@ PAGES = [
     },
     {
         "slug": "engineering",
+        "lang": "ru",
+        "pair": "engineering-en",
         "nav": "Инженерия",
         "title": "Инженерные решения — ММОСО’Н",
         "desc": "Оболочка и её прочность, теплосброс двумя контурами, энергетика, транспорт «ось — обод», причал и шлюзы, биосфера станции.",
@@ -75,7 +81,22 @@ PAGES = [
         "img": {"max_width": 1200, "quality": 82},
     },
     {
+        "slug": "engineering-en",
+        "lang": "en",
+        "pair": "engineering",
+        "nav": "Engineering",
+        "title": "Engineering — MMOSON",
+        "desc": "Shell and its strength, dual-loop heat rejection, power, axis-to-rim transport, docking and locks, station biosphere.",
+        "kicker": "Construction and systems",
+        "h1": "Engineering",
+        "sub": "Six station circuits: each closed on calculation, not illustration.",
+        "page_head": True,
+        "img": {"max_width": 1200, "quality": 82},
+    },
+    {
         "slug": "verification",
+        "lang": "ru",
+        "pair": "verification-en",
         "nav": "Верификация",
         "title": "Расчётная верификация — ММОСО’Н",
         "desc": "243/243 независимых пересчёта, сверка корпуса публикации, ноль дефектов вёрстки, запас прочности 1,53 и открытые задачи проекта.",
@@ -86,7 +107,22 @@ PAGES = [
         "img": {"max_width": 1200, "quality": 82},
     },
     {
+        "slug": "verification-en",
+        "lang": "en",
+        "pair": "verification",
+        "nav": "Verification",
+        "title": "Calculation Verification — MMOSON",
+        "desc": "243/243 independent recalculations, publication cross-check, zero layout defects, safety margin 1.53 and open project tasks.",
+        "kicker": "Checks and open tasks",
+        "h1": "Calculation Verification",
+        "sub": "Each check is reproducible by one command: code is next to the document.",
+        "page_head": True,
+        "img": {"max_width": 1200, "quality": 82},
+    },
+    {
         "slug": "gallery",
+        "lang": "ru",
+        "pair": "gallery-en",
         "nav": "Иллюстрации",
         "title": "Иллюстрации — ММОСО’Н",
         "desc": "Восемь листов из публикации: компоновка станции, сечение и обшивка, трасса «ось — обод», энергия, климат, ресурсы, продовольствие, землепользование.",
@@ -97,7 +133,22 @@ PAGES = [
         "img": {"max_width": 1080, "quality": 78},
     },
     {
+        "slug": "gallery-en",
+        "lang": "en",
+        "pair": "gallery",
+        "nav": "Gallery",
+        "title": "Illustrations — MMOSON",
+        "desc": "Eight publication sheets: station layout, section and cladding, axis-to-rim trajectory, energy, climate, resources, food, land use.",
+        "kicker": "Publication sheets",
+        "h1": "Illustrations",
+        "sub": "Eight technical sheets of the project. Click a sheet to open it large.",
+        "page_head": True,
+        "img": {"max_width": 1080, "quality": 78},
+    },
+    {
         "slug": "edition",
+        "lang": "ru",
+        "pair": "edition-en",
         "nav": "Издание",
         "title": "Издание — ММОСО’Н",
         "desc": "43 документа, 34 раздела, две языковые редакции, приложения с обоснованием расчётов и матрицей проверок.",
@@ -108,7 +159,22 @@ PAGES = [
         "img": {"max_width": 1200, "quality": 82},
     },
     {
+        "slug": "edition-en",
+        "lang": "en",
+        "pair": "edition",
+        "nav": "Edition",
+        "title": "Edition — MMOSON",
+        "desc": "43 documents, 34 sections, two language editions, appendices with calculation rationale and check matrix.",
+        "kicker": "Publication",
+        "h1": "Edition",
+        "sub": "43 documents, 34 sections, Russian and English editions.",
+        "page_head": True,
+        "img": {"max_width": 1200, "quality": 82},
+    },
+    {
         "slug": "contacts",
+        "lang": "ru",
+        "pair": "contacts-en",
         "nav": "Контакты",
         "title": "Контакты — ММОСО’Н",
         "desc": "Связаться с автором проекта ММОСО’Н: почта, Макс, ВКонтакте, Добро.рф. Реквизиты проекта, статус, адрес и порядок цитирования.",
@@ -121,13 +187,43 @@ PAGES = [
         "img": {"max_width": 1200, "quality": 82},
     },
     {
+        "slug": "contacts-en",
+        "lang": "en",
+        "pair": "contacts",
+        "nav": "Contacts",
+        "title": "Contacts — MMOSON",
+        "desc": "Contact the author of the MMOSON project: email, Max, VK, Dobro.ru. Project details, status, address and citation procedure.",
+        "kicker": "",
+        "h1": "",
+        "sub": "",
+        "page_head": False,
+        "shell": False,
+        "css": "css/contacts.css",
+        "img": {"max_width": 1200, "quality": 82},
+    },
+    {
         "slug": "authors",
+        "lang": "ru",
+        "pair": "authors-en",
         "nav": "Авторы",
         "title": "Авторы и лицензия — ММОСО’Н",
         "desc": "Автор проекта, расчётная линия НИК, условия использования материалов и порядок ссылки на публикацию.",
         "kicker": "Люди и права",
         "h1": "Авторы и лицензия",
         "sub": "Человек и расчётная линия. Чтение открыто, использование — по согласию.",
+        "page_head": True,
+        "img": {"max_width": 1200, "quality": 82},
+    },
+    {
+        "slug": "authors-en",
+        "lang": "en",
+        "pair": "authors",
+        "nav": "Authors",
+        "title": "Authors and License — MMOSON",
+        "desc": "Project author, calculation line NIK, terms of material use and citation procedure.",
+        "kicker": "People and rights",
+        "h1": "Authors and License",
+        "sub": "Person and calculation line. Reading open, use — by agreement.",
         "page_head": True,
         "img": {"max_width": 1200, "quality": 82},
     },
@@ -177,6 +273,20 @@ def page_head_html(page: dict) -> str:
         f'    <p class="page-sub">{page["sub"]}</p>\n'
         "  </div>\n"
         "</section>"
+    )
+
+
+def lang_switch_html(page: dict) -> str:
+    """Кнопка переключения языка на параллельную страницу."""
+    pair = page.get("pair")
+    lang = page.get("lang", "ru")
+    if not pair:
+        return ""
+    label = "EN" if lang == "ru" else "RU"
+    return (
+        '<div class="lang-switch">\n'
+        f'  <a href="{pair}.html" class="lang-btn">{label}</a>\n'
+        "</div>\n"
     )
 
 
@@ -241,7 +351,8 @@ def build(page: dict, css: str, js: str, embed: bool) -> tuple[str, int]:
     if not shell:
         # Страница-визитка со своим оформлением: без общей шапки, переходов и
         # подвала — только содержимое в контейнере, как в образце.
-        body = '<div class="container">\n' + fragment + "\n</div>"
+        ls = lang_switch_html(page)
+        body = '<div class="container">\n' + ls + fragment + "\n</div>"
         return finish(page, body, css, js, embed)
 
     parts = []
@@ -251,6 +362,9 @@ def build(page: dict, css: str, js: str, embed: bool) -> tuple[str, int]:
     head_block = page_head_html(page)
     if head_block:
         parts.append(head_block)
+    ls = lang_switch_html(page)
+    if ls:
+        parts.append(ls)
     parts.append(fragment)
     parts.append("</main>")
     body = "\n\n".join(parts)
