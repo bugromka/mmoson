@@ -477,7 +477,7 @@ code {
   box-shadow: var(--shadow);
   background: #fff;
 }
-.spec-table { width: 100%; border-collapse: collapse; min-width: 560px; }
+.spec-table { width: 100%; border-collapse: collapse; min-width: 560px; table-layout: fixed; }
 .spec-table caption {
   text-align: left;
   font-family: 'Montserrat', sans-serif;
@@ -487,6 +487,10 @@ code {
   font-size: 1rem;
 }
 .spec-table th, .spec-table td { padding: 12px 22px; text-align: left; font-size: 0.9rem; }
+.spec-table th:nth-child(1), .spec-table td:nth-child(1) { width: 26%; }
+.spec-table th:nth-child(2), .spec-table td:nth-child(2) { width: 38%; }
+.spec-table th:nth-child(3), .spec-table td:nth-child(3) { width: 12%; }
+.spec-table th:nth-child(4), .spec-table td:nth-child(4) { width: 24%; }
 .spec-table thead th {
   background: linear-gradient(to right, rgba(143, 126, 214, 0.16), rgba(78, 205, 196, 0.12));
   color: var(--primary-deep);
