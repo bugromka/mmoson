@@ -6,7 +6,30 @@
 <title>Иллюстрации — ММОСО’Н</title>
 <meta name="description" content="Восемь листов из публикации: компоновка станции, сечение и обшивка, трасса «ось — обод», энергия, климат, ресурсы, продовольствие, землепользование.">
 <meta name="theme-color" content="#8f7ed6">
+<!-- ============================================================
+     ММОСО’Н · страница «Иллюстрации»
+     Один самодостаточный файл: разметка, стили, скрипт и иллюстрации
+     этой страницы внутри. Внешних файлов нет, кроме шрифтов Google Fonts.
 
+     Версия для встраивания: Вставка → Встроить → Код вставки.
+     Шапки-меню и переходов «назад/дальше» здесь нет — навигацию даёт
+     меню самого Google Sites. Карточки внутри страницы ведут на href="#".
+     Чтобы они открывали нужные страницы Sites, вставьте перед </style>
+     или сразу после <body> карту адресов:
+
+       <script>
+         window.MMOSON_LINKS = {
+           index: "https://sites.google.com/view/…",
+           engineering: "https://sites.google.com/view/…",
+           verification: "https://sites.google.com/view/…",
+           gallery: "https://sites.google.com/view/…",
+           edition: "https://sites.google.com/view/…",
+           authors: "https://sites.google.com/view/…"
+         };
+       </script>
+
+     Собрано site/build_pages.py из content/, css/styles.css и js/app.js.
+     ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
@@ -824,7 +847,7 @@ code {
 .footer-sub, .footer-copy { font-size: 0.82rem; color: rgba(255, 255, 255, 0.78); }
 
 /* ================= ANIMATIONS ================= */
-.fade-in { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-in { opacity: 1; transform: none; transition: opacity 0.7s ease, transform 0.7s ease; }
 .fade-in.visible { opacity: 1; transform: none; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -1065,6 +1088,13 @@ code {
 
   /* ---------- 1. Появление элементов ---------- */
   const fadeEls = document.querySelectorAll('.fade-in');
+
+  /* Скрываем элементы через JS — если скрипт не запустился (например, в
+     Google Sites embed), контент остаётся видимым благодаря CSS (opacity: 1). */
+  fadeEls.forEach((el) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(26px)';
+  });
 
   function showAll() {
     fadeEls.forEach((el) => el.classList.add('visible'));
