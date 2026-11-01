@@ -299,7 +299,7 @@ def finish(page: dict, body: str, css: str, js: str, embed: bool) -> tuple[str, 
         html = html.replace(rel, uri)
 
     # Иконки и фото из site/icons/ — тоже встраиваем как data-URI
-    for rel in sorted(set(re.findall(r"icons/[A-Za-z0-9_\-.]+\.(?:png|jpg|jpeg)", html))):
+    for rel in sorted(set(re.findall(r"icons/[A-Za-z0-9_\-.]+\.(?:png|jpg|jpeg|svg)", html))):
         uri, size = encode_image(
             ROOT / rel,
             max_width=settings.get("max_width", 1200),
