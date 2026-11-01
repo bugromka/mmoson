@@ -186,12 +186,8 @@
   }
 
   /* ---------- 7. Ссылки между страницами ----------
-     В версии для хостинга переходы относительные: файлы лежат рядом.
-     В файлах каталога embed/ ссылки заданы как href="#" с атрибутом data-page,
-     а навигацию даёт меню Google Sites. Если нужно, чтобы карточки внутри
-     страницы тоже вели на страницы Sites, перед </head> кладут карту адресов:
-       <script>window.MMOSON_LINKS = { engineering: "https://sites.google.com/…" };</script>
-     Скрипт подменит href и откроет переход в родительском окне. */
+     В файлах каталога embed/ ссылки заданы как href="#" с атрибутом data-page.
+     Навигацию даёт меню Google Sites. */
   const pageMap = window.MMOSON_LINKS || {};
   document.querySelectorAll('a[data-page]').forEach((a) => {
     const key = a.dataset.page;
