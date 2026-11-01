@@ -121,6 +121,12 @@ h1, h2, h3, h4, h5 {
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
 }
 
+.contact-icon-img {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: block;
+}
 .contact-icon {
   width: 24px;
   height: 24px;
@@ -128,6 +134,18 @@ h1, h2, h3, h4, h5 {
   color: #fff;
 }
 .contact-icon svg { width: 100%; height: 100%; display: block; }
+
+/* фото автора в шапке */
+.author-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: var(--shadow);
+  object-fit: cover;
+  margin-top: 10px;
+}
 
 /* ---------- секции ---------- */
 .content-section {
