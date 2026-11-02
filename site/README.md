@@ -1,161 +1,107 @@
-# Сайт ММОСО’Н
+# Сайт ММОСО’Н / MMOSON Website
 
-Визуальный язык — по референсу МХ «КРЯК»: лавандовый фон, белые «стеклянные»
-секции-карточки, Montserrat + Raleway, градиентные подчёркивания, акценты
-фиолетовый / коралловый / бирюзовый.
+## Русский / Russian
 
-## Главное
+Визуальный язык — по референсу МХ «КРЯК»: лавандовый фон, белые «стеклянные» секции-карточки, Montserrat + Raleway, градиентные подчёркивания, акценты фиолетовый / коралловый / бирюзовый.
 
-Каждая страница — **один самодостаточный HTML-файл**: разметка, весь CSS,
-весь JS и её собственные иллюстрации (`data:image/webp`) внутри. Отдельных
-`css/`, `js/` и папки с картинками во время работы страницы не требуется.
+### Главное
 
-Собираются два набора из одних и тех же исходников:
+Каждая страница — **один самодостаточный HTML-файл**: разметка, весь CSS, весь JS и её собственные иллюстрации (`data:image/webp`) внутри. Отдельных `css/`, `js/` и папки с картинками во время работы страницы не требуется.
 
-| Каталог | Для чего | Отличия |
+Страницы распределены по языковым папкам:
+
+| Папка | Язык | Страницы |
 |---|---|---|
-| `embed/` | **вставка в Google Sites** | нет шапки-меню и переходов «назад/дальше»; навигацию даёт меню Sites |
-| `site/` (корень) | локальный просмотр и обычный хостинг | шапка-меню и переходы между страницами работают |
+| `site/ru/` | Русский | Главная, Инженерия, Верификация, Иллюстрации, Издание, Контакты, Авторы и лицензия, Титульная |
+| `site/en/` | Английский | Main, Engineering, Verification, Gallery, Edition, Contacts, Authors and License |
 
-| Страница | `embed/` | корень |
-|---|---|---|
-| Главная: первый экран, о проекте, ключевые параметры | `embed/index.html` 50 КБ | `index.html` 51 КБ |
-| Инженерия: шесть контуров станции | `embed/engineering.html` 44 КБ | `engineering.html` 46 КБ |
-| Верификация: проверки и открытые задачи | `embed/verification.html` 42 КБ | `verification.html` 44 КБ |
-| Иллюстрации: 8 листов с лайтбоксом | `embed/gallery.html` 450 КБ | `gallery.html` 452 КБ |
-| Издание: 43 документа, 34 раздела | `embed/edition.html` 41 КБ | `edition.html` 42 КБ |
-| Контакты: карточка автора, связи, реквизиты, карта | `embed/contacts.html` 32 КБ | `contacts.html` 32 КБ |
-| Авторы и лицензия | `embed/authors.html` 41 КБ | `authors.html` 42 КБ |
-
-## Вставка в Google Sites
-
-1. Sites → **Вставка → Встроить → Код вставки**.
-2. Вставить целиком содержимое файла из `embed/` — по одному файлу на страницу.
-3. Растянуть блок по высоте: Sites не меняет высоту фрейма автоматически,
-   содержимое скроллится внутри блока.
-4. Навигацию сделать **меню самого Sites** — файлы из `embed/` намеренно без
-   верхнего меню, чтобы не дублировать его и не давать мёртвых ссылок.
-   В Google Sites главную страницу сайта (корень) нельзя поместить внутрь
-   раздела меню, поэтому структура выглядит так:
-
-   ```
-   ├── Титульная            ← корень сайта (отдельная страница)
-   ├── ru Русская версия    ← раздел меню
-   │   ├── Главная
-   │   ├── Инженерия
-   │   ├── Верификация
-   │   ├── Иллюстрации
-   │   ├── Издание
-   │   ├── Контакты
-   │   └── Авторы и лицензия
-   └── us English version   ← раздел меню
-       ├── Main
-       ├── Engineering
-       ├── Verification
-       ├── Gallery
-       ├── Edition
-       ├── Contacts
-       └── Authors and License
-   ```
-
-   Каждую страницу создайте через **Вставка → Встроить → Код вставки**, вставив
-   содержимое соответствующего файла из `embed/`.
-
-В `embed/` нет ни одной ссылки на другие `.html`-файлы: проверить можно так —
+В `ru/` и `en/` нет ссылок на другие `.html`-файлы (все страницы самодостаточные):
 
 ```bash
-grep -o 'href="[^"]*\.html"' site/embed/*.html    # вывод пустой
+grep -o 'href="[^"]*\.html"' site/ru/*.html site/en/*.html    # вывод пустой
 ```
 
-Карточки внутри страниц, которые должны вести на другие страницы Sites
-(например кнопка «Смотреть иллюстрации» на главной), заданы как `href="#"`
-с атрибутом `data-page`. Чтобы они заработали, вставьте перед `</head>` карту
-адресов со своими ссылками:
-
-```html
-<script>
-  window.MMOSON_LINKS = {
-    index: "https://sites.google.com/view/…",
-    engineering: "https://sites.google.com/view/…",
-    verification: "https://sites.google.com/view/…",
-    gallery: "https://sites.google.com/view/…",
-    edition: "https://sites.google.com/view/…",
-    authors: "https://sites.google.com/view/…"
-  };
-</script>
-```
-
-Скрипт подменит адреса и откроет переход в родительском окне (`target="_top"`),
-то есть по сайту, а не внутри фрейма. Без карты эти элементы просто не кликаются
-— вёрстка от этого не ломается.
-
-Скрыть неиспользуемое внутреннее меню в других файлах не требуется: в `embed/`
-его нет.
-
-## Исходники и пересборка
+### Исходники и пересборка
 
 ```
 site/
-├── embed/*.html                готовые страницы для Google Sites
-├── *.html                      готовые страницы для хостинга
+├── build_pages.py              сборка всех страниц
 ├── content/*.html              разметка страниц без обвязки — правится здесь
-├── css/contacts.css            своя таблица стилей страницы «Контакты»
-├── content/_parts/*.html       исходные фрагменты (историческая разбивка)
+├── content/_parts/*.html       исходные фрагменты
 ├── css/styles.css              общий стиль (вшивается в каждую страницу)
+├── css/contacts.css            своя таблица стилей страницы «Контакты»
 ├── js/app.js                   общее поведение (вшивается в каждую страницу)
 ├── assets/fig/*.png            иллюстрации в исходном разрешении
-└── build_pages.py              сборка обоих наборов
+├── icons/*.png                 иконки и фото (вшиваются как data-URI)
+├── IMAGE-MANIFEST.md           список иллюстраций публикации
+├── README.md                   этот файл
+├── ru/*.html                   готовые русские страницы
+└── en/*.html                   готовые английские страницы
 ```
 
 ```bash
 python3 site/build_pages.py
 ```
 
-Сборка вшивает CSS и JS в каждую страницу, перекодирует нужные ей иллюстрации
-в WebP и печатает размеры. Правки текста — в `content/`, правки оформления — в
-`css/styles.css`, после этого достаточно повторить сборку. Вручную файлы в
-`embed/` не править: при следующей сборке они перезапишутся.
+Сборка вшивает CSS и JS в каждую страницу, перекодирует нужные ей иллюстрации в WebP/PNG и печатает размеры. Правки текста — в `content/`, правки оформления — в `css/styles.css`, после этого достаточно повторить сборку.
 
-## Локальный просмотр
+### Локальный просмотр
 
 ```bash
 cd site
 python3 -m http.server 8000     # http://localhost:8000
+# Затем откройте http://localhost:8000/ru/title.html или http://localhost:8000/en/index.html
 ```
 
-## Страница «Контакты»
+## English / English
 
-Сделана по образцу личной страницы МХ «КРЯК»: крупная градиентная шапка с
-эмблемой, пилюли с контактами, белые секции-карточки с градиентным
-подчёркиванием. Отличия от остальных страниц:
+Visual language — by reference of MX «КРЯК»: lavender background, white «glass» card-sections, Montserrat + Raleway, gradient underlines, accents violet / coral / turquoise.
 
-- собственная таблица стилей `css/contacts.css`, не общая `styles.css`;
-- нет шапки-меню, переходов и подвала — только содержимое в контейнере,
-  как в образце (`shell: False` в `build_pages.py`);
-- иконки контактов нарисованы встроенным SVG: ни одного внешнего изображения,
-  поэтому ничего не отваливается, если файлы в репозитории изображений
-  недоступны;
-- карта — конструктор Яндекс Карт, как в образце (единственный внешний скрипт).
+### Main
 
-## Изображения сайта
+Each page is **one self-contained HTML file**: markup, all CSS, all JS, and its own illustrations (`data:image/webp`) inside. No separate `css/`, `js/`, or image folders are needed at runtime.
 
-Все иллюстрации вшиты в страницы как `data:`URI, поэтому сайт не зависит от
-внешнего хостинга картинок. Список файлов, которые ждут исходные страницы
-КРЯК (репозиторий `Interregional-cartographic-yacluster/Image`), и порядок их
-возврата — в `IMAGE-MANIFEST.md`. Загрузка из папки:
+Pages are distributed into language folders:
+
+| Folder | Language | Pages |
+|---|---|---|
+| `site/ru/` | Russian | Главная, Инженерия, Верификация, Иллюстрации, Издание, Контакты, Авторы и лицензия, Титульная |
+| `site/en/` | English | Main, Engineering, Verification, Gallery, Edition, Contacts, Authors and License |
+
+There are no links to other `.html` files in `ru/` or `en/` (all pages are self-contained):
 
 ```bash
-python3 tools/upload_images.py <папка с картинками> --dry-run
-python3 tools/upload_images.py <папка с картинками>
+grep -o 'href="[^"]*\.html"' site/ru/*.html site/en/*.html    # output empty
 ```
 
-## Данные
+### Sources and rebuild
 
-Числа взяты из `README.md`, канона v7 и расчётных модулей: радиус 5 000 м,
-полная длина 49 км, 0,423 об/мин, 3 100,2 км², 46,70 млрд т, 721,4 ГВт,
-1 603 ГВт тепловых, 1 022 км² радиаторов, σ = 1 308 МПа при запасе 1,53.
+```
+site/
+├── build_pages.py              builds all pages
+├── content/*.html              page markup without wrapper — edit here
+├── content/_parts/*.html       source fragments
+├── css/styles.css              common style (inlined into each page)
+├── css/contacts.css            dedicated style for the «Contacts» page
+├── js/app.js                   common behavior (inlined into each page)
+├── assets/fig/*.png            illustrations in original resolution
+├── icons/*.png                 icons and photos (inlined as data-URI)
+├── IMAGE-MANIFEST.md           list of publication illustrations
+├── README.md                   this file
+├── ru/*.html                   ready Russian pages
+└── en/*.html                   ready English pages
+```
 
-Сайт показывает расчётную модель и открытые задачи; утверждений о сертификации
-конструкции или согласовании с органами власти на нём нет.
+```bash
+python3 site/build_pages.py
+```
 
-Память линии НИК (капсула, журнал, состояние) в репозиторий не входит.
+The build inlines CSS and JS into each page, re-encodes required illustrations to WebP/PNG, and prints sizes. Edit text in `content/`, edit styling in `css/styles.css`, then rerun the build.
+
+### Local preview
+
+```bash
+cd site
+python3 -m http.server 8000     # http://localhost:8000
+# Then open http://localhost:8000/ru/title.html or http://localhost:8000/en/index.html
+```

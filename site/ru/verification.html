@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Издание — ММОСО’Н</title>
-<meta name="description" content="43 документа, 34 раздела, две языковые редакции, приложения с обоснованием расчётов и матрицей проверок.">
+<title>Расчётная верификация — ММОСО’Н</title>
+<meta name="description" content="243/243 независимых пересчёта, сверка корпуса публикации, ноль дефектов вёрстки, запас прочности 1,53 и открытые задачи проекта.">
 <meta name="theme-color" content="#8f7ed6">
-<!-- ММОСО’Н · страница «Издание». Один самодостаточный файл: разметка, стили, скрипт и иллюстрации внутри.  Версия для хостинга: переходы между страницами относительные. -->
+<!-- ММОСО’Н · страница «Верификация». Один самодостаточный файл: разметка, стили, скрипт и иллюстрации внутри.  Страница сайта ММОСО’Н: самодостаточный HTML-файл. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
@@ -1143,46 +1143,64 @@ code {
 </head>
 <body>
 
-<main class="page" id="top">
-
-<section class="page-head">
+<main class="page" id="top">\n\n<section class="page-head">
   <div class="container">
-    <p class="eyebrow">Публикация</p>
-    <h1>Издание</h1>
-    <p class="page-sub">43 документа, 34 раздела, русская и английская редакции.</p>
+    <p class="eyebrow">Проверки и открытые задачи</p>
+    <h1>Расчётная верификация</h1>
+    <p class="page-sub">Каждая проверка воспроизводится одной командой: код лежит рядом с документом.</p>
   </div>
-</section>
-
-<section class="card-section" id="edition">
+</section>\n\n<section class="card-section" id="verification">
     <div class="container">
       <div class="section-title">
-        <h2>Издание</h2>
-        <p class="section-kicker">43 документа · 34 раздела · две языковые редакции</p>
+        <h2>Расчётная верификация</h2>
+        <p class="section-kicker">Проверки воспроизводимы: код лежит рядом с документом</p>
       </div>
 
-      <div class="edition-grid">
-        <div class="edition-main fade-in">
-          <p>Публикация существует не одним файлом, а набором документов: каждый раздел — отдельный <code>.docx</code> с титульным блоком, русским и английским текстом, таблицами, рисунками и своим списком литературы.</p>
-          <div class="edition-facts">
-            <div><strong>34</strong><span>раздела</span></div>
-            <div><strong>43</strong><span>документа</span></div>
-            <div><strong>23</strong><span>рисунка</span></div>
-            <div><strong>5</strong><span>приложений</span></div>
+      <div class="verify-grid">
+        <div class="verify-item fade-in">
+          <div class="verify-num">243/243</div>
+          <div class="verify-body">
+            <h3>Независимый пересчёт</h3>
+            <p><code>verify_all.py</code> заново выводит каждую величину публикации от первооснов и сверяет с документом.</p>
           </div>
-          <a class="btn btn-primary" href="https://github.com/bugromka/mmoson" target="_blank" rel="noopener">Репозиторий проекта</a>
         </div>
+        <div class="verify-item fade-in">
+          <div class="verify-num">PASS</div>
+          <div class="verify-body">
+            <h3>Сверка корпуса</h3>
+            <p><code>crosscheck.py</code> склеивает 43 документа в один корпус и проверяет согласованность чисел и единиц.</p>
+          </div>
+        </div>
+        <div class="verify-item fade-in">
+          <div class="verify-num">0</div>
+          <div class="verify-body">
+            <h3>Дефектов вёрстки</h3>
+            <p><code>check_overlap.py</code> ищет наложения объектов и разрывов в иллюстрациях; результат — ноль.</p>
+          </div>
+        </div>
+        <div class="verify-item fade-in">
+          <div class="verify-num">1,53</div>
+          <div class="verify-body">
+            <h3>Запас прочности</h3>
+            <p>Кольцевое напряжение 1 308 МПа при суммарном давлении 222,4 кПа.</p>
+          </div>
+        </div>
+      </div>
 
-        <ul class="edition-list fade-in">
-          <li><span>01–19</span> Концепция, физика, биоразнообразие, инженерия, биосфера, право</li>
-          <li><span>20–27</span> Носовые купола, аварийная потеря вращения, химия воздуха, почва, связь из L1</li>
-          <li><span>28–34</span> Генетика, сельское хозяйство, промышленность, стыковка, города</li>
-          <li><span>Б–Е</span> Обоснование расчётов, сокращения, источники, литература, матрица проверок</li>
+      <div class="open-list fade-in">
+        <h3>Что остаётся открытым</h3>
+        <p class="open-note">Эти задачи не объявлены решёнными — они честно висят в проекте и ждут следующих расчётов.</p>
+        <ul>
+          <li>Малоцикловая усталость пояса при 1 290 МПа на горизонте столетий</li>
+          <li>Активные магнитные подшипниковые узлы: электромагнитный и тепловой расчёт</li>
+          <li>Металлургический цикл 18Ni(300): ресурсный риск и обогащение никеля</li>
+          <li>Динамическая модель биосферы и поглощение кислорода конструкциями</li>
+          <li>Противометеороидный пакет и роботизированная герметизация секций</li>
+          <li>Политико-правовая рамка: суверенитет, гражданство, признание</li>
         </ul>
       </div>
     </div>
-  </section>
-
-</main>
+  </section>\n\n</main>
 
 <script>
 /* ММОСО’Н — поведение страницы.

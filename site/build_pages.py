@@ -3,19 +3,12 @@
 
 Каждая страница — один самодостаточный HTML-файл: разметка, весь CSS,
 весь JS и только её собственные иллюстрации (data:image/webp) внутри.
-Отдельные css/, js/ и картинки во время работы страницы не нужны.
+Отдельные css/, js/ и картинки во время работы страницы не требуются.
 
-Собираются ДВА набора из одних и тех же исходников:
+Страницы распределяются по языковым папкам:
 
-  site/<page>.html   версия для хостинга и локального просмотра:
-                     с шапкой-меню и переходами «назад / дальше».
-
-  site/embed/<page>.html
-                     версия для встраивания в Google Sites:
-                     без шапки и без переходов, потому что навигацию даёт
-                     меню самого Sites. Внутренние ссылки сведены к href="#"
-                     и оживают только если заполнить карту адресов
-                     window.MMOSON_LINKS (см. комментарий в файле).
+  site/ru/<page>.html   русская версия
+  site/en/<page>.html   английская версия
 
 Источники:
   content/<page>.html   разметка страницы без обвязки
@@ -38,11 +31,14 @@ ROOT = Path(__file__).resolve().parent
 CONTENT = ROOT / "content"
 CSS = ROOT / "css" / "styles.css"
 JS = ROOT / "js" / "app.js"
-EMBED = ROOT / "embed"
+RU_DIR = ROOT / "ru"
+EN_DIR = ROOT / "en"
 
 PAGES = [
     {
         "slug": "index",
+        "lang": "ru",
+        "output": "index.html",
         "nav": "Главная",
         "title": "ММОСО’Н — Модуль моделирования орбитальной станции О’Нилла",
         "desc": "Расчётная модель обитаемой орбитальной станции О’Нилла в точке L1: два встречновращающихся цилиндра, 1 000 000 жителей, полный инженерный и биосферный баланс.",
@@ -54,6 +50,8 @@ PAGES = [
     },
     {
         "slug": "index-en",
+        "lang": "en",
+        "output": "index.html",
         "nav": "EN",
         "title": "MMOSON — O'Neill Station Modeling Module",
         "desc": "Calculable model of a habitable O'Neill orbital station at L1 point: two counter-rotating cylinders, 1,000,000 inhabitants, full engineering and biosphere balance.",
@@ -65,6 +63,8 @@ PAGES = [
     },
     {
         "slug": "engineering",
+        "lang": "ru",
+        "output": "engineering.html",
         "nav": "Инженерия",
         "title": "Инженерные решения — ММОСО’Н",
         "desc": "Оболочка и её прочность, теплосброс двумя контурами, энергетика, транспорт «ось — обод», причал и шлюзы, биосфера станции.",
@@ -76,6 +76,8 @@ PAGES = [
     },
     {
         "slug": "engineering-en",
+        "lang": "en",
+        "output": "engineering.html",
         "nav": "Engineering",
         "title": "Engineering — MMOSON",
         "desc": "Shell and its strength, dual-loop heat rejection, power, axis-to-rim transport, docking and locks, station biosphere.",
@@ -87,6 +89,8 @@ PAGES = [
     },
     {
         "slug": "verification",
+        "lang": "ru",
+        "output": "verification.html",
         "nav": "Верификация",
         "title": "Расчётная верификация — ММОСО’Н",
         "desc": "243/243 независимых пересчёта, сверка корпуса публикации, ноль дефектов вёрстки, запас прочности 1,53 и открытые задачи проекта.",
@@ -98,6 +102,8 @@ PAGES = [
     },
     {
         "slug": "verification-en",
+        "lang": "en",
+        "output": "verification.html",
         "nav": "Verification",
         "title": "Calculation Verification — MMOSON",
         "desc": "243/243 independent recalculations, publication cross-check, zero layout defects, safety margin 1.53 and open project tasks.",
@@ -109,6 +115,8 @@ PAGES = [
     },
     {
         "slug": "gallery",
+        "lang": "ru",
+        "output": "gallery.html",
         "nav": "Иллюстрации",
         "title": "Иллюстрации — ММОСО’Н",
         "desc": "Восемь листов из публикации: компоновка станции, сечение и обшивка, трасса «ось — обод», энергия, климат, ресурсы, продовольствие, землепользование.",
@@ -120,6 +128,8 @@ PAGES = [
     },
     {
         "slug": "gallery-en",
+        "lang": "en",
+        "output": "gallery.html",
         "nav": "Gallery",
         "title": "Illustrations — MMOSON",
         "desc": "Eight publication sheets: station layout, section and cladding, axis-to-rim trajectory, energy, climate, resources, food, land use.",
@@ -131,6 +141,8 @@ PAGES = [
     },
     {
         "slug": "edition",
+        "lang": "ru",
+        "output": "edition.html",
         "nav": "Издание",
         "title": "Издание — ММОСО’Н",
         "desc": "43 документа, 34 раздела, две языковые редакции, приложения с обоснованием расчётов и матрицей проверок.",
@@ -142,6 +154,8 @@ PAGES = [
     },
     {
         "slug": "edition-en",
+        "lang": "en",
+        "output": "edition.html",
         "nav": "Edition",
         "title": "Edition — MMOSON",
         "desc": "43 documents, 34 sections, two language editions, appendices with calculation rationale and check matrix.",
@@ -153,6 +167,8 @@ PAGES = [
     },
     {
         "slug": "contacts",
+        "lang": "ru",
+        "output": "contacts.html",
         "nav": "Контакты",
         "title": "Контакты — ММОСО’Н",
         "desc": "Связаться с автором проекта ММОСО’Н: почта, Макс, ВКонтакте, Добро.рф. Реквизиты проекта, статус, адрес и порядок цитирования.",
@@ -166,6 +182,8 @@ PAGES = [
     },
     {
         "slug": "contacts-en",
+        "lang": "en",
+        "output": "contacts.html",
         "nav": "Contacts",
         "title": "Contacts — MMOSON",
         "desc": "Contact the author of the MMOSON project: email, Max, VK, Dobro.ru. Project details, status, address and citation procedure.",
@@ -179,6 +197,8 @@ PAGES = [
     },
     {
         "slug": "authors",
+        "lang": "ru",
+        "output": "authors.html",
         "nav": "Авторы",
         "title": "Авторы и лицензия — ММОСО’Н",
         "desc": "Автор проекта, расчётная линия НИК, условия использования материалов и порядок ссылки на публикацию.",
@@ -190,6 +210,8 @@ PAGES = [
     },
     {
         "slug": "authors-en",
+        "lang": "en",
+        "output": "authors.html",
         "nav": "Authors",
         "title": "Authors and License — MMOSON",
         "desc": "Project author, calculation line NIK, terms of material use and citation procedure.",
@@ -201,6 +223,8 @@ PAGES = [
     },
     {
         "slug": "title",
+        "lang": "ru",
+        "output": "title.html",
         "nav": "Титульная",
         "title": "ММОСО'Н — Титульная страница",
         "desc": "Титульная страница проекта ММОСО'Н: двуязычный обзор (русский / английский) со ссылками на все разделы сайта.",
@@ -212,36 +236,35 @@ PAGES = [
     },
 ]
 
-MARK = """<svg class="nav-mark" viewBox="0 0 48 48" aria-hidden="true">
-        <circle cx="24" cy="15" r="8" fill="none" stroke="currentColor" stroke-width="2.6"/>
-        <circle cx="24" cy="33" r="8" fill="none" stroke="currentColor" stroke-width="2.6"/>
-        <line x1="24" y1="6" x2="24" y2="42" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 4" opacity=".7"/>
+MARK = """<svg class=\"nav-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\">
+        <circle cx=\"24\" cy=\"15\" r=\"8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\"/>
+        <circle cx=\"24\" cy=\"33\" r=\"8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\"/>
+        <line x1=\"24\" y1=\"6\" x2=\"24\" y2=\"42\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-dasharray=\"2 4\" opacity=\".7\"/>
       </svg>"""
 
 
-def link(page: dict, active: str, embed: bool) -> tuple[str, str]:
+def link(page: dict, active: str) -> tuple[str, str]:
     """Адрес и дополнительные атрибуты ссылки на страницу."""
-    if embed:
-        return "#", f' class="active"' if page["slug"] == active else ""
-    return f'{page["slug"]}.html', ' class="active"' if page["slug"] == active else ""
+    return f'{page["output"]}', f' class="active"' if page["slug"] == active else ""
 
 
-def nav_html(active: str, embed: bool) -> str:
-    if embed:
-        return ""
+def nav_html(active: str) -> str:
     items = []
     for page in PAGES:
-        href, cls = link(page, active, False)
+        href, cls = link(page, active)
         items.append(f'      <li><a href="{href}" data-page="{page["slug"]}"{cls}>{page["nav"]}</a></li>')
     return (
         '<header class="nav-wrap">\n'
         '  <nav class="nav" aria-label="Основная навигация">\n'
-        '    <a href="index.html" data-page="index" class="nav-brand">\n'
-        f"      {MARK}\n      <span>ММОСО’Н</span>\n    </a>\n"
+        '    <a href="ru/index.html" data-page="index" class="nav-brand">\n'
+        + MARK.replace("\n", "\\n        ")
+        + '\\n      <span>ММОСО’Н</span>\n    </a>\n'
         '    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Меню">\n'
         "      <span></span><span></span><span></span>\n"
         "    </button>\n"
-        '    <ul class="nav-links" id="nav-links">\n' + "\n".join(items) + "\n    </ul>\n  </nav>\n</header>"
+        '    <ul class="nav-links" id="nav-links">\n'
+        + "\\n".join(items)
+        + "\\n    </ul>\n  </nav>\n</header>"
     )
 
 
@@ -259,27 +282,25 @@ def page_head_html(page: dict) -> str:
     )
 
 
-def pager_html(slug: str, embed: bool) -> str:
-    if embed:
-        return ""
+def pager_html(slug: str) -> str:
     idx = next(i for i, p in enumerate(PAGES) if p["slug"] == slug)
     prev_page = PAGES[idx - 1] if idx > 0 else None
     next_page = PAGES[idx + 1] if idx + 1 < len(PAGES) else None
     left = (
-        f'  <a class="pager-prev" href="{prev_page["slug"]}.html" data-page="{prev_page["slug"]}">\n'
+        f'  <a class="pager-prev" href="{prev_page["output"]}" data-page="{prev_page["slug"]}">\n'
         '    <span class="pager-label">Назад</span>\n'
         f'    <span class="pager-name">← {prev_page["nav"]}</span>\n  </a>'
         if prev_page
         else "  <span></span>"
     )
     right = (
-        f'  <a class="pager-next" href="{next_page["slug"]}.html" data-page="{next_page["slug"]}">\n'
+        f'  <a class="pager-next" href="{next_page["output"]}" data-page="{next_page["slug"]}">\n'
         '    <span class="pager-label">Дальше</span>\n'
         f'    <span class="pager-name">{next_page["nav"]} →</span>\n  </a>'
         if next_page
         else "  <span></span>"
     )
-    return '<nav class="pager" aria-label="Переход между страницами">\n' + left + "\n" + right + "\n</nav>"
+    return '<nav class="pager" aria-label="Переход между страницами">\\n' + left + "\\n" + right + "\\n</nav>"
 
 
 def encode_image(path: Path, max_width: int = 1200, quality: int = 80) -> tuple[str, int]:
@@ -310,53 +331,38 @@ def encode_image(path: Path, max_width: int = 1200, quality: int = 80) -> tuple[
     return f"data:{mime};base64,{base64.b64encode(packed).decode('ascii')}", len(packed)
 
 
-def embed_links(html: str) -> str:
-    """В embed-версии относительные переходы заменяются на href="#" + data-page."""
-    def repl(match: re.Match[str]) -> str:
-        slug = match.group(1)
-        tail = match.group(2)
-        # data-page уже стоит в ссылке — второй раз не добавляем
-        attr = "" if "data-page" in tail else f' data-page="{slug}"'
-        return f'href="#"{attr}'
-
-    return re.sub(r'href="(?!https://|data:|#)([a-z]+)\.html"([^>]*)', repl, html)
-
-
-def build(page: dict, css: str, js: str, embed: bool) -> tuple[str, int]:
+def build(page: dict, css: str, js: str) -> tuple[str, int]:
     fragment = (CONTENT / f'{page["slug"]}.html').read_text(encoding="utf-8").strip()
     shell = page.get("shell", True)
 
     if not shell:
-        # Страница-визитка со своим оформлением: без общей шапки, переходов и
-        # подвала — только содержимое в контейнере, как в образце.
-        body = '<div class="container">\n' + fragment + "\n</div>"
-        return finish(page, body, css, js, embed)
+        body = '<div class="container">\\n' + fragment + "\\n</div>"
+        return finish(page, body, css, js)
 
     parts = []
-    # Навигация, пагинатор и подвал убраны со всех страниц —
-    # навигация и подвал делаются в меню Google Sites.
     parts.append('<main class="page" id="top">')
     head_block = page_head_html(page)
     if head_block:
         parts.append(head_block)
     parts.append(fragment)
     parts.append("</main>")
-    body = "\n\n".join(parts)
+    body = "\\n\\n".join(parts)
 
-    return finish(page, body, css, js, embed)
+    return finish(page, body, css, js)
 
 
-def finish(page: dict, body: str, css: str, js: str, embed: bool) -> tuple[str, int]:
+def finish(page: dict, body: str, css: str, js: str) -> tuple[str, int]:
     mode_note = ""
     if not page.get("shell", True):
         mode_note = " Страница-визитка: своя таблица стилей, без общей шапки и подвала. Навигация — меню сайта."
-    elif embed:
-        mode_note = " Версия для встраивания в Google Sites: навигация — меню самого Sites. Внутренние ссылки ведут на href=\"#\"."
     else:
-        mode_note = " Версия для хостинга: переходы между страницами относительные."
+        mode_note = " Страница сайта ММОСО’Н: самодостаточный HTML-файл."
+
+    lang = page.get("lang", "ru")
+    html_lang = lang
 
     html = f"""<!DOCTYPE html>
-<html lang="ru">
+<html lang="{html_lang}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -383,8 +389,6 @@ def finish(page: dict, body: str, css: str, js: str, embed: bool) -> tuple[str, 
 </body>
 </html>
 """
-
-    html = embed_links(html)
 
     settings = page.get("img", {})
     inlined = 0
@@ -413,30 +417,32 @@ def finish(page: dict, body: str, css: str, js: str, embed: bool) -> tuple[str, 
 def main() -> int:
     default_css = CSS.read_text(encoding="utf-8")
     js = JS.read_text(encoding="utf-8")
-    EMBED.mkdir(exist_ok=True)
-    print(f"стили: {len(default_css)/1024:.0f} КБ · скрипт: {len(js)/1024:.0f} КБ\n")
+    RU_DIR.mkdir(exist_ok=True)
+    EN_DIR.mkdir(exist_ok=True)
+    print(f"стили: {len(default_css)/1024:.0f} КБ · скрипт: {len(js)/1024:.0f} КБ\\n")
 
     rows = []
     for page in PAGES:
         css_path = ROOT / page.get("css", "css/styles.css")
         css = css_path.read_text(encoding="utf-8")
-        for embed, folder in ((False, ROOT), (True, EMBED)):
-            html, inlined = build(page, css, js, embed)
-            out = folder / f'{page["slug"]}.html'
-            out.write_text(html, encoding="utf-8")
-            left = [
-                x
-                for x in re.findall(r'(?:src|href)="(?!https://|data:|#|mailto:|tel:)([^"]+)"', html)
-                if not x.endswith(".html")
-            ]
-            rows.append((str(out.relative_to(ROOT)), out.stat().st_size, inlined, left, len(html)))
+        html, inlined = build(page, css, js)
+        lang = page.get("lang", "ru")
+        folder = RU_DIR if lang == "ru" else EN_DIR
+        out = folder / page["output"]
+        out.write_text(html, encoding="utf-8")
+        left = [
+            x
+            for x in re.findall(r'(?:src|href)="(?!https://|data:|#|mailto:|tel:)([^"]+)"', html)
+            if not x.endswith(".html")
+        ]
+        rows.append((str(out.relative_to(ROOT)), out.stat().st_size, inlined, left, len(html)))
 
     for name, size, inlined, left, chars in rows:
         note = f"  ⚠ локальные ссылки: {left}" if left else ""
         print(f"{name:<24} {size/1024:6.0f} КБ  иллюстраций {inlined/1024:5.0f} КБ  символов {chars:>7,}{note}".replace(",", " "))
 
     total = sum(r[1] for r in rows)
-    print(f"\nвсего {len(rows)} файлов, {total/1024/1024:.2f} МБ")
+    print(f"\\nвсего {len(rows)} файлов, {total/1024/1024:.2f} МБ")
     return 0
 
 

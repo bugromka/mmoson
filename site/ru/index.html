@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Engineering — MMOSON</title>
-<meta name="description" content="Shell and its strength, dual-loop heat rejection, power, axis-to-rim transport, docking and locks, station biosphere.">
+<title>ММОСО’Н — Модуль моделирования орбитальной станции О’Нилла</title>
+<meta name="description" content="Расчётная модель обитаемой орбитальной станции О’Нилла в точке L1: два встречновращающихся цилиндра, 1 000 000 жителей, полный инженерный и биосферный баланс.">
 <meta name="theme-color" content="#8f7ed6">
-<!-- ММОСО’Н · страница «Engineering». Один самодостаточный файл: разметка, стили, скрипт и иллюстрации внутри.  Версия для встраивания в Google Sites: навигация — меню самого Sites. Внутренние ссылки ведут на href="#". -->
+<!-- ММОСО’Н · страница «Главная». Один самодостаточный файл: разметка, стили, скрипт и иллюстрации внутри.  Страница сайта ММОСО’Н: самодостаточный HTML-файл. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
@@ -1143,76 +1143,142 @@ code {
 </head>
 <body>
 
-<main class="page" id="top">
+<main class="page" id="top">\n\n<section class="hero" aria-labelledby="hero-title">
+    <div class="hero-field" aria-hidden="true">
+      <div class="stars stars-a"></div>
+      <div class="stars stars-b"></div>
+      <div class="orbit orbit-1"></div>
+      <div class="orbit orbit-2"></div>
+      <div class="glow"></div>
+    </div>
 
-<section class="page-head">
-  <div class="container">
-    <p class="eyebrow">Construction and systems</p>
-    <h1>Engineering</h1>
-    <p class="page-sub">Six station circuits: each closed on calculation, not illustration.</p>
-  </div>
-</section>
+    <div class="container hero-content">
+      <p class="eyebrow fade-in">Проект Романа Сергеевича Бугаенко</p>
 
-<section class="card-section" id="engineering">
+      <h1 class="hero-title" id="hero-title">ММОСО’Н</h1>
+      <p class="hero-subtitle">Модуль моделирования орбитальной станции О’Нилла</p>
+      <p class="hero-lead">Два встречновращающихся цилиндра в точке L1. Расчётная модель мира на миллион человек — от несущей оболочки до правового устройства.</p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#params">Ключевые параметры</a>
+        <a class="btn btn-ghost" href="https://sites.google.com/view/mmoson/иллюстрации">Смотреть иллюстрации</a>
+      </div>
+
+      <dl class="hero-stats">
+        <div class="hero-stat"><dt>Полная длина</dt><dd>49 <span>км</span></dd></div>
+        <div class="hero-stat"><dt>Площадь поверхности</dt><dd>3 100,2 <span>км²</span></dd></div>
+        <div class="hero-stat"><dt>Население</dt><dd>1 000 000 <span>человек</span></dd></div>
+        <div class="hero-stat"><dt>Электроснабжение</dt><dd>721,4 <span>ГВт</span></dd></div>
+      </dl>
+    </div>
+  </section>
+
+<section class="card-section" id="about">
     <div class="container">
       <div class="section-title">
-        <h2>Engineering</h2>
-        <p class="section-kicker">Six circuits, each closed on calculation</p>
+        <h2>О проекте</h2>
+        <p class="section-kicker">Island Three · точка Лагранжа L1 системы Земля — Солнце</p>
       </div>
 
-      <div class="cards-grid">
-        <article class="feature-card fade-in">
-          <span class="feature-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="5"/><circle cx="12" cy="16" r="5"/><path d="M12 1v22" stroke-dasharray="2 3"/></svg>
-          </span>
-          <h3>Load-bearing shell</h3>
-          <p>External pressure 152.6 kPa plus self-weight 222.4 kPa. Hoop stress 1,308 MPa, safety margin 1.53 to ultimate strength.</p>
-        </article>
-        <article class="feature-card fade-in">
-          <span class="feature-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="7" width="18" height="3" rx="1.5"/><rect x="3" y="14" width="18" height="3" rx="1.5"/><path d="M6 10v4M12 10v4M18 10v4"/></svg>
-          </span>
-          <h3>Thermal regulation</h3>
-          <p>Two loops: high-temperature reactor heat rejection 882 GW at 800 °C on 12.4 km² and low-temperature 677 GW at 60 °C on 1,022 km².</p>
-        </article>
-        <article class="feature-card fade-in">
-          <span class="feature-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/></svg>
-          </span>
-          <h3>Power</h3>
-          <p>Reactor generation 721.4 GW electrical. Axial light-heat beams are the only source of light inside the volume.</p>
-        </article>
-        <article class="feature-card fade-in">
-          <span class="feature-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 20l7-16 4 9 3-4 4 11z"/></svg>
-          </span>
-          <h3>Axis-to-rim transport</h3>
-          <p>Funicular as the main route, stairs as a mandatory duplicate, lift for urgent and cargo tasks. Two inclined shafts per cylinder, route 7,429 m, 17.8 min from dock to rim at constant 10° incline.</p>
-        </article>
-        <article class="feature-card fade-in">
-          <span class="feature-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 3c3 3 3 15 0 18M3 12h18"/></svg>
-          </span>
-          <h3>Docking and locks</h3>
-          <p>Docking on the stationary frame at zero velocity: dock → locks and quarantine → rotating pressure transition → hollow axial shaft → inclined shafts → habitable surface.</p>
-        </article>
-        <article class="feature-card fade-in">
-          <span class="feature-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21c5-3 8-7 8-12a8 8 0 10-16 0c0 5 3 9 8 12z"/><path d="M12 3v18M6 9h12"/></svg>
-          </span>
-          <h3>Biosphere and food</h3>
-          <p>Zonal crop distribution, food balance, oxygen cycle over centuries, soil profile as an engineering system, closed-population genetics.</p>
-        </article>
-      </div>
+      <div class="about-grid">
+        <div class="about-text fade-in">
+          <p>ММОСО’Н — личный инженерный и научно-исследовательский проект: расчётная модель обитаемой орбитальной станции цилиндрического типа, рассчитанная от первооснов. Не иллюстрация будущего, а свод чисел, которые сходятся между собой.</p>
+          <p>Конфигурация — классическая <strong>Island Three</strong>: два встречновращающихся цилиндра радиусом 5 км. Вращение даёт на ободе тяжесть 1,0 g. Цилиндры не соединены по боковым поверхностям — это физически невозможно при встречном вращении: связь идёт только по осям через подшипниковые узлы.</p>
+          <p>Ось станции неподвижна в инерциальном пространстве. Всё внешнее оборудование — причалы, радиаторы, антенны, солнечные крылья — размещено только на двух торцевых рамах. Внутренний объём освещается реакторными осевыми светотепловыми балками; зеркал и солнечного паруса нет.</p>
 
-      <div class="callout fade-in">
-        <h3>Why cylinders are not joined to each other</h3>
-        <p>Side surfaces rotate counter to each other. Any rigid link between them is impossible: connection runs only through the axes via bearing units. Inter-axis distance 21 km, free vacuum gap 11 km, no longitudinal elements between shells.</p>
+          <ul class="check-list">
+            <li><span class="check-ico" aria-hidden="true">✓</span>Обитаемая поверхность 3 100,2 км² — четыре климатические зоны по длине цилиндра</li>
+            <li><span class="check-ico" aria-hidden="true">✓</span>Замкнутые продовольственный, водный и кислородный балансы, рассчитанные на столетия</li>
+            <li><span class="check-ico" aria-hidden="true">✓</span>Транспорт «ось — обод»: фуникулёр как основной путь, лестница как обязательный дубль</li>
+            <li><span class="check-ico" aria-hidden="true">✓</span>Публикация из 43 документов: инженерия, биосфера, право, экономика замкнутого мира</li>
+          </ul>
+        </div>
+
+        <aside class="about-side fade-in">
+          <div class="mini-card">
+            <h3>Расположение</h3>
+            <p>Точка L1, 1,5 млн км от Земли. Постоянная связь, защищённый тепловой режим, отсутствие затенений.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Гравитация</h3>
+            <p>0,423 об/мин · 0,04429 рад/с · период 141,9 с. Кориолисовы эффекты учтены в расчётах быта и спорта.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Материал оболочки</h3>
+            <p>Сталь 18Ni(300), силовой пояс 850 мм. Пакет обшивки 2 м: гермооболочка, пояс, изоляция, радиационная защита, грунт.</p>
+          </div>
+        </aside>
       </div>
     </div>
   </section>
 
-</main>
+<section class="card-section" id="params">
+    <div class="container">
+      <div class="section-title">
+        <h2>Ключевые параметры</h2>
+        <p class="section-kicker">Канон модели, сверенный по расчётным модулям и документу</p>
+      </div>
+
+      <div class="params-grid">
+        <article class="param-card fade-in">
+          <span class="param-value" data-count="5000" data-suffix=" м">5 000 м</span>
+          <h3>Радиус цилиндра</h3>
+          <p>Диаметр 10 км. При такой геометрии обеспечивается 1,0 g при приемлемой скорости вращения.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value" data-count="49" data-suffix=" км">49 км</span>
+          <h3>Полная длина</h3>
+          <p>Цилиндрическая часть 40 км, две полусферы по 4,5 км.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value">0,423 <small>об/мин</small></span>
+          <h3>Скорость вращения</h3>
+          <p>0,04429 рад/с, период 141,9 с. Два цилиндра вращаются встречно.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value">1,0 <small>g</small></span>
+          <h3>Тяжесть на ободе</h3>
+          <p>Линейная скорость обода 221,5 м/с. Приосевая зона r &lt; 2 500 м закрыта для людей.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value">3 100,2 <small>км²</small></span>
+          <h3>Обитаемая площадь</h3>
+          <p>По 1 550,1 км² на цилиндр. Четыре климатические зоны: 0–10, 10–22, 22–32, 32–40 км.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value">46,70 <small>млрд т</small></span>
+          <h3>Масса станции</h3>
+          <p>Суммарная масса конструкции и наполнения при стальном силовом поясе.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value">721,4 <small>ГВт</small></span>
+          <h3>Электрическая мощность</h3>
+          <p>1 603 ГВт тепловых при КПД 45 %. Освещение внутреннего объёма — только реакторное.</p>
+        </article>
+        <article class="param-card fade-in">
+          <span class="param-value">1 022 <small>км²</small></span>
+          <h3>Площадь радиаторов</h3>
+          <p>Низкотемпературный контур 677 ГВт при 60 °C; располагаемая площадь 1 477 км², запас 1,45.</p>
+        </article>
+      </div>
+
+      <div class="table-wrap fade-in">
+        <table class="spec-table">
+          <caption>Пакет обшивки, снаружи внутрь</caption>
+          <thead>
+            <tr><th>Слой</th><th>Материал</th><th>Толщина</th><th>Масса</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Грунт растительный</td><td>почвенный профиль</td><td>1,50 м</td><td>4,060 млрд т</td></tr>
+            <tr><td>Радиационная защита</td><td>реголит + боросиликат</td><td>1,00 м</td><td>2,325 млрд т</td></tr>
+            <tr><td>Теплоизоляция</td><td>коммуникации, экраны</td><td>0,10 м</td><td>0,078 млрд т</td></tr>
+            <tr><td>Силовой пояс</td><td>сталь 18Ni(300)</td><td>0,85 м</td><td>10,343 млрд т</td></tr>
+            <tr><td>Гермооболочка</td><td>нержавеющая сталь</td><td>0,05 м</td><td>0,608 млрд т</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>\n\n</main>
 
 <script>
 /* ММОСО’Н — поведение страницы.
