@@ -104,42 +104,54 @@ def add_panel(img: Image.Image, title: str, lines: list[tuple[str, str | None]],
 
 
 def make_fig01() -> None:
-    img = Image.open(SRC / "fig01_layout.png").convert("RGBA")
-    out = add_panel(
-        img,
-        "Station layout: two counter-rotating cylinders",
-        [
-            ("Angular velocity", "0.05 π/s"),
-            (None, None),
-            ("1", "Support node — rotating cylinder shell"),
-            ("", "and non-rotating frame"),
-            ("2", "Non-rotating fairing frame —"),
-            ("", "only rotation axis, no engines,"),
-            ("", "cargo, reactors"),
-            ("3", "Central solar mirror — indicates"),
-            ("", "solar line: diameter 8 m at"),
-            ("", "cylinder diameter 10 km"),
-            ("4", "Heat capacity — climatic zones,"),
-            ("", "1 000 g"),
-            ("5", "Radiator panels — mounted on"),
-            ("", "frame, 1 477 km²"),
-            (None, None),
-            ("Climatic zones", "km from cylinder end"),
-            ("tropical", "0–10"),
-            ("subtropical", "10–22"),
-            ("moderate", "22–32"),
-            ("cold", "32–40"),
-            (None, None),
-        ],
-        warn_lines=[
-            "Heat exchange between cylinders",
-            "does not occur: they rotate,",
-            "and rigid connection by rim is",
-            "impossible. Connection only",
-            "through axis.",
-        ],
-    )
-    out.save(DST / "fig01_layout.png")
+    """fig01_layout: английская версия по эталону русской картинки
+    (1904x998). Справа на том же холсте, в тех же зонах, что русский текст,
+    рисуется английский перевод (docs/image_captions_ru_en.md) — без
+    добавленной кривой панели, с аккуратным переносом.
+    """
+    ref = Path("/tmp/arena-coding-uploads/fig01_layout-3.png")
+    img = Image.open(ref).convert("RGBA")
+    assert img.size == (1904, 998), img.size
+    draw = ImageDraw.Draw(img)
+    # Стираем старую русскую текстовую зону справа (диаграмма занимает x<1000).
+    draw.rectangle([1000, 0, 1904, 998], fill=(255, 255, 255, 255))
+    draw = ImageDraw.Draw(img)
+
+    x = 1020
+    y = 24
+    draw.text((x, y), "Station layout: two counter-rotating cylinders", font=FONT_TITLE, fill=(20, 20, 20, 255))
+
+    y = 80
+    draw.text((x, y), "Angular velocity: 0.05 \u03c0/s", font=FONT_REG, fill=(20, 20, 20, 255))
+
+    def item(text: str, first_y: int) -> None:
+        nonlocal y
+        y = first_y
+        for i, line in enumerate(wrap_text(text, FONT_REG, 470)):
+            draw.text((x + (44 if i else 0), y), line, font=FONT_REG, fill=(20, 20, 20, 255))
+            y += 23
+
+    item("1. Support node — rotating cylinder shell and non-rotating frame", 155)
+    item("2. Non-rotating fairing frame — only rotation axis, no engines, cargo, reactors", 237)
+    item("3. Central solar mirror — indicates solar line: diameter 8 m at cylinder diameter 10 km", 326)
+    item("4. Heat capacity — climatic zones, 1 000 g", 436)
+    item("5. Radiator panels — mounted on frame, 1 477 km\u00b2", 498)
+
+    y = 612
+    draw.text((x, y), "Climatic zones, km from cylinder end:", font=FONT_REG, fill=(20, 20, 20, 255))
+    y += 26
+    for zone in ["tropical 0–10", "subtropical 10–22", "moderate 22–32", "cold 32–40"]:
+        draw.text((x + 44, y), zone, font=FONT_REG, fill=(20, 20, 20, 255))
+        y += 24
+
+    y = 778
+    warn = ("Heat exchange between cylinders does not occur: they rotate, "
+            "and rigid connection by rim is impossible. Connection only through axis.")
+    for line in wrap_text(warn, FONT_REG, 470):
+        draw.text((x, y), line, font=FONT_REG, fill=(20, 20, 20, 255))
+        y += 23
+
+    img.save(DST / "fig01_layout.png")
 
 
 def make_fig02() -> None:
