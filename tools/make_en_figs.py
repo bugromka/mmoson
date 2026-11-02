@@ -79,7 +79,6 @@ def add_panel(img: Image.Image, title: str, lines: list[tuple[str, str | None]],
 
         # Рисуем значение (правая часть, с переносом если нужно)
         if value:
-            # Проверяем, помещается ли значение на одной строке после метки
             label_w = FONT_REG.getlength(label) if label else 0
             value_x = x + 340
             avail_w = text_max_w - 340
@@ -87,7 +86,6 @@ def add_panel(img: Image.Image, title: str, lines: list[tuple[str, str | None]],
                 draw.text((value_x, y), value, font=FONT_REG, fill=(80, 80, 80, 255))
                 y += 38
             else:
-                # Переносим значение на отдельную строку под меткой
                 y += 38
                 for sub in wrap_text(value, FONT_REG, text_max_w):
                     draw.text((x, y), sub, font=FONT_REG, fill=(80, 80, 80, 255))
@@ -144,6 +142,25 @@ def make_fig01() -> None:
     out.save(DST / "fig01_layout.png")
 
 
+def make_fig02() -> None:
+    """fig02_section уже на английском — копируем как есть"""
+    shutil.copy2(SRC / "fig02_section.png", DST / "fig02_section.png")
+
+
+def make_fig03() -> None:
+    img = Image.open(SRC / "fig03_gravity.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Artificial gravity on station",
+        [
+            ("Gravity at cylinder surface", "1 g"),
+            ("Rotation radius", "5 000 m"),
+            ("Angular velocity", "0.05 π/s"),
+        ],
+    )
+    out.save(DST / "fig03_gravity.png")
+
+
 def make_fig04() -> None:
     img = Image.open(SRC / "fig04_climate.png").convert("RGBA")
     out = add_panel(
@@ -173,6 +190,138 @@ def make_fig04() -> None:
         ],
     )
     out.save(DST / "fig04_climate.png")
+
+
+def make_fig05() -> None:
+    img = Image.open(SRC / "fig05_pressure.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Station atmospheric pressure",
+        [
+            ("Pressure at sea level", "101.3 kPa"),
+            ("Air composition", "N₂ 78 % · O₂ 21 % · others 1 %"),
+            ("Excess pressure in envelope", "not more than 5 kPa"),
+        ],
+    )
+    out.save(DST / "fig05_pressure.png")
+
+
+def make_fig06() -> None:
+    img = Image.open(SRC / "fig06_steel.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Structural steel 18Ni(300)",
+        [
+            ("Tensile strength", "1 200 MPa"),
+            ("Density", "7 850 kg/m³"),
+            ("Total quantity", "20.83 billion tonnes"),
+            ("Share of asteroid 6178 1986 DA", "94 %"),
+        ],
+    )
+    out.save(DST / "fig06_steel.png")
+
+
+def make_fig07() -> None:
+    img = Image.open(SRC / "fig07_load.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Dynamic loads on station structures",
+        [
+            ("Rotating cylinders", "centrifugal loads"),
+            ("Non-rotating frame", "static loads from docks and equipment"),
+            ("Max load on support node", "does not exceed design limit"),
+        ],
+    )
+    out.save(DST / "fig07_load.png")
+
+
+def make_fig08() -> None:
+    img = Image.open(SRC / "fig08_mass.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Station mass by elements",
+        [
+            ("Total station mass", "not more than 43.55 billion tonnes"),
+            ("Share of structural materials", "94 %"),
+            ("Share of life support", "3.5 %"),
+            ("Share of equipment and instruments", "2.5 %"),
+        ],
+    )
+    out.save(DST / "fig08_mass.png")
+
+
+def make_fig09() -> None:
+    img = Image.open(SRC / "fig09_thermal.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Station thermal balance",
+        [
+            ("Heat sources", "solar radiation, equipment, people"),
+            ("Heat rejection", "radiator panels 1 477 km²"),
+            ("Heat exchange between cylinders", "does not occur"),
+        ],
+    )
+    out.save(DST / "fig09_thermal.png")
+
+
+def make_fig10() -> None:
+    """fig10_energy уже содержит английский текст — копируем как есть"""
+    shutil.copy2(SRC / "fig10_energy.png", DST / "fig10_energy.png")
+
+
+def make_fig11() -> None:
+    img = Image.open(SRC / "fig11_docking.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Station docking system",
+        [
+            ("Docks", "on rotating cylinder and non-rotating frame"),
+            ("Transition", "between rotating and non-rotating segments through axis"),
+        ],
+    )
+    out.save(DST / "fig11_docking.png")
+
+
+def make_fig12() -> None:
+    img = Image.open(SRC / "fig12_coriolis.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Coriolis forces on station",
+        [
+            ("Cylinder angular rotation", "0.05 π/s"),
+            ("Deflection", "of moving objects during radial movement"),
+            ("Compensation", "in navigation and control systems"),
+        ],
+    )
+    out.save(DST / "fig12_coriolis.png")
+
+
+def make_fig13() -> None:
+    img = Image.open(SRC / "fig13_climb.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Climb along cylinder radius",
+        [
+            ("Perceived gravity", "changes with radius"),
+            ("Transition from center to surface", "from 0 g to 1 g"),
+            ("Restrictions", "for heavy equipment"),
+        ],
+    )
+    out.save(DST / "fig13_climb.png")
+
+
+def make_fig14() -> None:
+    img = Image.open(SRC / "fig14_fall.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Fall on station",
+        [
+            ("Trajectory", "of falling object in rotating frame"),
+            ("Coriolis force effect", "on trajectory"),
+            ("Safety", "of movement inside cylinder"),
+        ],
+    )
+    out.save(DST / "fig14_fall.png")
 
 
 def make_fig15() -> None:
@@ -236,6 +385,11 @@ def make_fig16() -> None:
     out.save(DST / "fig16_resources.png")
 
 
+def make_fig17() -> None:
+    """fig17_food уже содержит английский текст — копируем как есть"""
+    shutil.copy2(SRC / "fig17_food.png", DST / "fig17_food.png")
+
+
 def make_fig18() -> None:
     img = Image.open(SRC / "fig18_land.png").convert("RGBA")
     out = add_panel(
@@ -277,24 +431,131 @@ def make_fig18() -> None:
     out.save(DST / "fig18_land.png")
 
 
+def make_fig19() -> None:
+    img = Image.open(SRC / "fig19_epidemic.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Station quarantine and epidemiological safety system",
+        [
+            ("Isolation", "of sick zones"),
+            ("Air filtration", "and health monitoring"),
+            ("Action protocols", "during disease outbreak"),
+        ],
+    )
+    out.save(DST / "fig19_epidemic.png")
+
+
+def make_fig20() -> None:
+    img = Image.open(SRC / "fig20_acoustics.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Station acoustic comfort",
+        [
+            ("Noise level in living zones", "not more than 45 dB"),
+            ("Sound-absorbing coatings", "and vibration isolation"),
+        ],
+    )
+    out.save(DST / "fig20_acoustics.png")
+
+
+def make_fig21() -> None:
+    img = Image.open(SRC / "fig21_volatiles.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Station volatiles",
+        [
+            ("Water, ammonia, methane, carbon dioxide", "— sources and cycles"),
+            ("Recycling", "and reuse"),
+        ],
+    )
+    out.save(DST / "fig21_volatiles.png")
+
+
+def make_fig22() -> None:
+    img = Image.open(SRC / "fig22_asteroids.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Asteroid resource mining",
+        [
+            ("Asteroid 6178 1986 DA", "— main metal source"),
+            ("Automated mining operations", "and delivery to station"),
+        ],
+    )
+    out.save(DST / "fig22_asteroids.png")
+
+
+def make_fig23() -> None:
+    img = Image.open(SRC / "fig23_quarantine.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Station quarantine zone",
+        [
+            ("Isolation", "of new objects and personnel"),
+            ("Biological protection", "of station ecosystem"),
+        ],
+    )
+    out.save(DST / "fig23_quarantine.png")
+
+
+def make_fig24() -> None:
+    img = Image.open(SRC / "fig24_panel_choice.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Radiator panel selection",
+        [
+            ("Materials", "area and placement on frame"),
+            ("Optimization", "of heat rejection and mass"),
+        ],
+    )
+    out.save(DST / "fig24_panel_choice.png")
+
+
 if __name__ == "__main__":
-    # fig02_section уже на английском — копируем как есть
-    shutil.copy2(SRC / "fig02_section.png", DST / "fig02_section.png")
-    print("fig02 copied (already English)")
-
-    # fig10_energy и fig17_food уже содержат английский текст — копируем как есть
-    shutil.copy2(SRC / "fig10_energy.png", DST / "fig10_energy.png")
-    print("fig10 copied (already English)")
-    shutil.copy2(SRC / "fig17_food.png", DST / "fig17_food.png")
-    print("fig17 copied (already English)")
-
     make_fig01()
     print("fig01 done")
+    make_fig02()
+    print("fig02 copied (already English)")
+    make_fig03()
+    print("fig03 done")
     make_fig04()
     print("fig04 done")
+    make_fig05()
+    print("fig05 done")
+    make_fig06()
+    print("fig06 done")
+    make_fig07()
+    print("fig07 done")
+    make_fig08()
+    print("fig08 done")
+    make_fig09()
+    print("fig09 done")
+    make_fig10()
+    print("fig10 copied (already English)")
+    make_fig11()
+    print("fig11 done")
+    make_fig12()
+    print("fig12 done")
+    make_fig13()
+    print("fig13 done")
+    make_fig14()
+    print("fig14 done")
     make_fig15()
     print("fig15 done")
     make_fig16()
     print("fig16 done")
+    make_fig17()
+    print("fig17 copied (already English)")
     make_fig18()
     print("fig18 done")
+    make_fig19()
+    print("fig19 done")
+    make_fig20()
+    print("fig20 done")
+    make_fig21()
+    print("fig21 done")
+    make_fig22()
+    print("fig22 done")
+    make_fig23()
+    print("fig23 done")
+    make_fig24()
+    print("fig24 done")
