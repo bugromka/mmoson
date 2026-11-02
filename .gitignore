@@ -7,3 +7,4 @@ NIK_*/
 .nik-vault/
 passphrase
 passphrase.*
+__pycache__/
