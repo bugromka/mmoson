@@ -392,7 +392,7 @@ def finish(page: dict, body: str, css: str, js: str) -> tuple[str, int]:
 
     settings = page.get("img", {})
     inlined = 0
-    for rel in sorted(set(re.findall(r"assets/fig/[A-Za-z0-9_\-.]+\.png", html))):
+    for rel in sorted(set(re.findall(r"assets/(?:fig|fig_en)/[A-Za-z0-9_\-.]+\.png", html))):
         uri, size = encode_image(
             ROOT / rel,
             max_width=settings.get("max_width", 1200),

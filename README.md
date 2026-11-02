@@ -30,8 +30,9 @@
 
 | Файл | Содержание |
 |---|---|
-| `sections/` | публикация, разбитая на отдельные документы: 43 файла — по одному на каждый раздел 1–34, вводные части, приложения и лицензию; в каждом документе титульный блок, русский и английский текст раздела со таблицами и рисунками, а также список литературы именно этого раздела |
-| `sections/00_ОГЛАВЛЕНИЕ.docx` | содержание издания: состав документов с числом источников по каждому и перечень иллюстраций с указанием документа-владельца |
+| `sections/` | объединённые документы публикации: 2 файла — русский и английский вариант полного текста всех 43 разделов (разделы 1–34, вводные части, приложения и лицензия) |
+| `sections/MMOSON_combined_document_ru.docx` | полный текст публикации на русском языке, все 43 раздела в одном файле |
+| `sections/MMOSON_combined_document_en.docx` | полный текст публикации на английском языке, все 43 раздела в одном файле |
 | `src/` | генераторы документа и расчётная верификация |
 | `resource_map.png`, `resource_map.pdf` | ресурсная карта программы |
 | `MMOSON_supplement_new_domains.docx` | архивная копия дополнения: семь новых областей анализа (разделы 20–27); текст этих разделов входит в публикацию |
@@ -48,7 +49,7 @@ python3 crosscheck.py ../sections
 python3 audit_tables_figures_v7.py ../sections
 ```
 
-`verify_all.py` пересчитывает величины независимо. `crosscheck.py` и `audit_tables_figures_v7.py` принимают либо один DOCX, либо каталог: им передаётся весь каталог `sections/`, документы склеиваются в один корпус (`src/corpus.py`), поэтому сверка охватывает всю публикацию сразу. Поскольку каждый раздел содержит русскую и английскую редакции, рисунков в корпусе 46 — по два на каждый из 23 рисунков.
+`verify_all.py` пересчитывает величины независимо. `crosscheck.py` и `audit_tables_figures_v7.py` принимают либо один DOCX, либо каталог: им передаётся каталог `sections/` с объединёнными документами (`sections/MMOSON_combined_document_ru.docx` и `sections/MMOSON_combined_document_en.docx`), поэтому сверка охватывает всю публикацию сразу.
 
 Новые области анализа (разделы 20–27) считаются отдельным скриптом:
 
@@ -62,38 +63,18 @@ python3 edition8_calcs.py            # разделы 28-34, результат 
 
 Модули сборки монолитного документа (`integrate_supplement_v1.py`, `integrate_edition8_v1.py`, `build_supplement_docx.py`, `split_publication.py`) работали с едиными файлами `MMOSON_russian_publication.docx` и `MMOSON_english_publication.docx`. Эти файлы из репозитория удалены, поэтому модули сохранены как запись способа сборки публикации и в текущем составе репозитория не запускаются. Расчётные части (`supplement_calcs.py`, `edition8_calcs.py`, `verify_all.py`) от удаления не зависят.
 
-### Раздельные документы публикации
+### Объединённые документы публикации
 
-Публикация разбита на отдельные документы каталога `sections/` — 43 файла. Разбивка выполнена `src/split_publication.py`.
-
-```bash
-cd src
-python3 split_publication.py         # собирает sections/ из единых публикаций
-```
-
-Каждый документ содержит:
-
-- титульный блок: проект, номер и название раздела на русском и английском, редакция с датой и порядковый номер документа в издании («документ N из 43»);
-- русский текст раздела со таблицами и рисунками;
-- английский текст того же раздела со таблицами и рисунками;
-- список литературы именно этого раздела — ссылки на внешние источники и собственные допущения публикации, на которые раздел опирается.
+Публикация объединена в два файла в каталоге `sections/` — русский и английский вариант полного текста всех 43 разделов (разделы 1–34, вводные части, приложения и лицензия). Каждый файл содержит титульные блоки, текст со таблицами и рисунками, списки литературы.
 
 Состав каталога:
 
 | Файл | Содержание |
 |---|---|
-| `00_ОГЛАВЛЕНИЕ.docx` | состав издания и перечень иллюстраций с документом-владельцем |
-| `00_Аннотация.docx` | аннотация и ключевые слова |
-| `00_Об_авторстве_и_методе_работы.docx` | авторы и метод работы |
-| `01_…` — `34_…` | разделы 1–34 публикации |
-| `ПРИЛОЖЕНИЕ_Б_Обоснование_расчётов.docx` | обоснование расчётов |
-| `ПРИЛОЖЕНИЕ_В_Перечень_сокращений_и_обозначений.docx` | перечень сокращений и обозначений |
-| `ПРИЛОЖЕНИЕ_Г_Источники.docx` | источники |
-| `ПРИЛОЖЕНИЕ_Д_Список_использованной_литературы.docx` | полный список литературы публикации |
-| `ПРИЛОЖЕНИЕ_Е_Матрица_статусов_и_проверок.docx` | матрица статусов и проверок |
-| `ЛИЦЕНЗИЯ.docx` | лицензия и авторские права, обе редакции |
+| `sections/MMOSON_combined_document_ru.docx` | полный текст публикации на русском языке, все 43 раздела в одном файле |
+| `sections/MMOSON_combined_document_en.docx` | полный текст публикации на английском языке, все 43 раздела в одном файле |
 
-Нумерация приложений в русской и английской редакциях отличается намеренно: русская — Б, В, Г, Д, Е; английская — B, C, D, E, F (D занята источниками). Рисунки русской и английской редакций побайтово совпадают, поэтому каждый рисунок встроен в пакет своего раздела один раз на язык.
+Рисунки русской и английской редакций побайтово совпадают.
 
 `supplement_calcs.py` выводит все величины от первооснов: носовые купола как ограничение давления, аварийную потерю вращения, визуальную среду замкнутого мира, химию воздуха на столетия, почву как инженерный профиль, масштабирование архитектуры и связь из точки L1.
 
@@ -164,8 +145,9 @@ Lighting is provided only by reactors through axial light-and-thermal beams. The
 
 | File | Contents |
 |---|---|
-| `sections/` | the publication split into separate documents: 43 files — one per section 1–34, plus the introductory parts, appendices and licence; each document carries a title block, the Russian and English text of its section with tables and figures, and the reference list of that very section |
-| `sections/00_ОГЛАВЛЕНИЕ.docx` | contents of the edition: the document set with source counts per document and the list of illustrations naming the owning document |
+| `sections/` | combined documents of the publication: 2 files — Russian and English variants of the full text of all 43 sections (sections 1–34, introductory parts, appendices and licence) |
+| `sections/MMOSON_combined_document_ru.docx` | full publication text in Russian, all 43 sections in one file |
+| `sections/MMOSON_combined_document_en.docx` | full publication text in English, all 43 sections in one file |
 | `src/` | document generators and calculation verification |
 | `resource_map.png`, `resource_map.pdf` | program resource map |
 | `MMOSON_supplement_new_domains.docx` | archived copy of the supplement: seven new analysis domains (sections 20–27); the text of these sections is part of the publication |
@@ -182,7 +164,7 @@ python3 crosscheck.py ../sections
 python3 audit_tables_figures_v7.py ../sections
 ```
 
-`verify_all.py` independently recalculates the values. `crosscheck.py` and `audit_tables_figures_v7.py` accept either a single DOCX or a directory: the whole `sections/` directory is passed and its documents are merged into one corpus (`src/corpus.py`), so the check covers the entire publication at once. Since every section carries both the Russian and the English edition, the corpus holds 46 figures — two for each of the 23 figures.
+`verify_all.py` independently recalculates the values. `crosscheck.py` and `audit_tables_figures_v7.py` accept either a single DOCX or a directory: the `sections/` directory is passed with the combined documents (`sections/MMOSON_combined_document_ru.docx` and `sections/MMOSON_combined_document_en.docx`), so the check covers the entire publication at once.
 
 The new analysis domains (sections 20–27) are computed by a separate script:
 
@@ -196,38 +178,18 @@ Both scripts are pure first-principles calculation and need no documents.
 
 The document-assembly modules (`integrate_supplement_v1.py`, `integrate_edition8_v1.py`, `build_supplement_docx.py`, `split_publication.py`) operated on the single files `MMOSON_russian_publication.docx` and `MMOSON_english_publication.docx`. Those files have been removed from the repository, so the modules are kept as a record of how the publication was assembled and do not run against the current repository contents. The calculation parts (`supplement_calcs.py`, `edition8_calcs.py`, `verify_all.py`) do not depend on that removal.
 
-### Separate documents of the publication
+### Combined documents of the publication
 
-The publication is split into separate documents in the `sections/` directory — 43 files. The split was produced by `src/split_publication.py`.
-
-```bash
-cd src
-python3 split_publication.py         # builds sections/ from the single publications
-```
-
-Each document contains:
-
-- a title block: the project, the section number and title in Russian and English, the edition with its date, and the ordinal number of the document in the edition ("документ N из 43");
-- the Russian text of the section, with its tables and figures;
-- the English text of the same section, with its tables and figures;
-- the reference list of that very section — the external sources and the publication's own assumptions the section relies on.
+The publication is combined into two files in the `sections/` directory — Russian and English variants of the full text of all 43 sections (sections 1–34, introductory parts, appendices and licence). Each file contains title blocks, text with tables and figures, and reference lists.
 
 Contents of the directory:
 
 | File | Contents |
 |---|---|
-| `00_ОГЛАВЛЕНИЕ.docx` | document set of the edition and the list of illustrations naming the owning document |
-| `00_Аннотация.docx` | abstract and keywords |
-| `00_Об_авторстве_и_методе_работы.docx` | authors and method of work |
-| `01_…` — `34_…` | sections 1–34 of the publication |
-| `ПРИЛОЖЕНИЕ_Б_Обоснование_расчётов.docx` | substantiation of the calculations |
-| `ПРИЛОЖЕНИЕ_В_Перечень_сокращений_и_обозначений.docx` | list of abbreviations and symbols |
-| `ПРИЛОЖЕНИЕ_Г_Источники.docx` | sources |
-| `ПРИЛОЖЕНИЕ_Д_Список_использованной_литературы.docx` | full reference list of the publication |
-| `ПРИЛОЖЕНИЕ_Е_Матрица_статусов_и_проверок.docx` | matrix of statuses and checks |
-| `ЛИЦЕНЗИЯ.docx` | licence and copyright, both editions |
+| `sections/MMOSON_combined_document_ru.docx` | full publication text in Russian, all 43 sections in one file |
+| `sections/MMOSON_combined_document_en.docx` | full publication text in English, all 43 sections in one file |
 
-The appendix numbering differs between the Russian and the English edition by design: Russian — Б, В, Г, Д, Е; English — B, C, D, E, F (D is taken by the sources). The figures of the Russian and English editions are byte-identical, so each figure is embedded in the package of its own section once per language.
+The figures of the Russian and English editions are byte-identical.
 
 `supplement_calcs.py` derives every value from first principles: nose domes as a pressure boundary, emergency loss of rotation, the visual environment of a closed world, air chemistry over centuries, soil as an engineered profile, architecture scaling, and communications from the L1 point.
 
