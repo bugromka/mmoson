@@ -33,6 +33,8 @@ CSS = ROOT / "css" / "styles.css"
 JS = ROOT / "js" / "app.js"
 RU_DIR = ROOT / "ru"
 EN_DIR = ROOT / "en"
+FIG_RU = ROOT / "assets" / "fig"
+FIG_EN = ROOT / "assets" / "fig_en"
 
 PAGES = [
     {
@@ -392,9 +394,15 @@ def finish(page: dict, body: str, css: str, js: str) -> tuple[str, int]:
 
     settings = page.get("img", {})
     inlined = 0
-    for rel in sorted(set(re.findall(r"assets/fig/[A-Za-z0-9_\-.]+\.png", html))):
+    # Ищем картинки в обеих папках: assets/fig/ (RU) и assets/fig_en/ (EN)
+    for rel in sorted(set(re.findall(r"assets/fig(?:_en)?/[A-Za-z0-9_\-.]+\.png", html))):
+        # Определяем папку источника по префиксу пути в HTML
+        if rel.startswith("assets/fig_en/"):
+            src_path = FIG_EN / rel.split("/")[-1]
+        else:
+            src_path = FIG_RU / rel.split("/")[-1]
         uri, size = encode_image(
-            ROOT / rel,
+            src_path,
             max_width=settings.get("max_width", 1200),
             quality=settings.get("quality", 80),
         )
