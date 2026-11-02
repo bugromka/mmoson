@@ -7,6 +7,7 @@
 «как есть» без подписей.
 
 Текст располагается справа от диаграммы, в одной текстовой колонке.
+Высота холста подбирается динамически, чтобы текст не обрезался.
 """
 
 from __future__ import annotations
@@ -19,18 +20,27 @@ DST = Path("site/assets/fig_en")
 DST.mkdir(exist_ok=True)
 
 try:
-    FONT_TITLE = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 28)
-    FONT_REG = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24)
-    FONT_SMALL = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 20)
+    FONT_TITLE = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 26)
+    FONT_REG = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)
     FONT_WARN = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 22)
 except Exception:
     FONT_TITLE = ImageFont.load_default()
     FONT_REG = ImageFont.load_default()
-    FONT_SMALL = ImageFont.load_default()
     FONT_WARN = ImageFont.load_default()
 
-# Ширина текстовой панели справа — достаточно для длинных английских строк
-PANEL_W = 950
+PANEL_W = 1000
+PADDING_X = 30
+PADDING_Y = 30
+TITLE_GAP = 14
+LINE_GAP = 30
+SMALL_GAP = 12
+WARN_GAP = 16
+VALUE_INLINE_OFFSET = 320  # смещение значения вправо относительно метки
+
+C_TITLE = (20, 20, 20, 255)
+C_LABEL = (50, 50, 50, 255)
+C_VALUE = (80, 80, 80, 255)
+C_WARN = (180, 40, 40, 255)
 
 
 def wrap_text(text: str, font, max_width: int) -> list[str]:
@@ -51,62 +61,108 @@ def wrap_text(text: str, font, max_width: int) -> list[str]:
     return lines
 
 
+def needed_height(title: str, lines: list[tuple[str, str | None]],
+                  warn_lines: list[str] | None, text_max_w: int) -> int:
+    """Рассчитывает высоту текстового блока (без верхнего/нижнего padding)."""
+    h = 0
+    h += 40  # высота заголовка (размер шрифта 26)
+    h += TITLE_GAP
+    for label, value in lines:
+        if label is None and value is None:
+            h += SMALL_GAP
+            continue
+
+        if label:
+            h += LINE_GAP  # строка с меткой
+            if value:
+                label_w = FONT_REG.getlength(label)
+                value_x_offset = label_w + 20
+                value_max_w = text_max_w - value_x_offset
+                if FONT_REG.getlength(value) <= value_max_w:
+                    pass  # значение на той же строке, дополнительной высоты не нужно
+                else:
+                    for _ in wrap_text(value, FONT_REG, text_max_w):
+                        h += LINE_GAP - 4
+        elif value:
+            for _ in wrap_text(value, FONT_REG, text_max_w):
+                h += LINE_GAP - 4
+
+    if warn_lines:
+        h += WARN_GAP
+        for wl in warn_lines:
+            for _ in wrap_text(wl, FONT_WARN, text_max_w):
+                h += LINE_GAP + 6
+    return h
+
+
 def add_panel(img: Image.Image, title: str, lines: list[tuple[str, str | None]],
               warn_lines: list[str] | None = None) -> Image.Image:
-    """Добавляет текстовую панель шириной PANEL_W справа."""
+    """Добавляет текстовую панель шириной PANEL_W справа.
+
+    Высота холста вычисляется динамически, чтобы весь текст помещался
+    с верхним и нижним отступами (ничего не обрезается).
+    """
     w, h = img.size
-    canvas = Image.new("RGBA", (w + PANEL_W, h), (255, 255, 255, 255))
+    text_max_w = PANEL_W - 2 * PADDING_X
+    need_h = needed_height(title, lines, warn_lines, text_max_w)
+    canvas_h = max(h, need_h + 2 * PADDING_Y)
+    canvas = Image.new("RGBA", (w + PANEL_W, canvas_h), (255, 255, 255, 255))
     canvas.paste(img, (0, 0))
     draw = ImageDraw.Draw(canvas)
 
-    x = w + 30
-    y = 30
-    text_max_w = PANEL_W - 60  # отступы по краям панели
+    x = w + PADDING_X
+    y = PADDING_Y
 
     # Заголовок
-    draw.text((x, y), title, font=FONT_TITLE, fill=(20, 20, 20, 255))
-    y += 50
+    draw.text((x, y), title, font=FONT_TITLE, fill=C_TITLE)
+    y += 40 + TITLE_GAP
 
     for label, value in lines:
         if label is None and value is None:
-            y += 14
+            y += SMALL_GAP
             continue
 
-        # Рисуем метку (левая часть строки)
         if label:
-            draw.text((x, y), label, font=FONT_REG, fill=(50, 50, 50, 255))
+            draw.text((x, y), label, font=FONT_REG, fill=C_LABEL)
+            label_w = FONT_REG.getlength(label)
+            value_x = x + label_w + 20
+            value_max_w = text_max_w - (label_w + 20)
 
-        # Рисуем значение (правая часть, с переносом если нужно)
-        if value:
-            label_w = FONT_REG.getlength(label) if label else 0
-            value_x = x + 340
-            avail_w = text_max_w - 340
-            if FONT_REG.getlength(value) <= avail_w:
-                draw.text((value_x, y), value, font=FONT_REG, fill=(80, 80, 80, 255))
-                y += 38
+            if value:
+                if FONT_REG.getlength(value) <= value_max_w:
+                    draw.text((value_x, y), value, font=FONT_REG, fill=C_VALUE)
+                    y += LINE_GAP
+                else:
+                    y += LINE_GAP
+                    for sub in wrap_text(value, FONT_REG, text_max_w):
+                        draw.text((x, y), sub, font=FONT_REG, fill=C_VALUE)
+                        y += LINE_GAP - 4
             else:
-                y += 38
-                for sub in wrap_text(value, FONT_REG, text_max_w):
-                    draw.text((x, y), sub, font=FONT_REG, fill=(80, 80, 80, 255))
-                    y += 34
-        else:
-            y += 38
+                y += LINE_GAP
+        elif value:
+            for sub in wrap_text(value, FONT_REG, text_max_w):
+                draw.text((x, y), sub, font=FONT_REG, fill=C_VALUE)
+                y += LINE_GAP - 4
 
     if warn_lines:
-        y += 16
+        y += WARN_GAP
         for wl in warn_lines:
             for sub in wrap_text(wl, FONT_WARN, text_max_w):
-                draw.text((x, y), sub, font=FONT_WARN, fill=(180, 40, 40, 255))
-                y += 32
+                draw.text((x, y), sub, font=FONT_WARN, fill=C_WARN)
+                y += LINE_GAP + 6
 
     return canvas
 
 
+# ---------------------------------------------------------------------------
+# fig01 — особый случай: база — эталон русской картинки (1904x998)
+# ---------------------------------------------------------------------------
+
 def make_fig01() -> None:
-    """fig01_layout: английская версия по эталону русской картинки
-    (1904x998). Справа на том же холсте, в тех же зонах, что русский текст,
-    рисуется английский перевод (docs/image_captions_ru_en.md) — без
-    добавленной кривой панели, с аккуратным переносом.
+    """fig01_layout: английская версия по эталону русской картинки (1904x998).
+
+    Справа на том же холсте, в тех же зонах, что русский текст эталона,
+    рисуется английский перевод. Диаграмма — байт-в-байт как в эталоне.
     """
     ref = Path("/tmp/arena-coding-uploads/fig01_layout-3.png")
     img = Image.open(ref).convert("RGBA")
@@ -118,16 +174,17 @@ def make_fig01() -> None:
 
     x = 1020
     y = 24
-    draw.text((x, y), "Station layout: two counter-rotating cylinders", font=FONT_TITLE, fill=(20, 20, 20, 255))
 
+    draw.text((x, y), "Station layout: two counter-rotating cylinders",
+              font=FONT_TITLE, fill=C_TITLE)
     y = 80
-    draw.text((x, y), "Angular velocity: 0.05 \u03c0/s", font=FONT_REG, fill=(20, 20, 20, 255))
+    draw.text((x, y), "Angular velocity: 0.05 \u03c0/s", font=FONT_REG, fill=C_VALUE)
 
     def item(text: str, first_y: int) -> None:
         nonlocal y
         y = first_y
         for i, line in enumerate(wrap_text(text, FONT_REG, 470)):
-            draw.text((x + (44 if i else 0), y), line, font=FONT_REG, fill=(20, 20, 20, 255))
+            draw.text((x + (44 if i else 0), y), line, font=FONT_REG, fill=C_VALUE)
             y += 23
 
     item("1. Support node — rotating cylinder shell and non-rotating frame", 155)
@@ -137,21 +194,25 @@ def make_fig01() -> None:
     item("5. Radiator panels — mounted on frame, 1 477 km\u00b2", 498)
 
     y = 612
-    draw.text((x, y), "Climatic zones, km from cylinder end:", font=FONT_REG, fill=(20, 20, 20, 255))
+    draw.text((x, y), "Climatic zones, km from cylinder end:", font=FONT_REG, fill=C_VALUE)
     y += 26
     for zone in ["tropical 0–10", "subtropical 10–22", "moderate 22–32", "cold 32–40"]:
-        draw.text((x + 44, y), zone, font=FONT_REG, fill=(20, 20, 20, 255))
+        draw.text((x + 44, y), zone, font=FONT_REG, fill=C_VALUE)
         y += 24
 
     y = 778
     warn = ("Heat exchange between cylinders does not occur: they rotate, "
             "and rigid connection by rim is impossible. Connection only through axis.")
     for line in wrap_text(warn, FONT_REG, 470):
-        draw.text((x, y), line, font=FONT_REG, fill=(20, 20, 20, 255))
+        draw.text((x, y), line, font=FONT_REG, fill=C_VALUE)
         y += 23
 
     img.save(DST / "fig01_layout.png")
 
+
+# ---------------------------------------------------------------------------
+# Остальные картинки — чистый источник + английская панель справа
+# ---------------------------------------------------------------------------
 
 def make_fig02() -> None:
     img = Image.open(SRC / "fig02_section.png").convert("RGBA")
@@ -173,7 +234,7 @@ def make_fig03() -> None:
         [
             ("Gravity at cylinder surface", "1 g"),
             ("Rotation radius", "5 000 m"),
-            ("Angular velocity", "0.05 π/s"),
+            ("Angular velocity", "0.05 \u03c0/s"),
         ],
     )
     out.save(DST / "fig03_gravity.png")
@@ -186,25 +247,17 @@ def make_fig04() -> None:
         "Climatic zones of the cylinder",
         [
             ("1", "Tropical, 0–10 km"),
-            ("", "+28...+35 °C · humidity 70–85 % ·"),
-            ("", "solar 220 Wt/m²"),
-            ("", "thermophilic cultures, rice,"),
-            ("", "batat, bananas"),
+            ("", "+28…+35 °C · humidity 70–85 % · solar 220 Wt/m²"),
+            ("", "thermophilic cultures, rice, batat, bananas"),
             ("2", "Subtropical, 10–22 km"),
-            ("", "+15...+28 °C · humidity 60–70 % ·"),
-            ("", "solar 170 Wt/m²"),
-            ("", "grains, soy, oilseeds, beets,"),
-            ("", "arctic greens"),
+            ("", "+15…+28 °C · humidity 60–70 % · solar 170 Wt/m²"),
+            ("", "grains, soy, oilseeds, beets, arctic greens"),
             ("3", "Moderate, 22–32 km"),
-            ("", "+0...+15 °C · humidity 55–65 % ·"),
-            ("", "solar 120 Wt/m²"),
-            ("", "spinach, cauliflower, chicory,"),
-            ("", "oats, arctic grains"),
+            ("", "+0…+15 °C · humidity 55–65 % · solar 120 Wt/m²"),
+            ("", "spinach, cauliflower, chicory, oats, arctic grains"),
             ("4", "Cold, 32–40 km"),
-            ("", "-15...-5 °C · humidity 40–50 % ·"),
-            ("", "solar 60 Wt/m²"),
-            ("", "only frost-resistant"),
-            ("", "microgreens, no heating"),
+            ("", "-15…-5 °C · humidity 40–50 % · solar 60 Wt/m²"),
+            ("", "only frost-resistant microgreens, no heating"),
         ],
     )
     out.save(DST / "fig04_climate.png")
@@ -233,7 +286,7 @@ def make_fig06() -> None:
             ("Tensile strength", "1 200 MPa"),
             ("Density", "7 850 kg/m³"),
             ("Total quantity", "20.83 billion tonnes"),
-            ("Share of asteroid 6178 1986 DA", "94 %"),
+            ("Share of asteroid 6178 1986 DA resource", "94 %"),
         ],
     )
     out.save(DST / "fig06_steel.png")
@@ -247,7 +300,7 @@ def make_fig07() -> None:
         [
             ("Rotating cylinders", "centrifugal loads"),
             ("Non-rotating frame", "static loads from docks and equipment"),
-            ("Max load on support node", "does not exceed design limit"),
+            ("Maximum load on support node", "does not exceed design limit"),
         ],
     )
     out.save(DST / "fig07_load.png")
@@ -314,7 +367,7 @@ def make_fig12() -> None:
         img,
         "Coriolis forces on station",
         [
-            ("Cylinder angular rotation", "0.05 π/s"),
+            ("Cylinder angular rotation", "0.05 \u03c0/s"),
             ("Deflection", "of moving objects during radial movement"),
             ("Compensation", "in navigation and control systems"),
         ],
@@ -358,20 +411,17 @@ def make_fig15() -> None:
         [
             ("1", "Cable fairing to non-rotating frame"),
             ("2", "Support node: transition to rotation"),
-            ("3", "Thermal barrier separates fairing"),
-            ("", "from OSC envelope"),
+            ("3", "Thermal barrier separates fairing from OSC envelope"),
             ("4", "Hull placed inside toroidal fairing"),
             ("5", "Central solar mirror"),
             ("6", "Gravity layer 1 000 g"),
-            ("7", "Production zone g < 2 500 m,"),
-            ("", "closed for people"),
+            ("7", "Production zone g < 2 500 m, closed for people"),
         ],
         warn_lines=[
-            "Production volume radius up to 2 500 m closed",
-            "for people: flux from OSC increases 300 W/m²,",
-            "and beyond 500 m — 1 500 W/m². Mirror",
-            "shielding leads to distantly controlled",
-            "mechanisms. Free path along axis is reduced.",
+            "Production volume radius up to 2 500 m closed for people: "
+            "flux from OSC increases 300 W/m², and beyond 500 m — 1 500 W/m². "
+            "Mirror shielding leads to distantly controlled mechanisms. "
+            "Free path along axis is reduced.",
         ],
     )
     out.save(DST / "fig15_transport.png")
@@ -384,28 +434,17 @@ def make_fig16() -> None:
         "Material requirement: total 43.55 billion tonnes",
         [
             ("1", "Steel 18Ni(300), structural fabric"),
-            ("", "20.83 billion tonnes · resource share:"),
-            ("", "94 % of asteroid metal (6178)"),
-            ("", "1986 DA"),
+            ("", "20.83 billion tonnes · resource share: 94 % of asteroid metal (6178) 1986 DA"),
             ("2", "Structural regolith"),
-            ("", "8.13 billion tonnes · regolith"),
-            ("", "reprocessing, general"),
+            ("", "8.13 billion tonnes · regolith reprocessing, general"),
             ("3", "Breathable mix (N2, O2)"),
-            ("", "7.55 billion tonnes · conceptual"),
-            ("", "program ch. 8; graphics,"),
-            ("", "qualification and testing —"),
-            ("", "in development"),
+            ("", "7.55 billion tonnes · conceptual program ch. 8; graphics, qualification and testing — in development"),
             ("4", "Regolith, boron carbide"),
-            ("", "4.65 billion tonnes · loose"),
-            ("", "regolith, general"),
+            ("", "4.65 billion tonnes · loose regolith, general"),
             ("5", "Water"),
-            ("", "1.17 billion tonnes · conceptual"),
-            ("", "program ch. 8; graphics,"),
-            ("", "qualification and testing —"),
-            ("", "in development"),
-            ("6", "Nickel-steel shell, thermal"),
-            ("", "insulation 1.22 billion tonnes ·"),
-            ("", "general"),
+            ("", "1.17 billion tonnes · conceptual program ch. 8; graphics, qualification and testing — in development"),
+            ("6", "Nickel-steel shell, thermal insulation"),
+            ("", "1.22 billion tonnes · general"),
         ],
     )
     out.save(DST / "fig16_resources.png")
@@ -430,37 +469,21 @@ def make_fig18() -> None:
         "Land use of two cylinders, biosphere 1 508 km²",
         [
             ("1", "Sowing areas"),
-            ("", "807 km² · 54 % · 14 crops,"),
-            ("", "table 5.5; net 1.870"),
-            ("", "trillion kcal"),
+            ("", "807 km² · 54 % · 14 crops, table 5.5; net 1.870 trillion kcal"),
             ("2", "Free reserve"),
-            ("", "536 km² · 36 % · including"),
-            ("", "29.6 km² arctic crop"),
-            ("", "strains"),
-            ("3", "Reserve for variational"),
-            ("", "cultures 150 km² · 10 % ·"),
-            ("", "introduced after crop"),
-            ("", "failure, not sown"),
+            ("", "536 km² · 36 % · including 29.6 km² arctic crop strains"),
+            ("3", "Reserve for variational cultures"),
+            ("", "150 km² · 10 % · introduced after crop failure, not sown"),
             ("4", "Fish ponds"),
-            ("", "15 km² · 1 % · natural feed,"),
-            ("", "depth up to 3 m, p. B.11"),
+            ("", "15 km² · 1 % · natural feed, depth up to 3 m, p. B.11"),
+        ],
+        warn_lines=[
+            "Biosphere accounts for 49 % of total area of 3 100.2 km²; "
+            "remaining — buildings, roads, waterways. "
+            "150 km² of 1.2 m deep ponds and slopes. "
+            "No heating in cold zone (p. B.12).",
         ],
     )
-    draw = ImageDraw.Draw(out)
-    w, h = out.size
-    x = w - PANEL_W + 30
-    y = 330
-    footer = [
-        "Biosphere accounts for 49 % of total",
-        "area of 3 100.2 km²; remaining —",
-        "buildings, roads, waterways",
-        "150 km² of 1.2 m deep ponds",
-        "and slopes. No heating in cold",
-        "zone (p. B.12)",
-    ]
-    for fl in footer:
-        draw.text((x, y), fl, font=FONT_REG, fill=(50, 50, 50, 255))
-        y += 36
     out.save(DST / "fig18_land.png")
 
 
