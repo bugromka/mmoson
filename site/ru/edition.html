@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ММОСО'Н — Титульная страница</title>
-<meta name="description" content="Титульная страница проекта ММОСО'Н: двуязычный обзор (русский / английский) со ссылками на все разделы сайта.">
+<title>Издание — ММОСО’Н</title>
+<meta name="description" content="43 документа, 34 раздела, две языковые редакции, приложения с обоснованием расчётов и матрицей проверок.">
 <meta name="theme-color" content="#8f7ed6">
-<!-- ММОСО’Н · страница «Титульная». Один самодостаточный файл: разметка, стили, скрипт и иллюстрации внутри.  Версия для встраивания в Google Sites: навигация — меню самого Sites. Внутренние ссылки ведут на href="#". -->
+<!-- ММОСО’Н · страница «Издание». Один самодостаточный файл: разметка, стили, скрипт и иллюстрации внутри.  Страница сайта ММОСО’Н: самодостаточный HTML-файл. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
@@ -1143,38 +1143,40 @@ code {
 </head>
 <body>
 
-<main class="page" id="top">
-
-<section class="content-section fade-in title-page">
+<main class="page" id="top">\n\n<section class="page-head">
   <div class="container">
-    <div class="bilingual-grid">
-      <div class="lang-column lang-ru">
-        <h2>О проекте</h2>
-        <p>ММОСО'Н — личный инженерный и научно-исследовательский проект: расчётная модель обитаемой орбитальной станции цилиндрического типа, рассчитанная от первооснов.</p>
-        <ul class="check-list">
-          <li><span class="check-ico" aria-hidden="true">✓</span>Два встречновращающихся цилиндра в точке L1</li>
-          <li><span class="check-ico" aria-hidden="true">✓</span>Обитаемая поверхность 3 100,2 км²</li>
-          <li><span class="check-ico" aria-hidden="true">✓</span>Население 1 000 000 человек</li>
-          <li><span class="check-ico" aria-hidden="true">✓</span>Электроснабжение 721,4 ГВт</li>
-        </ul>
-        <a class="btn btn-primary" href="https://sites.google.com/view/mmoson/русская-версия/главная">Читать на русском →</a>
+    <p class="eyebrow">Публикация</p>
+    <h1>Издание</h1>
+    <p class="page-sub">43 документа, 34 раздела, русская и английская редакции.</p>
+  </div>
+</section>\n\n<section class="card-section" id="edition">
+    <div class="container">
+      <div class="section-title">
+        <h2>Издание</h2>
+        <p class="section-kicker">43 документа · 34 раздела · две языковые редакции</p>
       </div>
-      <div class="lang-column lang-en">
-        <h2>About the project</h2>
-        <p>MMOSON is a personal engineering and research project: a calculable model of a habitable cylindrical orbital station, derived from first principles.</p>
-        <ul class="check-list">
-          <li><span class="check-ico" aria-hidden="true">✓</span>Two counter-rotating cylinders at L1 point</li>
-          <li><span class="check-ico" aria-hidden="true">✓</span>Habitable surface 3 100.2 km²</li>
-          <li><span class="check-ico" aria-hidden="true">✓</span>Population 1 000 000 people</li>
-          <li><span class="check-ico" aria-hidden="true">✓</span>Power supply 721.4 GW</li>
+
+      <div class="edition-grid">
+        <div class="edition-main fade-in">
+          <p>Публикация существует не одним файлом, а набором документов: каждый раздел — отдельный <code>.docx</code> с титульным блоком, русским и английским текстом, таблицами, рисунками и своим списком литературы.</p>
+          <div class="edition-facts">
+            <div><strong>34</strong><span>раздела</span></div>
+            <div><strong>43</strong><span>документа</span></div>
+            <div><strong>23</strong><span>рисунка</span></div>
+            <div><strong>5</strong><span>приложений</span></div>
+          </div>
+          <a class="btn btn-primary" href="https://github.com/bugromka/mmoson" target="_blank" rel="noopener">Репозиторий проекта</a>
+        </div>
+
+        <ul class="edition-list fade-in">
+          <li><span>01–19</span> Концепция, физика, биоразнообразие, инженерия, биосфера, право</li>
+          <li><span>20–27</span> Носовые купола, аварийная потеря вращения, химия воздуха, почва, связь из L1</li>
+          <li><span>28–34</span> Генетика, сельское хозяйство, промышленность, стыковка, города</li>
+          <li><span>Б–Е</span> Обоснование расчётов, сокращения, источники, литература, матрица проверок</li>
         </ul>
-        <a class="btn btn-ghost" href="https://sites.google.com/view/mmoson/english-version/main">Read in English →</a>
       </div>
     </div>
-  </div>
-</section>
-
-</main>
+  </section>\n\n</main>
 
 <script>
 /* ММОСО’Н — поведение страницы.
