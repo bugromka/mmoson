@@ -77,13 +77,6 @@ def heart(draw: ImageDraw.ImageDraw, cy: int = 104, scale: float = 1.0, color=(2
     draw.polygon([(cx - 2 * r, cy + 2), (cx + 2 * r, cy + 2), (cx, cy + 3.1 * r)], fill=color)
 
 
-def pin(draw: ImageDraw.ImageDraw, color=(255, 255, 255, 255)):
-    cx, cy, r = SIZE / 2, 104, 52
-    draw.ellipse((cx - r, cy - r, cx + r, cy + r), outline=color, width=12)
-    draw.polygon([(cx - 26, cy + 34), (cx + 26, cy + 34), (cx, cy + 96)], fill=color)
-    draw.ellipse((cx - 14, cy - 14, cx + 14, cy + 14), fill=color)
-
-
 def building(draw: ImageDraw.ImageDraw, color=(255, 255, 255, 255)):
     draw.rectangle((72, 92, 184, 196), fill=color)
     draw.polygon([(64, 92), (192, 92), (128, 52)], fill=color)
@@ -144,16 +137,7 @@ def main() -> int:
     centered_text(d, "МИНСТРОЙ", 26, 204)
     save(img, out / "Minstroy-RF.png")
 
-    # КРЯК — знак-заменитель: контур карты и точка на ней
-    img = rounded((143, 126, 214, 255), radius=128)
-    d = ImageDraw.Draw(img)
-    for i, w in enumerate((16, 12, 8)):
-        d.arc((44 + i * 26, 44 + i * 26, 212 - i * 26, 212 - i * 26), start=200, end=340,
-              fill=(255, 255, 255, 255), width=w)
-    pin(d)
-    save(img, out / "new-logo-kryak (1).png")
-
-    print("\nготова памятка: README для репозитория Image")
+        print("\nготова памятка: README для репозитория Image")
     return 0
 
 

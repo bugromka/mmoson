@@ -2,7 +2,7 @@
 
 ## Русский / Russian
 
-Визуальный язык — по референсу МХ «КРЯК» (Региональный картографический Я-кластер; полное название — Межрегиональный картографический Я-кластер; Я-кластер — Yacluster): лавандовый фон, белые «стеклянные» секции-карточки, Montserrat + Raleway, градиентные подчёркивания, акценты фиолетовый / коралловый / бирюзовый.
+Визуальный язык: лавандовый фон, белые «стеклянные» секции-карточки, Montserrat + Raleway, градиентные подчёркивания, акценты фиолетовый / коралловый / бирюзовый.
 
 ### Главное
 
@@ -55,7 +55,7 @@ python3 -m http.server 8000     # http://localhost:8000
 
 ## English / English
 
-Visual language — by reference of MX «КРЯК» (Regional Cartographic Ya-Cluster; full name — Interregional Cartographic Ya-Cluster; Ya-Cluster — Yacluster): lavender background, white «glass» card-sections, Montserrat + Raleway, gradient underlines, accents violet / coral / turquoise.
+Visual language: lavender background, white «glass» card-sections, Montserrat + Raleway, gradient underlines, accents violet / coral / turquoise.
 
 ### Main
 
