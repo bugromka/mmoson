@@ -59,7 +59,6 @@ EXPECTED = [
     "is7y3-uk-D8o.png",
     "kursk-511x533.png",
     "lingvistznanie.png",
-    "new-logo-kryak (1).png",
     "nex-Ufo-Sv-X0-m0-C2ov-Gh-lh-Al-Fl-Pl6qoe-KLFSQ7-MHi9-Z3-VUfu-En-Okzk-Nv-RLfvt-PRo2r2t-Rw1dj-Kn3-RNna-FVQl.png",
     "pervie.png",
     "school59_kursk.png",
