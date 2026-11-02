@@ -4,6 +4,9 @@
 Сохраняет графику неизменной, добавляя английскую текстовую панель справа.
 Картинки, где английский текст уже присутствует (fig02, fig10, fig17),
 копируются как есть.
+
+Текст располагается на тех же позициях, что и русский текст в оригинальных
+картинках: справа от диаграммы, в одной текстовой колонке.
 """
 
 from __future__ import annotations
@@ -17,18 +20,36 @@ DST = Path("site/assets/fig_en")
 DST.mkdir(exist_ok=True)
 
 try:
-    FONT_TITLE = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 30)
-    FONT_REG = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 26)
-    FONT_SMALL = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)
-    FONT_WARN = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 24)
+    FONT_TITLE = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 28)
+    FONT_REG = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24)
+    FONT_SMALL = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 20)
+    FONT_WARN = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 22)
 except Exception:
     FONT_TITLE = ImageFont.load_default()
     FONT_REG = ImageFont.load_default()
     FONT_SMALL = ImageFont.load_default()
     FONT_WARN = ImageFont.load_default()
 
+# Ширина текстовой панели справа — достаточно для длинных английских строк
+PANEL_W = 950
 
-PANEL_W = 700  # достаточно широкая панель, чтобы текст не обрезался
+
+def wrap_text(text: str, font, max_width: int) -> list[str]:
+    """Переносит строку по словам, чтобы она не выходила за max_width."""
+    words = text.split()
+    if not words:
+        return [""]
+    lines = []
+    current = words[0]
+    for w in words[1:]:
+        test = current + " " + w
+        if font.getlength(test) <= max_width:
+            current = test
+        else:
+            lines.append(current)
+            current = w
+    lines.append(current)
+    return lines
 
 
 def add_panel(img: Image.Image, title: str, lines: list[tuple[str, str | None]],
@@ -41,25 +62,45 @@ def add_panel(img: Image.Image, title: str, lines: list[tuple[str, str | None]],
 
     x = w + 30
     y = 30
+    text_max_w = PANEL_W - 60  # отступы по краям панели
 
     # Заголовок
     draw.text((x, y), title, font=FONT_TITLE, fill=(20, 20, 20, 255))
-    y += 55
+    y += 50
 
     for label, value in lines:
         if label is None and value is None:
-            y += 12
+            y += 14
             continue
-        draw.text((x, y), label, font=FONT_REG, fill=(50, 50, 50, 255))
+
+        # Рисуем метку (левая часть строки)
+        if label:
+            draw.text((x, y), label, font=FONT_REG, fill=(50, 50, 50, 255))
+
+        # Рисуем значение (правая часть, с переносом если нужно)
         if value:
-            draw.text((x + 340, y), value, font=FONT_REG, fill=(80, 80, 80, 255))
-        y += 40
+            # Проверяем, помещается ли значение на одной строке после метки
+            label_w = FONT_REG.getlength(label) if label else 0
+            value_x = x + 340
+            avail_w = text_max_w - 340
+            if FONT_REG.getlength(value) <= avail_w:
+                draw.text((value_x, y), value, font=FONT_REG, fill=(80, 80, 80, 255))
+                y += 38
+            else:
+                # Переносим значение на отдельную строку под меткой
+                y += 38
+                for sub in wrap_text(value, FONT_REG, text_max_w):
+                    draw.text((x, y), sub, font=FONT_REG, fill=(80, 80, 80, 255))
+                    y += 34
+        else:
+            y += 38
 
     if warn_lines:
-        y += 20
+        y += 16
         for wl in warn_lines:
-            draw.text((x, y), wl, font=FONT_WARN, fill=(180, 40, 40, 255))
-            y += 36
+            for sub in wrap_text(wl, FONT_WARN, text_max_w):
+                draw.text((x, y), sub, font=FONT_WARN, fill=(180, 40, 40, 255))
+                y += 32
 
     return canvas
 
