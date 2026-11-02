@@ -2,16 +2,15 @@
 """Наложение английских подписей на чистые версии картинок галереи.
 
 Сохраняет графику неизменной, добавляя английскую текстовую панель справа.
-Картинки, где английский текст уже присутствует (fig02, fig10, fig17),
-копируются как есть.
+Текст берётся из docs/image_captions_ru_en.md (техническая документация).
+Все картинки галереи получают английскую панель — ninguna не копируется
+«как есть» без подписей.
 
-Текст располагается на тех же позициях, что и русский текст в оригинальных
-картинках: справа от диаграммы, в одной текстовой колонке.
+Текст располагается справа от диаграммы, в одной текстовой колонке.
 """
 
 from __future__ import annotations
 
-import shutil
 from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 
@@ -155,8 +154,15 @@ def make_fig01() -> None:
 
 
 def make_fig02() -> None:
-    """fig02_section уже на английском — копируем как есть"""
-    shutil.copy2(SRC / "fig02_section.png", DST / "fig02_section.png")
+    img = Image.open(SRC / "fig02_section.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Station section: cross-section and longitudinal view",
+        [
+            ("Cylinder structure, envelope, internal partitions", None),
+        ],
+    )
+    out.save(DST / "fig02_section.png")
 
 
 def make_fig03() -> None:
@@ -277,8 +283,16 @@ def make_fig09() -> None:
 
 
 def make_fig10() -> None:
-    """fig10_energy уже содержит английский текст — копируем как есть"""
-    shutil.copy2(SRC / "fig10_energy.png", DST / "fig10_energy.png")
+    img = Image.open(SRC / "fig10_energy.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Station energy balance",
+        [
+            ("Sources:", "solar energy, nuclear reactors"),
+            ("Distribution:", "life support, production, climate control"),
+        ],
+    )
+    out.save(DST / "fig10_energy.png")
 
 
 def make_fig11() -> None:
@@ -398,8 +412,15 @@ def make_fig16() -> None:
 
 
 def make_fig17() -> None:
-    """fig17_food уже содержит английский текст — копируем как есть"""
-    shutil.copy2(SRC / "fig17_food.png", DST / "fig17_food.png")
+    img = Image.open(SRC / "fig17_food.png").convert("RGBA")
+    out = add_panel(
+        img,
+        "Station food system",
+        [
+            ("Agricultural zones, aquaculture, production cycles", None),
+        ],
+    )
+    out.save(DST / "fig17_food.png")
 
 
 def make_fig18() -> None:
@@ -526,7 +547,7 @@ if __name__ == "__main__":
     make_fig01()
     print("fig01 done")
     make_fig02()
-    print("fig02 copied (already English)")
+    print("fig02 done")
     make_fig03()
     print("fig03 done")
     make_fig04()
@@ -542,7 +563,7 @@ if __name__ == "__main__":
     make_fig09()
     print("fig09 done")
     make_fig10()
-    print("fig10 copied (already English)")
+    print("fig10 done")
     make_fig11()
     print("fig11 done")
     make_fig12()
@@ -556,7 +577,7 @@ if __name__ == "__main__":
     make_fig16()
     print("fig16 done")
     make_fig17()
-    print("fig17 copied (already English)")
+    print("fig17 done")
     make_fig18()
     print("fig18 done")
     make_fig19()
