@@ -1,113 +1,109 @@
-# Сайт ММОСО’Н / MMOSON Website
+# Сайт ММОСО’Н / MMOSO'N Website
 
-## Русский / Russian
+## Русский
 
-Визуальный язык: лавандовый фон, белые «стеклянные» секции-карточки, Montserrat + Raleway, градиентные подчёркивания, акценты фиолетовый / коралловый / бирюзовый.
+Визуальный язык сайта: лавандовый фон, белые «стеклянные» карточки, Montserrat + Raleway, градиентные подчёркивания и акценты фиолетовый / коралловый / бирюзовый.
 
-### Главное
+### Страницы и навигация
 
-Каждая страница — **один самодостаточный HTML-файл**: разметка, весь CSS, весь JS и её собственные иллюстрации (`data:image/webp`) внутри. Отдельных `css/`, `js/` и папки с картинками во время работы страницы не требуется.
+Сборщик генерирует **14 актуальных страниц** — по семь на каждом языке:
 
-Страницы распределены по языковым папкам:
+| Язык | Меню |
+|---|---|
+| Русский | Главная, Инженерия, Верификация, Иллюстрации, Издание, Контакты, Авторы |
+| English | Home, Engineering, Verification, Gallery, Edition, Contacts, Authors |
 
-| Папка | Язык | Страницы |
-|---|---|---|
-| `site/ru/` | Русский | Главная, Инженерия, Верификация, Иллюстрации, Издание, Контакты, Авторы и лицензия, Титульная |
-| `site/en/` | Английский | Main, Engineering, Verification, Gallery, Edition, Contacts, Authors and License |
+Полноформатные страницы получают видимое меню только своего языка и пейджер «назад / дальше» по тому же языку. Переключателя языка на страницах нет. Контактные страницы (`shell: false`) — отдельные embed-страницы: без общей навигационной шапки, пейджера и локальных `.html`-ссылок; для них меню предоставляет Google Sites. На полноформатных страницах меню остаётся видимым и без JavaScript; скрипт только улучшает его компактный мобильный режим. Страница «Авторы» указывает Молодёжное общественное движение «Межрегиональный картографический Я-кластер» (МХ «КРЯК») как партнёра проекта в технологическом аспекте.
 
-В `ru/` и `en/` нет ссылок на другие `.html`-файлы (все страницы самодостаточные):
+### Один HTML на страницу
 
-```bash
-grep -o 'href="[^"]*\.html"' site/ru/*.html site/en/*.html    # вывод пустой
-```
+Каждая готовая страница — отдельный самодостаточный HTML-файл: собственные CSS, JS и нужные изображения встроены внутрь. Во время просмотра не требуются локальные CSS/JS-файлы или отдельная загрузка иллюстраций. В полноформатных страницах ссылки ведут на соответствующие страницы того же языка.
 
-### Исходники и пересборка
+### Исходники и сборка
 
 ```
 site/
-├── build_pages.py              сборка всех страниц
-├── content/*.html              разметка страниц без обвязки — правится здесь
-├── content/_parts/*.html       исходные фрагменты
-├── css/styles.css              общий стиль (вшивается в каждую страницу)
-├── css/contacts.css            своя таблица стилей страницы «Контакты»
-├── js/app.js                   общее поведение (вшивается в каждую страницу)
-├── assets/fig_ru/*.png        русские иллюстрации галереи
-├── assets/fig_en/*.png        английские иллюстрации галереи
-├── icons/*.png                 иконки и фото (вшиваются как data-URI)
-├── IMAGE-MANIFEST.md           список иллюстраций публикации
-├── README.md                   этот файл
-├── ru/*.html                   готовые русские страницы
-└── en/*.html                   готовые английские страницы
+├── build_pages.py              сборщик; обновляет site/ru, site/en и корневые ru/, en/
+├── content/*.html              разметка страниц без оболочки
+├── css/styles.css              общие стили полноформатных страниц
+├── css/contacts.css            самостоятельный стиль страницы контактов
+├── js/app.js                   поведение меню, счётчиков и галереи
+├── assets/fig_ru/*.png         русские иллюстрации
+├── assets/fig_en/*.png         английские иллюстрации
+├── icons/                      изображения для страницы контактов
+├── ru/*.html                   собранные русские страницы
+└── en/*.html                   собранные английские страницы
 ```
 
-Чистые листы без подписей намеренно удалены; галереи используют финальные русские и английские версии из `assets/fig_ru/` и `assets/fig_en/`.
+Финальные версии иллюстраций находятся в `assets/fig_ru/` и `assets/fig_en/`; чистые листы без подписей в текущем наборе сайта не используются.
 
 ```bash
 python3 site/build_pages.py
 ```
 
-Сборка вшивает CSS и JS в каждую страницу, перекодирует нужные ей иллюстрации в WebP/PNG и печатает размеры. Правки текста — в `content/`, правки оформления — в `css/styles.css`, после этого достаточно повторить сборку.
+Сборка создаёт 14 страниц, встраивает стили, скрипт и изображения и синхронизирует результаты с корневыми `ru/` и `en/` для GitHub Pages. Файлы `ru/title.html` и `site/ru/title.html` — оставшиеся старые сборки, не входящие в текущий набор; скрипт их не создаёт и не удаляет до отдельного решения.
 
 ### Локальный просмотр
 
-```bash
-cd site
-python3 -m http.server 8000     # http://localhost:8000
-# Затем откройте http://localhost:8000/ru/title.html или http://localhost:8000/en/index.html
-```
-
-## English / English
-
-Visual language: lavender background, white «glass» card-sections, Montserrat + Raleway, gradient underlines, accents violet / coral / turquoise.
-
-### Main
-
-Each page is **one self-contained HTML file**: markup, all CSS, all JS, and its own illustrations (`data:image/webp`) inside. No separate `css/`, `js/`, or image folders are needed at runtime.
-
-Pages are distributed into language folders:
-
-| Folder | Language | Pages |
-|---|---|---|
-| `site/ru/` | Russian | Главная, Инженерия, Верификация, Иллюстрации, Издание, Контакты, Авторы и лицензия, Титульная |
-| `site/en/` | English | Main, Engineering, Verification, Gallery, Edition, Contacts, Authors and License |
-
-There are no links to other `.html` files in `ru/` or `en/` (all pages are self-contained):
+Из корня репозитория:
 
 ```bash
-grep -o 'href="[^"]*\.html"' site/ru/*.html site/en/*.html    # output empty
+python3 -m http.server 8000
+# http://localhost:8000/ru/index.html
+# http://localhost:8000/en/index.html
 ```
 
-### Sources and rebuild
+---
+
+## English
+
+The visual style uses a lavender background, white glass-like cards, Montserrat + Raleway, gradient underlines, and violet / coral / turquoise accents.
+
+### Pages and navigation
+
+The builder generates **14 current pages**, seven per language:
+
+| Language | Menu |
+|---|---|
+| Русский | Главная, Инженерия, Верификация, Иллюстрации, Издание, Контакты, Авторы |
+| English | Home, Engineering, Verification, Gallery, Edition, Contacts, Authors |
+
+Full website pages have a visible menu and previous/next pager limited to their own language. There is no language switcher. Contact pages (`shell: false`) are embed pages: no shared navigation header, pager or local `.html` links; Google Sites supplies their menu. On full pages, navigation remains visible without JavaScript; the script only enhances the compact mobile menu. The Authors page identifies the Youth Public Movement “Interregional Cartographic Ya-Cluster” (official Russian name: Молодёжное общественное движение «Межрегиональный картографический Я-кластер», abbreviated МХ «КРЯК») as a partner in the project’s technological aspect.
+
+### One HTML file per page
+
+Every built page is a self-contained HTML file with its CSS, JavaScript and required illustrations embedded. Local CSS/JS files and separately loaded images are not needed at runtime. Full-page links stay within the same language.
+
+### Sources and build
 
 ```
 site/
-├── build_pages.py              builds all pages
-├── content/*.html              page markup without wrapper — edit here
-├── content/_parts/*.html       source fragments
-├── css/styles.css              common style (inlined into each page)
-├── css/contacts.css            dedicated style for the «Contacts» page
-├── js/app.js                   common behavior (inlined into each page)
-├── assets/fig_ru/*.png        Russian gallery illustrations
-├── assets/fig_en/*.png        English gallery illustrations
-├── icons/*.png                 icons and photos (inlined as data-URI)
-├── IMAGE-MANIFEST.md           list of publication illustrations
-├── README.md                   this file
-├── ru/*.html                   ready Russian pages
-└── en/*.html                   ready English pages
+├── build_pages.py              builds site/ru, site/en and root ru/, en/
+├── content/*.html              page markup without the wrapper
+├── css/styles.css              shared full-page styles
+├── css/contacts.css            standalone contact-page style
+├── js/app.js                   menu, counters and gallery behavior
+├── assets/fig_ru/*.png         Russian illustrations
+├── assets/fig_en/*.png         English illustrations
+├── icons/                      images for the contact page
+├── ru/*.html                   built Russian pages
+└── en/*.html                   built English pages
 ```
 
-Clean, text-free source sheets are intentionally removed; the galleries use the final Russian and English versions in `assets/fig_ru/` and `assets/fig_en/`.
+Final gallery illustrations are in `assets/fig_ru/` and `assets/fig_en/`; clean, text-free sheets are not used by the current website build.
 
 ```bash
 python3 site/build_pages.py
 ```
 
-The build inlines CSS and JS into each page, re-encodes required illustrations to WebP/PNG, and prints sizes. Edit text in `content/`, edit styling in `css/styles.css`, then rerun the build.
+The build creates 14 pages, inlines styles, scripts and images, then syncs the result to the root `ru/` and `en/` directories for GitHub Pages. `ru/title.html` and `site/ru/title.html` are retained legacy builds outside the current page set; the builder neither generates nor deletes them pending a separate decision.
 
 ### Local preview
 
+From the repository root:
+
 ```bash
-cd site
-python3 -m http.server 8000     # http://localhost:8000
-# Then open http://localhost:8000/ru/title.html or http://localhost:8000/en/index.html
+python3 -m http.server 8000
+# http://localhost:8000/ru/index.html
+# http://localhost:8000/en/index.html
 ```

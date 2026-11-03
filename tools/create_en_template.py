@@ -70,11 +70,11 @@ def sort_key(name: str) -> tuple:
 files = sorted([p for p in SRC.glob("*.docx")], key=lambda p: sort_key(p.name))
 
 doc = Document()
-title = doc.add_heading("MMOSON — Combined Document (English Version)", level=0)
+title = doc.add_heading("MMOSO'N — Combined Document (English Version)", level=0)
 title.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
 sub = doc.add_paragraph(
-    "Combination of all document sections of the MMOSON project. "
+    "Combination of all document sections of the MMOSO'N project. "
     "Source: sections/ directory of the bugromka/mmoson repository. "
     "English translation — in progress."
 )

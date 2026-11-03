@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-"""Автоматическая сверка таблиц, подписей и встроенных рисунков MMOSON_v7.
+"""Audit Edition 8 tables, captions and embedded figures.
 
-Скрипт не заменяет инженерную верификацию из verify_all.py. Он проверяет
-редакционные связи: суммы в сводных таблицах, обязательные статусы,
-архитектурную формулировку, транспортные итоги, количество подписей и
-встроенных PNG, а также то, что две обновлённые ресурсные иллюстрации
-действительно попали в DOCX.
+This is an editorial consistency check, not an engineering certification. It
+checks key table values and status wording, architecture constraints, figure
+captions, embedded-image counts and PNG integrity. Optional source PNGs are
+compared when they are present in src/fig; that legacy source folder is not
+required in the current repository.
 """
 from __future__ import annotations
 
 from decimal import Decimal
 from pathlib import Path
 import hashlib
+import io
 import re
 import sys
 import zipfile
@@ -153,11 +154,10 @@ for path in D.paths:
 if len(seen_hashes) != CAPTIONS_EXPECTED:
     fail(f"различных PNG в корпусе: ожидалось {CAPTIONS_EXPECTED}, "
          f"найдено {len(seen_hashes)}")
-for source_name in ["fig09_thermal.png", "fig16_resources.png",
-                    "fig21_volatiles.png"]:
+for source_name in ["fig09_thermal.png", "fig16_resources.png", "fig21_volatiles.png"]:
     source = FIG / source_name
     if not source.exists():
-        fail(f"нет эталонного рисунка {source_name}")
+        notes.append(f"не найден необязательный исходник {source_name}; сравнение с исходником пропущено")
         continue
     src_hash = hashlib.sha256(source.read_bytes()).hexdigest()
     if src_hash not in seen_hashes:
@@ -169,6 +169,21 @@ for source_name in ["fig09_thermal.png", "fig16_resources.png",
     except Exception as exc:
         fail(f"не читается рисунок {source_name}: {exc}")
 
+# Проверяем целостность каждого встроенного PNG без необходимости хранить
+# отдельные исходники рисунков в репозитории.
+for path in D.paths:
+    with zipfile.ZipFile(path) as z:
+        for name in z.namelist():
+            if not (name.startswith("word/media/") and name.lower().endswith(".png")):
+                continue
+            try:
+                with Image.open(io.BytesIO(z.read(name))) as image:
+                    image.load()
+                    if image.width < 500 or image.height < 250:
+                        fail(f"слишком маленький встроенный рисунок {path.name}:{name}: {image.size}")
+            except Exception as exc:
+                fail(f"не читается встроенный рисунок {path.name}:{name}: {exc}")
+
 # Text-level architecture guard.
 all_text = "\n".join(norm(p.text) for p in D.paragraphs)
 all_text += "\n" + "\n".join(norm(c.text) for t in D.tables for r in t.rows for c in r.cells)
@@ -178,7 +193,7 @@ for needle in ["Оборудование на боковой обшивке", "�
         fail(f"архитектурная оговорка отсутствует: {needle}")
 
 print("=" * 76)
-print("АВТОМАТИЧЕСКАЯ СВЕРКА ТАБЛИЦ, ПОДПИСЕЙ И РИСУНКОВ")
+print("АВТОМАТИЧЕСКАЯ СВЕРКА ТАБЛИЦ, ПОДПИСЕЙ И РИСУНКОВ · РЕДАКЦИЯ 8")
 print("=" * 76)
 print(f"Документ: {DOC}")
 print(f"Абзацев: {len(D.paragraphs)}; таблиц: {len(D.tables)}; рисунков: {len(D.inline_shapes)}")
@@ -189,4 +204,8 @@ if errors:
     print(f"Результат: FAIL ({len(errors)} ошибок)")
     raise SystemExit(1)
 print("Сводные суммы, статусы, архитектурные ограничения, подписи и встроенные рисунки согласованы.")
+if notes:
+    print("ПРИМЕЧАНИЯ:")
+    for note in notes:
+        print("  -", note)
 print("Результат: PASS")

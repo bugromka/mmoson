@@ -1,22 +1,10 @@
 #!/usr/bin/env python3
-"""make_site_icons.py — рисует иконки-заменители для репозитория Image.
+"""Optional generator of generic, non-official placeholder artwork.
 
-Зачем: страницы сайта ссылаются на файлы в
-`Interregional-cartographic-yacluster/Image`, а репозитория пуста. Оригиналы
-брендовых логотипов восстановить нельзя, поэтому здесь собираются
-аккуратные нейтральные иконки для сервисов и организаций, у которых есть
-общеизвестный знак (VK, MAX, Яндекс, почта, Добро.рф) и типовая эмблема для
-Минстроя.
-
-ВАЖНО: это заменители, а не официальные логотипы. Их задача — чтобы ссылки
-на сайте не отдавали 404, пока не вернутся оригиналы. Файлы помечены в
-README репозитория Image.
-
-Запуск:
-    python3 tools/make_site_icons.py                # в site/icons/
-    python3 tools/make_site_icons.py --out DIR
+This is not a logo-recovery tool and is not part of the website build. It does
+not write anything unless --write-placeholders is supplied, and it never
+replaces an existing file unless --force is also supplied.
 """
-
 from __future__ import annotations
 
 import argparse
@@ -29,7 +17,7 @@ FONT_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 FONT_REG = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
 
-def font(size: int, bold: bool = True) -> ImageFont.FreeTypeFont:
+def font(size: int, bold: bool = True):
     try:
         return ImageFont.truetype(FONT_BOLD if bold else FONT_REG, size)
     except OSError:
@@ -56,20 +44,23 @@ def gradient(c1, c2) -> Image.Image:
     return img
 
 
-def centered_text(draw: ImageDraw.ImageDraw, text: str, size: int, y: int, fill=(255, 255, 255, 255), bold=True):
-    f = font(size, bold)
-    box = draw.textbbox((0, 0), text, font=f)
-    draw.text(((SIZE - (box[2] - box[0])) / 2 - box[0], y), text, font=f, fill=fill)
+def centered_text(draw: ImageDraw.ImageDraw, text: str, size: int, y: int,
+                  fill=(255, 255, 255, 255), bold=True) -> None:
+    selected_font = font(size, bold)
+    box = draw.textbbox((0, 0), text, font=selected_font)
+    draw.text(((SIZE - (box[2] - box[0])) / 2 - box[0], y), text,
+              font=selected_font, fill=fill)
 
 
-def envelope(draw: ImageDraw.ImageDraw, color=(255, 255, 255, 255)):
+def envelope(draw: ImageDraw.ImageDraw, color=(255, 255, 255, 255)) -> None:
     x0, y0, x1, y1 = 48, 78, 208, 178
     draw.rounded_rectangle((x0, y0, x1, y1), radius=14, outline=color, width=10)
     draw.line((x0 + 8, y0 + 10, SIZE / 2, y0 + 52), fill=color, width=10)
     draw.line((x1 - 8, y0 + 10, SIZE / 2, y0 + 52), fill=color, width=10)
 
 
-def heart(draw: ImageDraw.ImageDraw, cy: int = 104, scale: float = 1.0, color=(255, 255, 255, 255)):
+def heart(draw: ImageDraw.ImageDraw, cy: int = 104, scale: float = 1.0,
+          color=(255, 255, 255, 255)) -> None:
     r = 34 * scale
     cx = SIZE / 2
     draw.ellipse((cx - 2 * r, cy - r, cx, cy + r), fill=color)
@@ -77,7 +68,7 @@ def heart(draw: ImageDraw.ImageDraw, cy: int = 104, scale: float = 1.0, color=(2
     draw.polygon([(cx - 2 * r, cy + 2), (cx + 2 * r, cy + 2), (cx, cy + 3.1 * r)], fill=color)
 
 
-def building(draw: ImageDraw.ImageDraw, color=(255, 255, 255, 255)):
+def building(draw: ImageDraw.ImageDraw, color=(255, 255, 255, 255)) -> None:
     draw.rectangle((72, 92, 184, 196), fill=color)
     draw.polygon([(64, 92), (192, 92), (128, 52)], fill=color)
     for col in (96, 124, 152):
@@ -85,59 +76,73 @@ def building(draw: ImageDraw.ImageDraw, color=(255, 255, 255, 255)):
         draw.rectangle((col, 148, col + 16, 168), fill=(31, 95, 169, 255))
 
 
-def save(img: Image.Image, path: Path):
+def save(img: Image.Image, path: Path, force: bool) -> bool:
+    if path.exists() and not force:
+        print(f"  пропуск существующего файла: {path.name} (для перезаписи нужен --force)")
+        return False
     img.save(path, "PNG", optimize=True)
     print(f"  {path.name}  {path.stat().st_size / 1024:.1f} КБ")
+    return True
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--out", type=Path, default=Path(__file__).resolve().parent.parent / "site" / "icons")
-    args = ap.parse_args()
+    parser = argparse.ArgumentParser(description="Create generic non-official placeholder icons.")
+    parser.add_argument(
+        "--out", type=Path,
+        default=Path(__file__).resolve().parent.parent / "site" / "icons",
+        help="output directory",
+    )
+    parser.add_argument(
+        "--write-placeholders", action="store_true",
+        help="explicitly allow creation of generic placeholder artwork",
+    )
+    parser.add_argument(
+        "--force", action="store_true",
+        help="overwrite existing files (requires --write-placeholders)",
+    )
+    args = parser.parse_args()
+
+    if args.force and not args.write_placeholders:
+        parser.error("--force requires --write-placeholders")
+    if not args.write_placeholders:
+        print("Ничего не изменено. Для явного создания заглушек укажите --write-placeholders.")
+        return 0
+
     out: Path = args.out
     out.mkdir(parents=True, exist_ok=True)
-    print(f"иконки в {out}")
+    print(f"Создание неофициальных заглушек в {out}")
+    saved = 0
 
-    # VK
     img = rounded((0, 119, 255, 255))
-    d = ImageDraw.Draw(img)
-    centered_text(d, "VK", 118, 58)
-    save(img, out / "Icon-Color.png")
+    centered_text(ImageDraw.Draw(img), "VK", 118, 58)
+    saved += save(img, out / "Icon-Color.png", args.force)
 
-    # MAX — мессенджер
     img = gradient((108, 92, 231), (0, 194, 255))
-    d = ImageDraw.Draw(img)
-    d.rounded_rectangle((56, 72, 200, 168), radius=28, outline=(255, 255, 255, 255), width=10)
-    d.polygon([(86, 168), (86, 206), (128, 168)], fill=(255, 255, 255, 255))
-    save(img, out / "Max-logo-2025.png")
+    draw = ImageDraw.Draw(img)
+    draw.rounded_rectangle((56, 72, 200, 168), radius=28, outline=(255, 255, 255, 255), width=10)
+    draw.polygon([(86, 168), (86, 206), (128, 168)], fill=(255, 255, 255, 255))
+    saved += save(img, out / "Max-logo-2025.png", args.force)
 
-    # Почта
     img = rounded((143, 126, 214, 255))
-    d = ImageDraw.Draw(img)
-    envelope(d)
-    save(img, out / "1200x630wa.png")
+    envelope(ImageDraw.Draw(img))
+    saved += save(img, out / "1200x630wa.png", args.force)
 
-    # Добро.рф
     img = rounded((255, 107, 107, 255))
-    d = ImageDraw.Draw(img)
-    heart(d, cy=100, scale=0.80)
-    centered_text(d, "ДОБРО", 34, 186)
-    save(img, out / "6v-QBl8-L6mgk.png")
+    draw = ImageDraw.Draw(img)
+    heart(draw, cy=100, scale=0.80)
+    centered_text(draw, "ДОБРО", 34, 186)
+    saved += save(img, out / "6v-QBl8-L6mgk.png", args.force)
 
-    # Яндекс
     img = Image.new("RGBA", (SIZE, SIZE), (255, 255, 255, 255))
-    d = ImageDraw.Draw(img)
-    centered_text(d, "Я", 168, 24, fill=(252, 63, 29, 255))
-    save(img, out / "yandex-logo-rus.png")
+    centered_text(ImageDraw.Draw(img), "Я", 168, 24, fill=(252, 63, 29, 255))
+    saved += save(img, out / "yandex-logo-rus.png", args.force)
 
-    # Минстрой России — типовая эмблема
     img = rounded((31, 95, 169, 255))
-    d = ImageDraw.Draw(img)
-    building(d)
-    centered_text(d, "МИНСТРОЙ", 26, 204)
-    save(img, out / "Minstroy-RF.png")
+    building(ImageDraw.Draw(img))
+    centered_text(ImageDraw.Draw(img), "МИНСТРОЙ", 26, 204)
+    saved += save(img, out / "Minstroy-RF.png", args.force)
 
-        print("\nготова памятка: README для репозитория Image")
+    print(f"Готово: записано {saved} неофициальных заглушек.")
     return 0
 
 

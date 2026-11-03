@@ -2,7 +2,7 @@
         ALL RIGHTS RESERVED / ВСЕ ПРАВА ЗАЩИЩЕНЫ — PROPRIETARY NOTICE
 ================================================================================
 
-Project / Проект: MMOSON — technical description of a personal research project
+Project / Проект: MMOSO'N — technical description of a personal research project
 Author / Автор: Roman Sergeevich Bugaenko / Бугаенко Роман Сергеевич
 Year / Год: 2026
 

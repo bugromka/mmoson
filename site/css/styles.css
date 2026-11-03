@@ -775,14 +775,15 @@ code {
 }
 .team-card p:last-child { font-size: 0.9rem; color: var(--text-soft); line-height: 1.7; }
 
-.license-note {
+.license-note, .partner-note {
   background: linear-gradient(to right, rgba(143, 126, 214, 0.07), rgba(78, 205, 196, 0.07));
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   padding: 24px 28px;
 }
-.license-note h3 { font-size: 1rem; color: var(--primary-dark); margin-bottom: 8px; }
-.license-note p { font-size: 0.88rem; color: var(--text-soft); line-height: 1.7; }
+.partner-note { margin-bottom: 24px; }
+.license-note h3, .partner-note h3 { font-size: 1rem; color: var(--primary-dark); margin-bottom: 8px; }
+.license-note p, .partner-note p { font-size: 0.88rem; color: var(--text-soft); line-height: 1.7; }
 
 /* ================= FOOTER ================= */
 .footer { max-width: var(--maxw); margin: 0 auto; width: 100%; padding: 26px 0 8px; }
@@ -829,17 +830,20 @@ code {
   .about-grid, .edition-grid { grid-template-columns: 1fr; }
   .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .open-list ul { grid-template-columns: 1fr; }
-  .nav-toggle { display: grid; }
+  .nav-toggle { display: none; }
   .nav { border-radius: 22px; flex-wrap: wrap; }
   .nav-links {
-    display: none;
+    display: flex;
     width: 100%;
     margin: 6px 0 4px;
     padding: 8px 4px 4px;
     border-top: 1px solid rgba(255, 255, 255, 0.25);
     gap: 2px;
   }
-  .nav-links.open { display: flex; }
+  /* Without JavaScript the full menu stays visible; the compact toggle is an enhancement. */
+  .has-js .nav-toggle { display: grid; }
+  .has-js .nav-links { display: none; }
+  .has-js .nav-links.open { display: flex; }
   .nav-links a { font-size: 0.9rem; }
 }
 

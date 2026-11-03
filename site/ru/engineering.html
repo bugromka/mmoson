@@ -6,7 +6,7 @@
 <title>Инженерные решения — ММОСО’Н</title>
 <meta name="description" content="Оболочка и её прочность, теплосброс двумя контурами, энергетика, транспорт «ось — обод», причал и шлюзы, биосфера станции.">
 <meta name="theme-color" content="#8f7ed6">
-<!-- ММОСО’Н · страница «Инженерия». Один самодостаточный файл: разметка, стили, скрипт и иллюстрации внутри.  Страница сайта ММОСО’Н: самодостаточный HTML-файл. -->
+<!-- ММОСО’Н · страница «Инженерия». Самодостаточный HTML-файл: разметка, стили, скрипт и иллюстрации встроены. Самодостаточная страница сайта ММОСО’Н. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
@@ -789,14 +789,15 @@ code {
 }
 .team-card p:last-child { font-size: 0.9rem; color: var(--text-soft); line-height: 1.7; }
 
-.license-note {
+.license-note, .partner-note {
   background: linear-gradient(to right, rgba(143, 126, 214, 0.07), rgba(78, 205, 196, 0.07));
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   padding: 24px 28px;
 }
-.license-note h3 { font-size: 1rem; color: var(--primary-dark); margin-bottom: 8px; }
-.license-note p { font-size: 0.88rem; color: var(--text-soft); line-height: 1.7; }
+.partner-note { margin-bottom: 24px; }
+.license-note h3, .partner-note h3 { font-size: 1rem; color: var(--primary-dark); margin-bottom: 8px; }
+.license-note p, .partner-note p { font-size: 0.88rem; color: var(--text-soft); line-height: 1.7; }
 
 /* ================= FOOTER ================= */
 .footer { max-width: var(--maxw); margin: 0 auto; width: 100%; padding: 26px 0 8px; }
@@ -843,17 +844,20 @@ code {
   .about-grid, .edition-grid { grid-template-columns: 1fr; }
   .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .open-list ul { grid-template-columns: 1fr; }
-  .nav-toggle { display: grid; }
+  .nav-toggle { display: none; }
   .nav { border-radius: 22px; flex-wrap: wrap; }
   .nav-links {
-    display: none;
+    display: flex;
     width: 100%;
     margin: 6px 0 4px;
     padding: 8px 4px 4px;
     border-top: 1px solid rgba(255, 255, 255, 0.25);
     gap: 2px;
   }
-  .nav-links.open { display: flex; }
+  /* Without JavaScript the full menu stays visible; the compact toggle is an enhancement. */
+  .has-js .nav-toggle { display: grid; }
+  .has-js .nav-links { display: none; }
+  .has-js .nav-links.open { display: flex; }
   .nav-links a { font-size: 0.9rem; }
 }
 
@@ -1143,13 +1147,42 @@ code {
 </head>
 <body>
 
-<main class="page" id="top">\n\n<section class="page-head">
+<header class="nav-wrap">
+  <nav class="nav" aria-label="Основная навигация">
+    <a href="index.html" data-page="index" class="nav-brand">
+      <svg class="nav-mark" viewBox="0 0 48 48" aria-hidden="true">
+                <circle cx="24" cy="15" r="8" fill="none" stroke="currentColor" stroke-width="2.6"/>
+                <circle cx="24" cy="33" r="8" fill="none" stroke="currentColor" stroke-width="2.6"/>
+                <line x1="24" y1="6" x2="24" y2="42" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 4" opacity=".7"/>
+              </svg>
+      <span>ММОСО’Н</span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html" data-page="index">Главная</a></li>
+      <li><a href="engineering.html" data-page="engineering" class="active" aria-current="page">Инженерия</a></li>
+      <li><a href="verification.html" data-page="verification">Верификация</a></li>
+      <li><a href="gallery.html" data-page="gallery">Иллюстрации</a></li>
+      <li><a href="edition.html" data-page="edition">Издание</a></li>
+      <li><a href="contacts.html" data-page="contacts">Контакты</a></li>
+      <li><a href="authors.html" data-page="authors">Авторы</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="page" id="top">
+
+<section class="page-head">
   <div class="container">
     <p class="eyebrow">Конструкция и системы</p>
     <h1>Инженерные решения</h1>
     <p class="page-sub">Шесть контуров станции: каждый замкнут на расчёт, а не на иллюстрацию.</p>
   </div>
-</section>\n\n<section class="card-section" id="engineering">
+</section>
+
+<section class="card-section" id="engineering">
     <div class="container">
       <div class="section-title">
         <h2>Инженерные решения</h2>
@@ -1206,7 +1239,20 @@ code {
         <p>Боковые поверхности вращаются встречно. Любая жёсткая связь между ними невозможна: связь идёт только по осям через подшипниковые узлы. Межосевое расстояние 21 км, свободный вакуумный зазор 11 км, продольных элементов между оболочками нет.</p>
       </div>
     </div>
-  </section>\n\n</main>
+  </section>
+
+</main>
+
+<nav class="pager" aria-label="Переход между страницами">
+  <a class="pager-prev" href="index.html" data-page="index">
+    <span class="pager-label">Назад</span>
+    <span class="pager-name">← Главная</span>
+  </a>
+  <a class="pager-next" href="verification.html" data-page="verification">
+    <span class="pager-label">Дальше</span>
+    <span class="pager-name">Верификация →</span>
+  </a>
+</nav>
 
 <footer class="footer">
   <div class="footer-inner">
@@ -1224,6 +1270,7 @@ code {
 (function () {
   'use strict';
 
+  document.documentElement.classList.add('has-js');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- 1. Появление элементов ---------- */
