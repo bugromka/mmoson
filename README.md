@@ -200,6 +200,6 @@ Home pages include a button to switch between Russian and English. Full-page men
 
 ### Author and status
 
-**Roman Sergeevich Bugaenko** is the author of the personal MMOSO'N project. The project’s partner in the technological aspect is the Youth Public Movement “Interregional Cartographic Ya-Cluster” (official Russian name: Молодёжное общественное движение «Межрегиональный картографический Я-кластер», abbreviated МХ «КРЯК»). This is a conceptual research publication, not working design documentation or a flight-ready project.
+**Roman Sergeevich Bugaenko** is the author of the personal MMOSO'N project. The project’s partner in the technological aspect is the Youth Public Movement «Interregional Cartographic Ya-Cluster». This is a conceptual research publication, not working design documentation or a flight-ready project.
 
 The materials are provided under an **“All rights reserved / Все права защищены”** notice. Public reading is permitted; other uses require the author’s prior written consent.
