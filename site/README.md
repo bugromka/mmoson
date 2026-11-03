@@ -31,13 +31,16 @@ site/
 ├── css/styles.css              общий стиль (вшивается в каждую страницу)
 ├── css/contacts.css            своя таблица стилей страницы «Контакты»
 ├── js/app.js                   общее поведение (вшивается в каждую страницу)
-├── assets/fig/*.png            иллюстрации в исходном разрешении
+├── assets/fig_ru/*.png        русские иллюстрации галереи
+├── assets/fig_en/*.png        английские иллюстрации галереи
 ├── icons/*.png                 иконки и фото (вшиваются как data-URI)
 ├── IMAGE-MANIFEST.md           список иллюстраций публикации
 ├── README.md                   этот файл
 ├── ru/*.html                   готовые русские страницы
 └── en/*.html                   готовые английские страницы
 ```
+
+Чистые листы без подписей намеренно удалены; галереи используют финальные русские и английские версии из `assets/fig_ru/` и `assets/fig_en/`.
 
 ```bash
 python3 site/build_pages.py
@@ -84,13 +87,16 @@ site/
 ├── css/styles.css              common style (inlined into each page)
 ├── css/contacts.css            dedicated style for the «Contacts» page
 ├── js/app.js                   common behavior (inlined into each page)
-├── assets/fig/*.png            illustrations in original resolution
+├── assets/fig_ru/*.png        Russian gallery illustrations
+├── assets/fig_en/*.png        English gallery illustrations
 ├── icons/*.png                 icons and photos (inlined as data-URI)
 ├── IMAGE-MANIFEST.md           list of publication illustrations
 ├── README.md                   this file
 ├── ru/*.html                   ready Russian pages
 └── en/*.html                   ready English pages
 ```
+
+Clean, text-free source sheets are intentionally removed; the galleries use the final Russian and English versions in `assets/fig_ru/` and `assets/fig_en/`.
 
 ```bash
 python3 site/build_pages.py

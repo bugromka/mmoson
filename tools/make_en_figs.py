@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Наложение английских подписей на чистые русские версии картинок галереи.
+"""Legacy-генератор английских подписей из чистых русских исходников.
 
-Сохраняет графику неизменной, добавляя английскую текстовую панель справа.
-Текст берётся из docs/image_captions_ru_en.md (техническая документация).
-
-Текст располагается справа от диаграммы, в одной текстовой колонке.
+Сами чистые исходники намеренно удалены из репозитория после подготовки
+финальных fig_ru/ и fig_en/. Для повторного запуска их нужно отдельно
+восстановить в site/assets/fig/.
 """
 
 from __future__ import annotations
@@ -15,6 +14,11 @@ from pathlib import Path
 
 SRC = Path("site/assets/fig")
 DST = Path("site/assets/fig_en")
+if not SRC.is_dir():
+    raise SystemExit(
+        "Clean source images are intentionally not stored in the repository. "
+        "Restore them in site/assets/fig/ before running this legacy generator."
+    )
 DST.mkdir(exist_ok=True)
 
 try:
