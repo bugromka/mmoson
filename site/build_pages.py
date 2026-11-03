@@ -383,6 +383,16 @@ def finish(page: dict, body: str, css: str, js: str) -> tuple[str, int]:
 
 {body}
 
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-title">ММОСО’Н</div>
+    <div class="footer-copy">
+      <strong>© Бугаенко Роман Сергеевич, 2026</strong><br>
+      Использование материалов, размещённых на этом сайте, возможно только при обязательном указании автора и ссылки на источник.
+    </div>
+  </div>
+</footer>
+
 <script>
 {js}
 </script>
