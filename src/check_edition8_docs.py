@@ -16,6 +16,7 @@ PUBLICATIONS = {
     "ru": {
         "path": ROOT / "sections" / "MMOSON_combined_document_ru.docx",
         "title_marker": "редакция 8",
+        "project_name": "ММОСО’Н",
         "stamp": re.compile(r"^Редакция 8 · 31 октября 2026 г\. · документ \d+ из 43$"),
         "section_heading": re.compile(r"^(\d{1,2})\."),
         "caption": re.compile(r"^Рисунок\s+(\d+)\s+—"),
@@ -25,6 +26,7 @@ PUBLICATIONS = {
     "en": {
         "path": ROOT / "sections" / "MMOSON_combined_document_en.docx",
         "title_marker": "edition 8",
+        "project_name": "MMOSO'N",
         "stamp": re.compile(r"^Edition 8 · 31 October 2026 · document \d+ of 43$"),
         "section_heading": re.compile(r"^(\d{1,2})\."),
         "caption": re.compile(r"^Figure\s+(\d+)\s+[-–—]"),
@@ -42,8 +44,17 @@ def verify(language: str, spec: dict) -> list[str]:
 
     doc = Document(path)
     paragraphs = [paragraph.text.strip() for paragraph in doc.paragraphs]
-    all_text = "\n".join(paragraphs)
+    table_text = "\n".join(
+        cell.text for table in doc.tables for row in table.rows for cell in row.cells
+    )
+    all_text = "\n".join(paragraphs) + "\n" + table_text
     title = doc.core_properties.title or ""
+    metadata = " ".join((title, doc.core_properties.subject or "", doc.core_properties.keywords or ""))
+
+    if spec["project_name"] not in " ".join(paragraphs[:5]):
+        errors.append(f"{language}: requested project spelling is missing from the visible title")
+    if "mmoson" in (all_text + "\n" + metadata).casefold():
+        errors.append(f"{language}: obsolete MMOSON spelling remains in the document text or metadata")
 
     if spec["title_marker"] not in title.casefold():
         errors.append(f"{language}: Edition 8 is missing from the DOCX title properties")

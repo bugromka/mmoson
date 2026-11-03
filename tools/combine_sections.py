@@ -196,7 +196,7 @@ def make_master(files: list[Path], language: str) -> Document:
         subtitle = f"{EDITION_DATE_RU} · 43 компонента · 34 технических раздела"
         subject = f"Редакция 8; {EDITION_DATE_RU}; 43 компонента; 34 раздела"
     else:
-        title_text = "MMOSON — Technical Documentation, Edition 8"
+        title_text = "MMOSO'N — Technical Documentation, Edition 8"
         subtitle = f"{EDITION_DATE_EN} · 43 components · 34 technical sections"
         subject = f"Edition 8; {EDITION_DATE_EN}; 43 components; 34 sections"
 
@@ -211,7 +211,7 @@ def make_master(files: list[Path], language: str) -> Document:
     properties = master.core_properties
     properties.title = title_text
     properties.subject = subject
-    properties.keywords = "MMOSON, Edition 8, technical documentation"
+    properties.keywords = "MMOSO'N, Edition 8, technical documentation"
     return master
 
 
@@ -247,6 +247,46 @@ def add_english_contents(master: Document, files: list[Path]) -> None:
         cells[1].text = component_title(path, "en")
 
 
+def iter_container_paragraphs(container):
+    """Yield paragraphs from a document part, including nested table cells."""
+    yield from container.paragraphs
+    for table in container.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                yield from iter_container_paragraphs(cell)
+
+
+def apply_project_spelling(doc: Document) -> None:
+    """Use the requested Latin spelling in all visible DOCX text and metadata."""
+    for paragraph in iter_container_paragraphs(doc):
+        if "MMOSON" not in paragraph.text:
+            continue
+        for run in paragraph.runs:
+            run.text = run.text.replace("MMOSON", "MMOSO'N")
+        if "MMOSON" in paragraph.text:
+            set_paragraph_text(paragraph, paragraph.text.replace("MMOSON", "MMOSO'N"))
+
+    for section in doc.sections:
+        for part in (
+            section.header, section.footer,
+            section.first_page_header, section.first_page_footer,
+            section.even_page_header, section.even_page_footer,
+        ):
+            for paragraph in iter_container_paragraphs(part):
+                if "MMOSON" not in paragraph.text:
+                    continue
+                for run in paragraph.runs:
+                    run.text = run.text.replace("MMOSON", "MMOSO'N")
+                if "MMOSON" in paragraph.text:
+                    set_paragraph_text(paragraph, paragraph.text.replace("MMOSON", "MMOSO'N"))
+
+    properties = doc.core_properties
+    for key in ("title", "subject", "author", "keywords", "comments", "category"):
+        value = getattr(properties, key, None)
+        if isinstance(value, str):
+            setattr(properties, key, value.replace("MMOSON", "MMOSO'N"))
+
+
 def build_one(files: list[Path], output: Path, language: str) -> None:
     master = make_master(files, language)
     composer = Composer(master)
@@ -279,6 +319,9 @@ def build_one(files: list[Path], output: Path, language: str) -> None:
 
     output.parent.mkdir(parents=True, exist_ok=True)
     composer.save(str(output))
+    result = Document(output)
+    apply_project_spelling(result)
+    result.save(str(output))
     result = Document(output)
     print(
         f"{output}: {output.stat().st_size / 1024 / 1024:.2f} MB; "

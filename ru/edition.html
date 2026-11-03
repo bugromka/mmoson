@@ -789,14 +789,15 @@ code {
 }
 .team-card p:last-child { font-size: 0.9rem; color: var(--text-soft); line-height: 1.7; }
 
-.license-note {
+.license-note, .partner-note {
   background: linear-gradient(to right, rgba(143, 126, 214, 0.07), rgba(78, 205, 196, 0.07));
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   padding: 24px 28px;
 }
-.license-note h3 { font-size: 1rem; color: var(--primary-dark); margin-bottom: 8px; }
-.license-note p { font-size: 0.88rem; color: var(--text-soft); line-height: 1.7; }
+.partner-note { margin-bottom: 24px; }
+.license-note h3, .partner-note h3 { font-size: 1rem; color: var(--primary-dark); margin-bottom: 8px; }
+.license-note p, .partner-note p { font-size: 0.88rem; color: var(--text-soft); line-height: 1.7; }
 
 /* ================= FOOTER ================= */
 .footer { max-width: var(--maxw); margin: 0 auto; width: 100%; padding: 26px 0 8px; }

@@ -1,4 +1,4 @@
-# ММОСО’Н / MMOSON
+# ММОСО’Н / MMOSO'N
 
 ## Русская версия
 
@@ -13,7 +13,7 @@
 | `sections/MMOSON_combined_document_ru.docx` | Русская версия технической документации, разделы 1–34 | Редакция 8; 69 таблиц; 23 встроенных рисунка |
 | `sections/MMOSON_combined_document_en.docx` | Английская версия технической документации, разделы 1–34 | Edition 8; 67 таблиц; 23 встроенных рисунка |
 
-В обоих файлах есть титульная маркировка редакции 8, 42 датированных отметки компонентов и разделы 1–34. Страница содержания русской версии сохраняет исходные двуязычные обозначения; основное содержание собрано по соответствующему языку.
+В обоих файлах есть титульная маркировка редакции 8, 42 датированных отметки компонентов и разделы 1–34. Страница содержания русской версии сохраняет исходные двуязычные обозначения; основное содержание собрано по соответствующему языку. Имена существующих файлов и URL репозитория сохранены для совместимости; в содержимом публикации и интерфейсе используется написание MMOSO'N.
 
 ### Основные параметры модели
 
@@ -47,7 +47,7 @@ python3 src/check_transport_interface.py
 python3 src/edition8_calcs.py
 ```
 
-`check_edition8_docs.py` сверяет видимую маркировку обоих DOCX, 42 отметки компонентов, разделы 1–34, таблицы, подписи и встроенные рисунки. Сквозная сверка и аудит публикации проходят на текущих объединённых документах. Аудит также проверяет целостность PNG внутри DOCX; отдельные исходники `src/fig/` в текущем репозитории не хранятся, поэтому сравнение с ними пропускается с предупреждением.
+`check_edition8_docs.py` сверяет видимую маркировку и написание названия проекта в обоих DOCX, 42 отметки компонентов, разделы 1–34, таблицы, подписи и встроенные рисунки. Сквозная сверка и аудит публикации проходят на текущих объединённых документах. Аудит также проверяет целостность PNG внутри DOCX; отдельные исходники `src/fig/` в текущем репозитории не хранятся, поэтому сравнение с ними пропускается с предупреждением.
 
 `check_transport_interface.py` проверяет канал размером 20,80 м при проёме 30,00 м, маршрут 7 430,8 м и расчётную пропускную способность. `edition8_calcs.py` пересчитывает семь областей редакции 8 (A–G) и сохраняет результат в `src/edition8_results.json`.
 
@@ -82,7 +82,7 @@ python3 site/build_pages.py
 
 В полноформатных страницах есть видимое меню только своего языка и переход к предыдущей/следующей странице. Переключателя языка нет. Контактные страницы сохраняют embed-режим: без общей навигационной шапки и пейджера; на Google Sites навигация для них задаётся меню самого сайта. Меню полноформатных страниц остаётся доступным и без JavaScript.
 
-`ru/title.html` и `site/ru/title.html` — старые файлы сборки, не входящие в текущий набор 14 страниц. Они не обновляются и оставлены без удаления до отдельного решения.
+`ru/title.html` и `site/ru/title.html` — старые файлы сборки, не входящие в текущий набор 14 страниц. Они не пересобираются и не удаляются; написание названия проекта в них также приведено к актуальному варианту.
 
 ### Состав репозитория
 
@@ -96,7 +96,7 @@ python3 site/build_pages.py
 
 ### Автор и статус
 
-**Бугаенко Роман Сергеевич** — автор личного проекта ММОСО’Н. Публикация является концептуальным исследованием, а не рабочей конструкторской документацией и не готовым к полёту проектом.
+**Бугаенко Роман Сергеевич** — автор личного проекта ММОСО’Н. В технологическом аспекте партнёром проекта является Молодёжное общественное движение «Межрегиональный картографический Я-кластер» (сокр. МХ «КРЯК»). Публикация является концептуальным исследованием, а не рабочей конструкторской документацией и не готовым к полёту проектом.
 
 Материалы распространяются по условию **«Все права защищены / All rights reserved»**. Публичное чтение разрешено; иное использование требует предварительного письменного согласия автора.
 
@@ -104,7 +104,7 @@ python3 site/build_pages.py
 
 ## English version
 
-**MMOSON — Modeling Module for an O’Neill Orbital Station** is Roman Sergeevich Bugaenko’s personal engineering and research project. It is a calculation model of a habitable two-cylinder station near the Earth–Sun L1 point, not an approved construction design.
+**MMOSO'N — Modeling Module for an O’Neill Orbital Station** is Roman Sergeevich Bugaenko’s personal engineering and research project. It is a calculation model of a habitable two-cylinder station near the Earth–Sun L1 point, not an approved construction design.
 
 ### Technical documentation
 
@@ -115,7 +115,7 @@ The current publication is **Edition 8, dated 31 October 2026**. It contains 43 
 | `sections/MMOSON_combined_document_ru.docx` | Russian technical-documentation edition, sections 1–34 | Edition 8; 69 tables; 23 embedded figures |
 | `sections/MMOSON_combined_document_en.docx` | English technical-documentation edition, sections 1–34 | Edition 8; 67 tables; 23 embedded figures |
 
-Both files have a visible Edition 8 title, 42 dated component stamps and sections 1–34. The Russian contents page retains its original bilingual labels; the main technical text is assembled by language.
+Both files have a visible Edition 8 title, 42 dated component stamps and sections 1–34. The Russian contents page retains its original bilingual labels; the main technical text is assembled by language. Existing file names and repository URLs are retained for compatibility; the displayed project name in the publication and website uses the spelling MMOSO'N.
 
 ### Model parameters
 
@@ -149,7 +149,7 @@ python3 src/check_transport_interface.py
 python3 src/edition8_calcs.py
 ```
 
-`check_edition8_docs.py` verifies the visible edition labels in both DOCX files, the 42 component stamps, sections 1–34, tables, captions and embedded figures. The publication cross-check and audit pass on the current combined documents. The audit also checks PNG integrity inside the DOCX files; standalone source images in `src/fig/` are not stored in the current repository, so comparisons against those files are skipped with a note.
+`check_edition8_docs.py` verifies the visible edition labels and project-name spelling in both DOCX files, the 42 component stamps, sections 1–34, tables, captions and embedded figures. The publication cross-check and audit pass on the current combined documents. The audit also checks PNG integrity inside the DOCX files; standalone source images in `src/fig/` are not stored in the current repository, so comparisons against those files are skipped with a note.
 
 `check_transport_interface.py` checks the 20.80 m channel against a 30.00 m opening, the 7,430.8 m route and calculated throughput. `edition8_calcs.py` recalculates the seven Edition 8 domains (A–G) and writes `src/edition8_results.json`.
 
@@ -184,7 +184,7 @@ python3 site/build_pages.py
 
 Full website pages have visible navigation and previous/next links within the same language. There is no language switcher. Contact pages retain embed mode: no shared navigation header or pager; on Google Sites their navigation comes from the host site menu. The full-page menu remains available without JavaScript.
 
-`ru/title.html` and `site/ru/title.html` are legacy build files outside the current 14-page set. They are not rebuilt and remain untouched pending a separate decision.
+`ru/title.html` and `site/ru/title.html` are legacy build files outside the current 14-page set. They are not rebuilt or deleted; their displayed project name has also been updated to the current spelling.
 
 ### Repository contents
 
@@ -198,6 +198,6 @@ Full website pages have visible navigation and previous/next links within the sa
 
 ### Author and status
 
-**Roman Sergeevich Bugaenko** is the author of the personal MMOSON project. This is a conceptual research publication, not working design documentation or a flight-ready project.
+**Roman Sergeevich Bugaenko** is the author of the personal MMOSO'N project. The project’s partner in the technological aspect is the Youth Public Movement “Interregional Cartographic Ya-Cluster” (official Russian name: Молодёжное общественное движение «Межрегиональный картографический Я-кластер», abbreviated МХ «КРЯК»). This is a conceptual research publication, not working design documentation or a flight-ready project.
 
 The materials are provided under an **“All rights reserved / Все права защищены”** notice. Public reading is permitted; other uses require the author’s prior written consent.

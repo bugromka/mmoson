@@ -55,7 +55,7 @@ PAGES = [
         "lang": "en",
         "output": "index.html",
         "nav": "Home",
-        "title": "MMOSON — O'Neill Station Modeling Module",
+        "title": "MMOSO'N — O'Neill Station Modeling Module",
         "desc": "Calculable model of a habitable O'Neill orbital station at L1 point: two counter-rotating cylinders, 1,000,000 inhabitants, full engineering and biosphere balance.",
         "kicker": "",
         "h1": "",
@@ -81,7 +81,7 @@ PAGES = [
         "lang": "en",
         "output": "engineering.html",
         "nav": "Engineering",
-        "title": "Engineering — MMOSON",
+        "title": "Engineering — MMOSO'N",
         "desc": "Shell and its strength, dual-loop heat rejection, power, axis-to-rim transport, docking and locks, station biosphere.",
         "kicker": "Construction and systems",
         "h1": "Engineering",
@@ -107,7 +107,7 @@ PAGES = [
         "lang": "en",
         "output": "verification.html",
         "nav": "Verification",
-        "title": "Calculation Verification — MMOSON",
+        "title": "Calculation Verification — MMOSO'N",
         "desc": "243/243 independent recalculations, publication cross-check, zero layout defects, safety margin 1.53 and open project tasks.",
         "kicker": "Checks and open tasks",
         "h1": "Calculation Verification",
@@ -133,7 +133,7 @@ PAGES = [
         "lang": "en",
         "output": "gallery.html",
         "nav": "Gallery",
-        "title": "Illustrations — MMOSON",
+        "title": "Illustrations — MMOSO'N",
         "desc": "Twenty-four technical illustrations covering station layout, engineering, climate, transport, food, resources, and operations.",
         "kicker": "Publication sheets",
         "h1": "Illustrations",
@@ -159,7 +159,7 @@ PAGES = [
         "lang": "en",
         "output": "edition.html",
         "nav": "Edition",
-        "title": "Edition — MMOSON",
+        "title": "Edition — MMOSO'N",
         "desc": "43 documents, 34 sections, two language editions, appendices with calculation rationale and check matrix.",
         "kicker": "Publication",
         "h1": "Edition",
@@ -187,8 +187,8 @@ PAGES = [
         "lang": "en",
         "output": "contacts.html",
         "nav": "Contacts",
-        "title": "Contacts — MMOSON",
-        "desc": "Contact the author of the MMOSON project: email, Max, VK, Dobro.ru. Project details, status, address and citation procedure.",
+        "title": "Contacts — MMOSO'N",
+        "desc": "Contact the author of the MMOSO'N project: email, Max, VK, Dobro.ru. Project details, status, address and citation procedure.",
         "kicker": "",
         "h1": "",
         "sub": "",
@@ -215,7 +215,7 @@ PAGES = [
         "lang": "en",
         "output": "authors.html",
         "nav": "Authors",
-        "title": "Authors and License — MMOSON",
+        "title": "Authors and License — MMOSO'N",
         "desc": "Project author, calculation line NIK, terms of material use and citation procedure.",
         "kicker": "People and rights",
         "h1": "Authors and License",
@@ -245,7 +245,7 @@ def nav_html(active: str) -> str:
     lang = current_page.get("lang", "ru")
     pages = [page for page in PAGES if page.get("lang", "ru") == lang]
     home = next(page for page in pages if page["slug"].startswith("index"))
-    brand = "ММОСО’Н" if lang == "ru" else "MMOSON"
+    brand = "ММОСО’Н" if lang == "ru" else "MMOSO'N"
     nav_label = "Основная навигация" if lang == "ru" else "Primary navigation"
     menu_label = "Меню" if lang == "ru" else "Menu"
 
@@ -379,15 +379,15 @@ def finish(page: dict, body: str, css: str, js: str) -> tuple[str, int]:
   </div>
 </footer>""" if shell else ""
     else:
-        page_comment = f"MMOSON · {page['nav']} page."
+        page_comment = f"MMOSO'N · {page['nav']} page."
         html_note = "One self-contained HTML file: markup, styles, script and illustrations inline."
         mode_note = (
             "Contact embed page: navigation is provided by the Google Sites menu."
-            if not shell else "Self-contained MMOSON website page."
+            if not shell else "Self-contained MMOSO'N website page."
         )
         footer = """<footer class="footer">
   <div class="footer-inner">
-    <div class="footer-title">MMOSON</div>
+    <div class="footer-title">MMOSO'N</div>
     <div class="footer-copy">
       <strong>© Roman Sergeevich Bugaenko, 2026</strong><br>
       Materials on this site may be used only with clear attribution to the author and a link to the source.

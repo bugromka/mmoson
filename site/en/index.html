@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MMOSON — O'Neill Station Modeling Module</title>
+<title>MMOSO'N — O'Neill Station Modeling Module</title>
 <meta name="description" content="Calculable model of a habitable O'Neill orbital station at L1 point: two counter-rotating cylinders, 1,000,000 inhabitants, full engineering and biosphere balance.">
 <meta name="theme-color" content="#8f7ed6">
-<!-- MMOSON · Home page. One self-contained HTML file: markup, styles, script and illustrations inline. Self-contained MMOSON website page. -->
+<!-- MMOSO'N · Home page. One self-contained HTML file: markup, styles, script and illustrations inline. Self-contained MMOSO'N website page. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
@@ -789,14 +789,15 @@ code {
 }
 .team-card p:last-child { font-size: 0.9rem; color: var(--text-soft); line-height: 1.7; }
 
-.license-note {
+.license-note, .partner-note {
   background: linear-gradient(to right, rgba(143, 126, 214, 0.07), rgba(78, 205, 196, 0.07));
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   padding: 24px 28px;
 }
-.license-note h3 { font-size: 1rem; color: var(--primary-dark); margin-bottom: 8px; }
-.license-note p { font-size: 0.88rem; color: var(--text-soft); line-height: 1.7; }
+.partner-note { margin-bottom: 24px; }
+.license-note h3, .partner-note h3 { font-size: 1rem; color: var(--primary-dark); margin-bottom: 8px; }
+.license-note p, .partner-note p { font-size: 0.88rem; color: var(--text-soft); line-height: 1.7; }
 
 /* ================= FOOTER ================= */
 .footer { max-width: var(--maxw); margin: 0 auto; width: 100%; padding: 26px 0 8px; }
@@ -1154,7 +1155,7 @@ code {
                 <circle cx="24" cy="33" r="8" fill="none" stroke="currentColor" stroke-width="2.6"/>
                 <line x1="24" y1="6" x2="24" y2="42" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 4" opacity=".7"/>
               </svg>
-      <span>MMOSON</span>
+      <span>MMOSO'N</span>
     </a>
     <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -1185,14 +1186,13 @@ code {
     <div class="container hero-content">
       <p class="eyebrow fade-in">Project of Roman Sergeevich Bugaenko</p>
 
-      <h1 class="hero-title" id="hero-title">MMOSON</h1>
+      <h1 class="hero-title" id="hero-title">MMOSO'N</h1>
       <p class="hero-subtitle">O'Neill Station Modeling Module</p>
       <p class="hero-lead">Two counter-rotating cylinders at the L1 point. A calculated model of a world for a million people — from load-bearing shell to legal structure.</p>
 
       <div class="hero-actions">
         <a class="btn btn-primary" href="#params">Key parameters</a>
         <a class="btn btn-ghost" href="gallery.html">See illustrations</a>
-        <a class="btn btn-ghost" href="/ru/index.html">Русская версия</a>
       </div>
 
       <dl class="hero-stats">
@@ -1213,7 +1213,7 @@ code {
 
       <div class="about-grid">
         <div class="about-text fade-in">
-          <p>MMOSON is a personal engineering and research project: a calculable model of a habitable cylindrical orbital station, derived from first principles. Not an illustration of the future, but a set of figures that add up.</p>
+          <p>MMOSO'N is a personal engineering and research project: a calculable model of a habitable cylindrical orbital station, derived from first principles. Not an illustration of the future, but a set of figures that add up.</p>
           <p>Configuration — classic <strong>Island Three</strong>: two counter-rotating cylinders with a radius of 5 km. Rotation provides 1.0 g gravity on the rim. The cylinders are not joined along their side surfaces — this is physically impossible under counter-rotation; connection runs only through the axes via bearing units.</p>
           <p>The station's axis remains fixed in inertial space. All external equipment — docking ports, radiators, antennas, solar wings — is placed only on the two end frames. The internal volume is illuminated by reactor-driven axial light-heat beams; there are no mirrors or solar sails.</p>
 
@@ -1323,7 +1323,7 @@ code {
 
 <footer class="footer">
   <div class="footer-inner">
-    <div class="footer-title">MMOSON</div>
+    <div class="footer-title">MMOSO'N</div>
     <div class="footer-copy">
       <strong>© Roman Sergeevich Bugaenko, 2026</strong><br>
       Materials on this site may be used only with clear attribution to the author and a link to the source.
