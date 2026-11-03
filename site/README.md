@@ -13,7 +13,7 @@
 | Русский | Главная, Инженерия, Верификация, Иллюстрации, Издание, Контакты, Авторы |
 | English | Home, Engineering, Verification, Gallery, Edition, Contacts, Authors |
 
-Главные страницы включают кнопку перехода между русской и английской версиями. Полноформатные страницы получают меню только своего языка и пейджер «назад / дальше»; контактные страницы также имеют общее меню и локализованный подвал, но без пейджера. Меню доступно без JavaScript; скрипт только улучшает его мобильный режим. На странице «Авторы» Молодёжное общественное движение «Межрегиональный картографический Я-кластер» (МХ «КРЯК») указано как партнёр проекта в технологическом аспекте.
+Главные страницы включают кнопку перехода между русской и английской версиями. Полноформатные страницы получают меню только своего языка и пейджер «назад / дальше»; контактные страницы также имеют общее меню и локализованный подвал, но без пейджера. Обе галереи содержат все 24 листа; русская галерея использует имеющиеся русские изображения и утверждённые англоязычные варианты для остальных, сохраняя русские подписи страницы. Страница «Издание» указывает редакцию 8 и предлагает по одному объединённому DOCX на язык. Меню доступно без JavaScript; скрипт только улучшает его мобильный режим. На странице «Авторы» Молодёжное общественное движение «Межрегиональный картографический Я-кластер» (МХ «КРЯК») указано как партнёр проекта в технологическом аспекте.
 
 ### Один HTML на страницу
 
@@ -30,12 +30,12 @@ site/
 ├── js/app.js                   поведение меню, счётчиков и галереи
 ├── assets/fig_ru/*.png         русские иллюстрации
 ├── assets/fig_en/*.png         английские иллюстрации
-├── icons/                      изображения страниц контактов и авторов
+├── icons/                      изображения контактов, авторов и встроенный PNG-фавикон
 ├── ru/*.html                   собранные русские страницы
 └── en/*.html                   собранные английские страницы
 ```
 
-Финальные версии иллюстраций находятся в `assets/fig_ru/` и `assets/fig_en/`; чистые листы без подписей в текущем наборе сайта не используются.
+Финальные версии иллюстраций находятся в `assets/fig_ru/` и `assets/fig_en/`; чистые листы без подписей в текущем наборе сайта не используются. Обе языковые галереи показывают все 24 листа. Для 16 листов без отдельного русского файла используется утверждённая англоязычная графика с русскими подписями страницы. Значок сайта собран из предоставленной эмблемы: `site/icons/favicon.png` встроен в страницы, многоразмерный `favicon.ico` лежит в корне публикации.
 
 ```bash
 python3 site/build_pages.py
@@ -68,7 +68,7 @@ The builder generates **14 current pages**, seven per language:
 | Русский | Главная, Инженерия, Верификация, Иллюстрации, Издание, Контакты, Авторы |
 | English | Home, Engineering, Verification, Gallery, Edition, Contacts, Authors |
 
-Home pages include a button to switch between Russian and English. Full pages have a language-specific menu and previous/next pager. Contact pages include the shared navigation and localized footer, but no pager. Navigation remains visible without JavaScript; the script only enhances the compact mobile menu. The Authors page identifies the Youth Public Movement “Interregional Cartographic Ya-Cluster” (official Russian name: Молодёжное общественное движение «Межрегиональный картографический Я-кластер», abbreviated МХ «КРЯК») as a partner in the project’s technological aspect.
+Home pages include a button to switch between Russian and English. Full pages have a language-specific menu and previous/next pager. Contact pages include the shared navigation and localized footer, but no pager. Both galleries contain all 24 sheets; the Russian gallery reuses approved English artwork where a Russian graphic is unavailable, while keeping Russian page captions. The Edition page identifies Edition 8 and links to one combined DOCX per language. Navigation remains visible without JavaScript; the script only enhances the compact mobile menu. The Authors page identifies the Youth Public Movement “Interregional Cartographic Ya-Cluster” (official Russian name: Молодёжное общественное движение «Межрегиональный картографический Я-кластер», abbreviated МХ «КРЯК») as a partner in the project’s technological aspect.
 
 ### One HTML file per page
 
@@ -85,12 +85,12 @@ site/
 ├── js/app.js                   menu, counters and gallery behavior
 ├── assets/fig_ru/*.png         Russian illustrations
 ├── assets/fig_en/*.png         English illustrations
-├── icons/                      images for contact and authors pages
+├── icons/                      contact/author images and embedded PNG favicon
 ├── ru/*.html                   built Russian pages
 └── en/*.html                   built English pages
 ```
 
-Final gallery illustrations are in `assets/fig_ru/` and `assets/fig_en/`; clean, text-free sheets are not used by the current website build.
+Final gallery illustrations are in `assets/fig_ru/` and `assets/fig_en/`; clean, text-free sheets are not used by the current website build. Both language galleries show all 24 sheets. Where a Russian graphic is unavailable, the approved English artwork is used with Russian page captions. The logo-derived `site/icons/favicon.png` is inlined into pages; the multi-resolution `favicon.ico` is at the publication root.
 
 ```bash
 python3 site/build_pages.py

@@ -698,6 +698,9 @@ code {
   align-items: start;
 }
 .edition-main p { font-size: 1rem; color: var(--text); line-height: 1.75; margin-bottom: 24px; }
+.edition-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; }
+.edition-actions .btn { padding: 12px 20px; font-size: 0.86rem; }
+.edition-repo { color: var(--primary-dark); font-weight: 600; text-underline-offset: 3px; }
 .edition-facts {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -908,6 +911,9 @@ code {
   .open-list { padding: 22px 20px; }
   .gallery-item img { height: 170px; }
   .edition-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .edition-actions { align-items: stretch; flex-direction: column; }
+  .edition-actions .btn { width: 100%; }
+  .edition-repo { text-align: center; }
   .lightbox { padding: 20px 12px; }
   .lightbox-close { top: 10px; right: 12px; }
 }
