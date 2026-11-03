@@ -14,7 +14,7 @@
   content/<page>.html   разметка страницы без обвязки
   css/styles.css        общий стиль
   js/app.js             общее поведение
-  assets/fig/*.png      иллюстрации в исходном разрешении
+  assets/fig_ru/*.png и assets/fig_en/*.png      иллюстрации галерей
 
 Запуск:
     python3 site/build_pages.py
@@ -389,7 +389,7 @@ def finish(page: dict, body: str, css: str, js: str) -> tuple[str, int]:
 
     settings = page.get("img", {})
     inlined = 0
-    for rel in sorted(set(re.findall(r"assets/(?:fig|fig_en)/[A-Za-z0-9_\-.]+\.png", html))):
+    for rel in sorted(set(re.findall(r"assets/(?:fig_ru|fig_en)/[A-Za-z0-9_\-.]+\.png", html))):
         uri, size = encode_image(
             ROOT / rel,
             max_width=settings.get("max_width", 1200),
