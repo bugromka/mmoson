@@ -121,10 +121,10 @@ PAGES = [
         "output": "gallery.html",
         "nav": "Иллюстрации",
         "title": "Иллюстрации — ММОСО’Н",
-        "desc": "Восемь листов из публикации: компоновка станции, сечение и обшивка, трасса «ось — обод», энергия, климат, ресурсы, продовольствие, землепользование.",
+        "desc": "24 технических листа проекта: компоновка станции, инженерные системы, ресурсы, климат, продовольствие, карантин и конструкция панелей.",
         "kicker": "Листы публикации",
         "h1": "Иллюстрации",
-        "sub": "Восемь технических листов проекта. Нажмите на лист, чтобы открыть крупно.",
+        "sub": "Все 24 технических листа проекта. Нажмите на изображение, чтобы открыть крупно.",
         "page_head": True,
         "img": {"max_width": 1080, "quality": 78},
     },
@@ -147,10 +147,10 @@ PAGES = [
         "output": "edition.html",
         "nav": "Издание",
         "title": "Издание — ММОСО’Н",
-        "desc": "43 документа, 34 раздела, две языковые редакции, приложения с обоснованием расчётов и матрицей проверок.",
+        "desc": "Редакция 8: 34 раздела собраны в один объединённый DOCX на каждом языке, вместе с приложениями и вводными материалами.",
         "kicker": "Публикация",
         "h1": "Издание",
-        "sub": "43 документа, 34 раздела, русская и английская редакции.",
+        "sub": "Редакция 8 · 34 раздела · два объединённых DOCX-файла.",
         "page_head": True,
         "img": {"max_width": 1200, "quality": 82},
     },
@@ -160,10 +160,10 @@ PAGES = [
         "output": "edition.html",
         "nav": "Edition",
         "title": "Edition — MMOSO'N",
-        "desc": "43 documents, 34 sections, two language editions, appendices with calculation rationale and check matrix.",
+        "desc": "Edition 8: 34 sections consolidated into one DOCX per language, including the front matter and appendices.",
         "kicker": "Publication",
         "h1": "Edition",
-        "sub": "43 documents, 34 sections, Russian and English editions.",
+        "sub": "Edition 8 · 34 sections · two combined DOCX files.",
         "page_head": True,
         "img": {"max_width": 1200, "quality": 82},
     },
@@ -178,8 +178,10 @@ PAGES = [
         "h1": "",
         "sub": "",
         "page_head": False,
-        "shell": False,
-        "css": "css/contacts.css",
+        "shell": True,
+        "pager": False,
+        "wrap_content": True,
+        "css": ["css/styles.css", "css/contacts.css"],
         "img": {"max_width": 1200, "quality": 82},
     },
     {
@@ -193,8 +195,10 @@ PAGES = [
         "h1": "",
         "sub": "",
         "page_head": False,
-        "shell": False,
-        "css": "css/contacts.css",
+        "shell": True,
+        "pager": False,
+        "wrap_content": True,
+        "css": ["css/styles.css", "css/contacts.css"],
         "img": {"max_width": 1200, "quality": 82},
     },
     {
@@ -347,13 +351,17 @@ def build(page: dict, css: str, js: str) -> tuple[str, int]:
         body = '<div class="container">\n' + fragment + "\n</div>"
         return finish(page, body, css, js)
 
+    if page.get("wrap_content"):
+        fragment = '<div class="container">\n' + fragment + "\n</div>"
+
     parts = [nav_html(page["slug"]), '<main class="page" id="top">']
     head_block = page_head_html(page)
     if head_block:
         parts.append(head_block)
     parts.append(fragment)
     parts.append("</main>")
-    parts.append(pager_html(page["slug"]))
+    if page.get("pager", True):
+        parts.append(pager_html(page["slug"]))
     body = "\n\n".join(parts)
     return finish(page, body, css, js)
 
@@ -366,7 +374,7 @@ def finish(page: dict, body: str, css: str, js: str) -> tuple[str, int]:
         page_comment = f"ММОСО’Н · страница «{page['nav']}»."
         html_note = "Самодостаточный HTML-файл: разметка, стили, скрипт и иллюстрации встроены."
         mode_note = (
-            "Страница-визитка: навигация задаётся меню Google Sites."
+            "Контентная HTML-страница без общей шапки."
             if not shell else "Самодостаточная страница сайта ММОСО’Н."
         )
         footer = """<footer class="footer">
@@ -382,7 +390,7 @@ def finish(page: dict, body: str, css: str, js: str) -> tuple[str, int]:
         page_comment = f"MMOSO'N · {page['nav']} page."
         html_note = "One self-contained HTML file: markup, styles, script and illustrations inline."
         mode_note = (
-            "Contact embed page: navigation is provided by the Google Sites menu."
+            "Standalone content HTML page without the shared header."
             if not shell else "Self-contained MMOSO'N website page."
         )
         footer = """<footer class="footer">
@@ -407,7 +415,8 @@ def finish(page: dict, body: str, css: str, js: str) -> tuple[str, int]:
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%238f7ed6'/%3E%3Ccircle cx='32' cy='24' r='9' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Ccircle cx='32' cy='44' r='9' fill='none' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="256x256" href="icons/favicon.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
 <style>
 {css}
 </style>
@@ -461,8 +470,10 @@ def main() -> int:
 
     rows = []
     for page in PAGES:
-        css_path = ROOT / page.get("css", "css/styles.css")
-        css = css_path.read_text(encoding="utf-8")
+        css_files = page.get("css", "css/styles.css")
+        if isinstance(css_files, str):
+            css_files = [css_files]
+        css = "\n\n".join((ROOT / css_file).read_text(encoding="utf-8") for css_file in css_files)
         html, inlined = build(page, css, js)
         lang = page.get("lang", "ru")
         folder = RU_DIR if lang == "ru" else EN_DIR
@@ -470,11 +481,16 @@ def main() -> int:
         out.write_text(html, encoding="utf-8")
         publish_folder = PUBLISH_RU_DIR if lang == "ru" else PUBLISH_EN_DIR
         (publish_folder / page["output"]).write_text(html, encoding="utf-8")
-        left = [
+        local_refs = [
             x
             for x in re.findall(r'(?:src|href)="(?!https://|data:|#|mailto:|tel:)([^"]+)"', html)
             if not x.endswith(".html")
         ]
+        left = []
+        for ref in local_refs:
+            target = ROOT.parent / ref.lstrip("/") if ref.startswith("/") else out.parent / ref
+            if not target.exists():
+                left.append(ref)
         rows.append((str(out.relative_to(ROOT)), out.stat().st_size, inlined, left, len(html)))
 
     for name, size, inlined, left, chars in rows:
