@@ -13,7 +13,7 @@
 | Русский | Главная, Инженерия, Верификация, Иллюстрации, Издание, Контакты, Авторы |
 | English | Home, Engineering, Verification, Gallery, Edition, Contacts, Authors |
 
-Полноформатные страницы получают видимое меню только своего языка и пейджер «назад / дальше» по тому же языку. Переключателя языка на страницах нет. Контактные страницы (`shell: false`) — отдельные embed-страницы: без общей навигационной шапки, пейджера и локальных `.html`-ссылок; для них меню предоставляет Google Sites. На полноформатных страницах меню остаётся видимым и без JavaScript; скрипт только улучшает его компактный мобильный режим. Страница «Авторы» указывает Молодёжное общественное движение «Межрегиональный картографический Я-кластер» (МХ «КРЯК») как партнёра проекта в технологическом аспекте.
+Главные страницы включают кнопку перехода между русской и английской версиями. Полноформатные страницы получают меню только своего языка и пейджер «назад / дальше»; контактные страницы также имеют общее меню и локализованный подвал, но без пейджера. Меню доступно без JavaScript; скрипт только улучшает его мобильный режим. На странице «Авторы» Молодёжное общественное движение «Межрегиональный картографический Я-кластер» (МХ «КРЯК») указано как партнёр проекта в технологическом аспекте.
 
 ### Один HTML на страницу
 
@@ -26,11 +26,11 @@ site/
 ├── build_pages.py              сборщик; обновляет site/ru, site/en и корневые ru/, en/
 ├── content/*.html              разметка страниц без оболочки
 ├── css/styles.css              общие стили полноформатных страниц
-├── css/contacts.css            самостоятельный стиль страницы контактов
+├── css/contacts.css            дополнительные стили страницы контактов
 ├── js/app.js                   поведение меню, счётчиков и галереи
 ├── assets/fig_ru/*.png         русские иллюстрации
 ├── assets/fig_en/*.png         английские иллюстрации
-├── icons/                      изображения для страницы контактов
+├── icons/                      изображения страниц контактов и авторов
 ├── ru/*.html                   собранные русские страницы
 └── en/*.html                   собранные английские страницы
 ```
@@ -68,7 +68,7 @@ The builder generates **14 current pages**, seven per language:
 | Русский | Главная, Инженерия, Верификация, Иллюстрации, Издание, Контакты, Авторы |
 | English | Home, Engineering, Verification, Gallery, Edition, Contacts, Authors |
 
-Full website pages have a visible menu and previous/next pager limited to their own language. There is no language switcher. Contact pages (`shell: false`) are embed pages: no shared navigation header, pager or local `.html` links; Google Sites supplies their menu. On full pages, navigation remains visible without JavaScript; the script only enhances the compact mobile menu. The Authors page identifies the Youth Public Movement “Interregional Cartographic Ya-Cluster” (official Russian name: Молодёжное общественное движение «Межрегиональный картографический Я-кластер», abbreviated МХ «КРЯК») as a partner in the project’s technological aspect.
+Home pages include a button to switch between Russian and English. Full pages have a language-specific menu and previous/next pager. Contact pages include the shared navigation and localized footer, but no pager. Navigation remains visible without JavaScript; the script only enhances the compact mobile menu. The Authors page identifies the Youth Public Movement “Interregional Cartographic Ya-Cluster” (official Russian name: Молодёжное общественное движение «Межрегиональный картографический Я-кластер», abbreviated МХ «КРЯК») as a partner in the project’s technological aspect.
 
 ### One HTML file per page
 
@@ -81,11 +81,11 @@ site/
 ├── build_pages.py              builds site/ru, site/en and root ru/, en/
 ├── content/*.html              page markup without the wrapper
 ├── css/styles.css              shared full-page styles
-├── css/contacts.css            standalone contact-page style
+├── css/contacts.css            contact-page-specific styles
 ├── js/app.js                   menu, counters and gallery behavior
 ├── assets/fig_ru/*.png         Russian illustrations
 ├── assets/fig_en/*.png         English illustrations
-├── icons/                      images for the contact page
+├── icons/                      images for contact and authors pages
 ├── ru/*.html                   built Russian pages
 └── en/*.html                   built English pages
 ```

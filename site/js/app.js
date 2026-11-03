@@ -181,19 +181,7 @@
     });
   }
 
-  /* ---------- 7. Ссылки между страницами ----------
-     В файлах каталога embed/ ссылки заданы как href="#" с атрибутом data-page.
-     Навигацию даёт меню Google Sites. */
-  const pageMap = window.MMOSON_LINKS || {};
-  document.querySelectorAll('a[data-page]').forEach((a) => {
-    const key = a.dataset.page;
-    if (!pageMap[key]) return;
-    a.href = pageMap[key];
-    a.target = '_top';
-    a.rel = 'noopener';
-  });
-
-  /* ---------- 6. Плавная прокрутка с поправкой на липкую навигацию ---------- */
+  /* ---------- Плавная прокрутка с поправкой на липкую навигацию ---------- */
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
     a.addEventListener('click', (e) => {
       const id = a.getAttribute('href');

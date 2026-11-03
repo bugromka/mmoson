@@ -80,7 +80,7 @@ python3 tools/combine_sections.py --src /path/to/43-component-docx --out-dir sec
 python3 site/build_pages.py
 ```
 
-В полноформатных страницах есть видимое меню только своего языка и переход к предыдущей/следующей странице. Переключателя языка нет. Контактные страницы сохраняют embed-режим: без общей навигационной шапки и пейджера; на Google Sites навигация для них задаётся меню самого сайта. Меню полноформатных страниц остаётся доступным и без JavaScript.
+На главной странице есть кнопка перехода к версии на другом языке; меню и пейджеры полноформатных страниц остаются внутри своего языка. Страницы контактов включают общую навигационную шапку и локализованный подвал, но не пейджер. Меню доступно и без JavaScript.
 
 `ru/title.html` и `site/ru/title.html` — старые файлы сборки, не входящие в текущий набор 14 страниц. Они не пересобираются и не удаляются; написание названия проекта в них также приведено к актуальному варианту.
 
@@ -182,7 +182,7 @@ Website sources are in `site/`. Each published page is a self-contained HTML fil
 python3 site/build_pages.py
 ```
 
-Full website pages have visible navigation and previous/next links within the same language. There is no language switcher. Contact pages retain embed mode: no shared navigation header or pager; on Google Sites their navigation comes from the host site menu. The full-page menu remains available without JavaScript.
+Home pages include a button to switch between Russian and English. Full-page menus and pagers stay within the current language. Contact pages include the shared navigation header and localized footer, but no pager. Navigation remains visible without JavaScript.
 
 `ru/title.html` and `site/ru/title.html` are legacy build files outside the current 14-page set. They are not rebuilt or deleted; their displayed project name has also been updated to the current spelling.
 

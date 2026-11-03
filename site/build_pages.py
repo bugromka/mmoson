@@ -178,8 +178,10 @@ PAGES = [
         "h1": "",
         "sub": "",
         "page_head": False,
-        "shell": False,
-        "css": "css/contacts.css",
+        "shell": True,
+        "pager": False,
+        "wrap_content": True,
+        "css": ["css/styles.css", "css/contacts.css"],
         "img": {"max_width": 1200, "quality": 82},
     },
     {
@@ -193,8 +195,10 @@ PAGES = [
         "h1": "",
         "sub": "",
         "page_head": False,
-        "shell": False,
-        "css": "css/contacts.css",
+        "shell": True,
+        "pager": False,
+        "wrap_content": True,
+        "css": ["css/styles.css", "css/contacts.css"],
         "img": {"max_width": 1200, "quality": 82},
     },
     {
@@ -347,13 +351,17 @@ def build(page: dict, css: str, js: str) -> tuple[str, int]:
         body = '<div class="container">\n' + fragment + "\n</div>"
         return finish(page, body, css, js)
 
+    if page.get("wrap_content"):
+        fragment = '<div class="container">\n' + fragment + "\n</div>"
+
     parts = [nav_html(page["slug"]), '<main class="page" id="top">']
     head_block = page_head_html(page)
     if head_block:
         parts.append(head_block)
     parts.append(fragment)
     parts.append("</main>")
-    parts.append(pager_html(page["slug"]))
+    if page.get("pager", True):
+        parts.append(pager_html(page["slug"]))
     body = "\n\n".join(parts)
     return finish(page, body, css, js)
 
@@ -366,7 +374,7 @@ def finish(page: dict, body: str, css: str, js: str) -> tuple[str, int]:
         page_comment = f"ММОСО’Н · страница «{page['nav']}»."
         html_note = "Самодостаточный HTML-файл: разметка, стили, скрипт и иллюстрации встроены."
         mode_note = (
-            "Страница-визитка: навигация задаётся меню Google Sites."
+            "Контентная HTML-страница без общей шапки."
             if not shell else "Самодостаточная страница сайта ММОСО’Н."
         )
         footer = """<footer class="footer">
@@ -382,7 +390,7 @@ def finish(page: dict, body: str, css: str, js: str) -> tuple[str, int]:
         page_comment = f"MMOSO'N · {page['nav']} page."
         html_note = "One self-contained HTML file: markup, styles, script and illustrations inline."
         mode_note = (
-            "Contact embed page: navigation is provided by the Google Sites menu."
+            "Standalone content HTML page without the shared header."
             if not shell else "Self-contained MMOSO'N website page."
         )
         footer = """<footer class="footer">
@@ -461,8 +469,10 @@ def main() -> int:
 
     rows = []
     for page in PAGES:
-        css_path = ROOT / page.get("css", "css/styles.css")
-        css = css_path.read_text(encoding="utf-8")
+        css_files = page.get("css", "css/styles.css")
+        if isinstance(css_files, str):
+            css_files = [css_files]
+        css = "\n\n".join((ROOT / css_file).read_text(encoding="utf-8") for css_file in css_files)
         html, inlined = build(page, css, js)
         lang = page.get("lang", "ru")
         folder = RU_DIR if lang == "ru" else EN_DIR
