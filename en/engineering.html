@@ -6,7 +6,7 @@
 <title>Engineering — MMOSON</title>
 <meta name="description" content="Shell and its strength, dual-loop heat rejection, power, axis-to-rim transport, docking and locks, station biosphere.">
 <meta name="theme-color" content="#8f7ed6">
-<!-- ММОСО’Н · страница «Engineering». Один самодостаточный файл: разметка, стили, скрипт и иллюстрации внутри.  Страница сайта ММОСО’Н: самодостаточный HTML-файл. -->
+<!-- MMOSON · Engineering page. One self-contained HTML file: markup, styles, script and illustrations inline. Self-contained MMOSON website page. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap">
@@ -843,17 +843,20 @@ code {
   .about-grid, .edition-grid { grid-template-columns: 1fr; }
   .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .open-list ul { grid-template-columns: 1fr; }
-  .nav-toggle { display: grid; }
+  .nav-toggle { display: none; }
   .nav { border-radius: 22px; flex-wrap: wrap; }
   .nav-links {
-    display: none;
+    display: flex;
     width: 100%;
     margin: 6px 0 4px;
     padding: 8px 4px 4px;
     border-top: 1px solid rgba(255, 255, 255, 0.25);
     gap: 2px;
   }
-  .nav-links.open { display: flex; }
+  /* Without JavaScript the full menu stays visible; the compact toggle is an enhancement. */
+  .has-js .nav-toggle { display: grid; }
+  .has-js .nav-links { display: none; }
+  .has-js .nav-links.open { display: flex; }
   .nav-links a { font-size: 0.9rem; }
 }
 
@@ -1143,13 +1146,42 @@ code {
 </head>
 <body>
 
-<main class="page" id="top">\n\n<section class="page-head">
+<header class="nav-wrap">
+  <nav class="nav" aria-label="Primary navigation">
+    <a href="index.html" data-page="index-en" class="nav-brand">
+      <svg class="nav-mark" viewBox="0 0 48 48" aria-hidden="true">
+                <circle cx="24" cy="15" r="8" fill="none" stroke="currentColor" stroke-width="2.6"/>
+                <circle cx="24" cy="33" r="8" fill="none" stroke="currentColor" stroke-width="2.6"/>
+                <line x1="24" y1="6" x2="24" y2="42" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 4" opacity=".7"/>
+              </svg>
+      <span>MMOSON</span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html" data-page="index-en">Home</a></li>
+      <li><a href="engineering.html" data-page="engineering-en" class="active" aria-current="page">Engineering</a></li>
+      <li><a href="verification.html" data-page="verification-en">Verification</a></li>
+      <li><a href="gallery.html" data-page="gallery-en">Gallery</a></li>
+      <li><a href="edition.html" data-page="edition-en">Edition</a></li>
+      <li><a href="contacts.html" data-page="contacts-en">Contacts</a></li>
+      <li><a href="authors.html" data-page="authors-en">Authors</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="page" id="top">
+
+<section class="page-head">
   <div class="container">
     <p class="eyebrow">Construction and systems</p>
     <h1>Engineering</h1>
     <p class="page-sub">Six station circuits: each closed on calculation, not illustration.</p>
   </div>
-</section>\n\n<section class="card-section" id="engineering">
+</section>
+
+<section class="card-section" id="engineering">
     <div class="container">
       <div class="section-title">
         <h2>Engineering</h2>
@@ -1206,14 +1238,27 @@ code {
         <p>Side surfaces rotate counter to each other. Any rigid link between them is impossible: connection runs only through the axes via bearing units. Inter-axis distance 21 km, free vacuum gap 11 km, no longitudinal elements between shells.</p>
       </div>
     </div>
-  </section>\n\n</main>
+  </section>
+
+</main>
+
+<nav class="pager" aria-label="Page navigation">
+  <a class="pager-prev" href="index.html" data-page="index-en">
+    <span class="pager-label">Previous</span>
+    <span class="pager-name">← Home</span>
+  </a>
+  <a class="pager-next" href="verification.html" data-page="verification-en">
+    <span class="pager-label">Next</span>
+    <span class="pager-name">Verification →</span>
+  </a>
+</nav>
 
 <footer class="footer">
   <div class="footer-inner">
-    <div class="footer-title">ММОСО’Н</div>
+    <div class="footer-title">MMOSON</div>
     <div class="footer-copy">
-      <strong>© Бугаенко Роман Сергеевич, 2026</strong><br>
-      Использование материалов, размещённых на этом сайте, возможно только при обязательном указании автора и ссылки на источник.
+      <strong>© Roman Sergeevich Bugaenko, 2026</strong><br>
+      Materials on this site may be used only with clear attribution to the author and a link to the source.
     </div>
   </div>
 </footer>
@@ -1224,6 +1269,7 @@ code {
 (function () {
   'use strict';
 
+  document.documentElement.classList.add('has-js');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- 1. Появление элементов ---------- */
