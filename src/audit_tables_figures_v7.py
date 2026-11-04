@@ -3,12 +3,13 @@
 
 This is an editorial consistency check, not an engineering certification. It
 checks key table values and status wording, architecture constraints, figure
-captions, embedded-image counts and PNG integrity. Optional source PNGs are
-compared when they are present in src/fig; that legacy source folder is not
-required in the current repository.
+captions, embedded-image counts, per-language asset matching and PNG integrity.
+Optional source PNGs are compared when present in src/fig; that legacy source
+folder is not required in the current repository.
 """
 from __future__ import annotations
 
+from collections import Counter
 from decimal import Decimal
 from pathlib import Path
 import hashlib
@@ -29,10 +30,9 @@ errors: list[str] = []
 notes: list[str] = []
 
 D = Corpus(DOC)
-# Корпус из раздельных документов: каждый рисунок присутствует в русской
-# и английской редакции своего раздела.
-CAPTIONS_EXPECTED = 23
-IMAGES_EXPECTED = 2 * 23
+# Each localized Edition 8 document contains the complete 24-sheet set.
+CAPTIONS_EXPECTED = 24
+IMAGES_EXPECTED = 2 * CAPTIONS_EXPECTED
 
 def fail(msg: str) -> None:
     errors.append(msg)
@@ -142,25 +142,46 @@ if len(D.inline_shapes) != IMAGES_EXPECTED:
     fail(f"встроенные рисунки: ожидалось {IMAGES_EXPECTED} "
          f"(русская и английская редакции), найдено {len(D.inline_shapes)}")
 
-# Совпадение встроенных файлов с эталонными рисунками. В раздельных
-# документах каждый рисунок лежит в пакете своего раздела, поэтому сверка
-# идёт по всем пакетам корпуса, а эталон ищется среди всех встроенных.
-seen_hashes = set()
+# Each document must embed the exact artwork set for its language. The
+# Russian and English media are expected to have different hashes.
+asset_dirs = {
+    "ru": ROOT / "site" / "assets" / "fig_ru",
+    "en": ROOT / "site" / "assets" / "fig_en",
+}
+all_hashes = set()
 for path in D.paths:
+    language = "ru" if path.stem.endswith("_ru") else "en" if path.stem.endswith("_en") else None
+    if language is None:
+        fail(f"язык документа не определяется по имени файла: {path.name}")
+        continue
+    asset_dir = asset_dirs[language]
+    expected_files = sorted(asset_dir.glob("fig*.png"))
+    if len(expected_files) != CAPTIONS_EXPECTED:
+        fail(f"{language}: ожидалось {CAPTIONS_EXPECTED} локализованных PNG в {asset_dir}, "
+             f"найдено {len(expected_files)}")
+    expected_hashes = Counter(hashlib.sha256(source.read_bytes()).hexdigest() for source in expected_files)
+
     with zipfile.ZipFile(path) as z:
-        for name in z.namelist():
-            if name.startswith("word/media/") and name.lower().endswith(".png"):
-                seen_hashes.add(hashlib.sha256(z.read(name)).hexdigest())
-if len(seen_hashes) != CAPTIONS_EXPECTED:
-    fail(f"различных PNG в корпусе: ожидалось {CAPTIONS_EXPECTED}, "
-         f"найдено {len(seen_hashes)}")
+        media_names = [
+            name for name in z.namelist()
+            if name.startswith("word/media/") and name.lower().endswith(".png")
+        ]
+        embedded_hashes = Counter(hashlib.sha256(z.read(name)).hexdigest() for name in media_names)
+    all_hashes.update(embedded_hashes)
+    if len(media_names) != CAPTIONS_EXPECTED:
+        fail(f"{path.name}: ожидалось {CAPTIONS_EXPECTED} встроенных PNG, найдено {len(media_names)}")
+    if embedded_hashes != expected_hashes:
+        missing = list((expected_hashes - embedded_hashes).elements())
+        extra = list((embedded_hashes - expected_hashes).elements())
+        fail(f"{path.name}: набор встроенных рисунков не совпадает с {asset_dir.name}; "
+             f"отсутствуют {len(missing)}, лишние {len(extra)}")
 for source_name in ["fig09_thermal.png", "fig16_resources.png", "fig21_volatiles.png"]:
     source = FIG / source_name
     if not source.exists():
         notes.append(f"не найден необязательный исходник {source_name}; сравнение с исходником пропущено")
         continue
     src_hash = hashlib.sha256(source.read_bytes()).hexdigest()
-    if src_hash not in seen_hashes:
+    if src_hash not in all_hashes:
         fail(f"эталонный рисунок {source_name} не встроен ни в один документ")
     try:
         with Image.open(source) as im:

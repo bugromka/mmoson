@@ -3,18 +3,22 @@
 
 The input directory must contain the 43 bilingual per-component DOCX files.
 Tables and figures are kept; text, tables and figures are split at the language
-markers instead of flattening the document into paragraphs.
+markers instead of flattening the document into paragraphs. The finalizer then
+restores the 24-sheet set and embeds the matching language versions from
+site/assets.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import re
 from pathlib import Path
 
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.shared import Pt
+from docx.shared import Cm, Pt
 from docx.text.paragraph import Paragraph
+from docx.oxml import OxmlElement
 from docxcompose.composer import Composer
 from docx.oxml.ns import qn
 
@@ -58,6 +62,201 @@ def set_paragraph_text(paragraph: Paragraph, text: str) -> None:
         runs[0].text = text
     else:
         paragraph.add_run(text)
+
+
+FIGURE_DIRS = {
+    "ru": ROOT / "site" / "assets" / "fig_ru",
+    "en": ROOT / "site" / "assets" / "fig_en",
+}
+FIGURE_COUNT = 24
+
+FIGURE_TEXT = {
+    "ru": {
+        "old_map_prefix": "Карта ресурсных тел программы вынесена из настоящего документа",
+        "new_map_prefix": "Краткая схема орбит ресурсных тел приведена",
+        "map_text": (
+            "Краткая схема орбит ресурсных тел приведена на рисунке 22. Она показывает "
+            "орбиты пяти ресурсных тел, орбиты Земли, Марса и Юпитера и положение станции "
+            "в точке L1; точками отмечены перигелии. Полная карта «Ресурсная база "
+            "программы» вынесена из настоящего документа отдельным листом формата A3, "
+            "альбомная ориентация (420 × 297 мм), в файлах resource_map.png и "
+            "resource_map.pdf. На полной карте показаны главный пояс астероидов, троянцы "
+            "и пять ресурсных орбит с точками перигелия и афелия; текущие положения тел "
+            "не отображаются. Диаметры пяти тел приведены в правой легенде вместе с их "
+            "ресурсной ролью и орбитальными параметрами. Компоновка рассчитана на печать "
+            "одним читаемым листом A3: карта занимает левую часть, а легенда источников и "
+            "материальный баланс — правую."
+        ),
+        "caption": "Рисунок 22 — орбиты ресурсных тел в плоскости эклиптики",
+        "alt_title": "Ресурсные тела: орбиты в плоскости эклиптики",
+        "alt_descr": "Орбиты пяти ресурсных тел, Земли, Марса и Юпитера; положение станции в точке L1.",
+        "caption_pattern": re.compile(r"^Рисунок\s+(\d+)\s+—"),
+        "reference_pattern": re.compile(
+            r"(?i)(\b(?:рисунок|рисунка|рисунке|рисунку|рис\.)\s+)(22|23)\b"
+        ),
+    },
+    "en": {
+        "old_map_prefix": "The map of program resource bodies is taken out from this document",
+        "new_map_prefix": "A concise diagram of resource-body orbits is provided",
+        "map_text": (
+            "A concise diagram of resource-body orbits is provided in Figure 22. It shows "
+            "the orbits of five resource bodies, the orbits of Earth, Mars and Jupiter, and "
+            "the station at L1; dots mark perihelia. The full “Program Resource Base” map "
+            "remains a separate A3 landscape sheet (420 × 297 mm; files resource_map.png "
+            "and resource_map.pdf). The full map shows the main asteroid belt, the Trojans, "
+            "and five resource orbits with perihelion and aphelion points; current body "
+            "positions are not displayed. The diameters of the five bodies are listed in "
+            "the right-hand legend together with their resource roles and orbital "
+            "parameters. The layout is designed for one readable A3 print: the map occupies "
+            "the left side, and the source legend and material balance the right."
+        ),
+        "caption": "Figure 22 - resource-body orbits in the ecliptic plane",
+        "alt_title": "Resource bodies: orbits in the ecliptic plane",
+        "alt_descr": "Orbits of five resource bodies, Earth, Mars and Jupiter; station location at L1.",
+        "caption_pattern": re.compile(r"^Figure\s+(\d+)\s+[-–—]", re.IGNORECASE),
+        "reference_pattern": re.compile(r"(?i)(\b(?:figure|fig\.)\s+)(22|23)\b"),
+    },
+}
+
+
+def _figure_hashes() -> tuple[dict[str, str], dict[str, dict[str, Path]]]:
+    """Return byte-hash-to-stem mapping and language-specific artwork paths."""
+    hash_to_stem: dict[str, str] = {}
+    by_language: dict[str, dict[str, Path]] = {"ru": {}, "en": {}}
+    for language, folder in FIGURE_DIRS.items():
+        files = sorted(folder.glob("fig*.png"))
+        if len(files) != FIGURE_COUNT:
+            raise RuntimeError(
+                f"Expected {FIGURE_COUNT} {language.upper()} figure assets in {folder}, found {len(files)}"
+            )
+        by_language[language] = {path.stem: path for path in files}
+        for path in files:
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            prior = hash_to_stem.setdefault(digest, path.stem)
+            if prior != path.stem:
+                raise RuntimeError(f"Figure assets share a hash but have different names: {prior}, {path.stem}")
+    return hash_to_stem, by_language
+
+
+def _insert_paragraph_after(anchor: Paragraph, style) -> Paragraph:
+    element = OxmlElement("w:p")
+    anchor._p.addnext(element)
+    paragraph = Paragraph(element, anchor._parent)
+    if style is not None:
+        paragraph.style = style
+    return paragraph
+
+
+def finalize_figures(output: Path, language: str) -> None:
+    """Embed all 24 language-specific plates in a combined Edition 8 DOCX."""
+    if language not in FIGURE_TEXT:
+        raise ValueError(f"Unsupported document language: {language}")
+    doc = Document(output)
+    hash_to_stem, assets = _figure_hashes()
+    figure_info = FIGURE_TEXT[language]
+    changed = False
+    # The bilingual source components currently carry Russian artwork in both
+    # language blocks. Normalize every retained image to the output language.
+    for shape in doc.inline_shapes:
+        relationship_id = shape._inline.graphic.graphicData.pic.blipFill.blip.embed
+        image_part = doc.part.related_parts[relationship_id]
+        digest = hashlib.sha256(image_part.blob).hexdigest()
+        stem = hash_to_stem.get(digest)
+        if stem is None:
+            raise RuntimeError(f"Unrecognized figure in {output.name}: {digest[:12]}")
+        expected = assets[language][stem].read_bytes()
+        if image_part.blob != expected:
+            image_part._blob = expected
+            changed = True
+
+    if len(doc.inline_shapes) not in (FIGURE_COUNT - 1, FIGURE_COUNT):
+        raise RuntimeError(
+            f"{output.name}: expected 23 or 24 existing figures, found {len(doc.inline_shapes)}"
+        )
+
+    paragraphs = list(iter_container_paragraphs(doc))
+    anchor_candidates = [
+        paragraph for paragraph in paragraphs
+        if paragraph.text.startswith(figure_info["old_map_prefix"])
+        or paragraph.text.startswith(figure_info["new_map_prefix"])
+    ]
+    if len(anchor_candidates) != 1:
+        raise RuntimeError(f"{output.name}: expected one resource-orbit map paragraph, found {len(anchor_candidates)}")
+    map_paragraph = anchor_candidates[0]
+    if map_paragraph.text != figure_info["map_text"]:
+        set_paragraph_text(map_paragraph, figure_info["map_text"])
+        changed = True
+
+    caption_numbers = [
+        int(match.group(1))
+        for paragraph in doc.paragraphs
+        if (match := figure_info["caption_pattern"].match(paragraph.text.strip()))
+    ]
+    if len(doc.inline_shapes) == FIGURE_COUNT - 1:
+        if caption_numbers != list(range(1, FIGURE_COUNT)):
+            raise RuntimeError(f"{output.name}: unexpected pre-insertion caption sequence {caption_numbers}")
+        # The newly inserted resource-orbit plate takes Figure 22. Shift all
+        # existing references to the quarantine and panel figures by one.
+        for paragraph in iter_container_paragraphs(doc):
+            if paragraph._p is map_paragraph._p:
+                continue
+            updated = figure_info["reference_pattern"].sub(
+                lambda match: match.group(1) + str(int(match.group(2)) + 1),
+                paragraph.text,
+            )
+            if updated != paragraph.text:
+                set_paragraph_text(paragraph, updated)
+                changed = True
+
+        picture_paragraph = _insert_paragraph_after(map_paragraph, doc.styles["Normal"])
+        picture_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        picture_paragraph.paragraph_format.first_line_indent = Cm(0)
+        picture_paragraph.paragraph_format.space_before = Pt(10)
+        picture_paragraph.paragraph_format.space_after = Pt(2)
+        picture_paragraph.paragraph_format.keep_with_next = True
+        picture = picture_paragraph.add_run().add_picture(
+            str(assets[language]["fig22_asteroids"]), width=Cm(15.5)
+        )
+        picture._inline.docPr.title = figure_info["alt_title"]
+        picture._inline.docPr.descr = figure_info["alt_descr"]
+
+        caption_paragraph = _insert_paragraph_after(picture_paragraph, doc.styles["Caption"])
+        caption_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        caption_paragraph.paragraph_format.first_line_indent = Cm(0)
+        caption_paragraph.add_run(figure_info["caption"])
+        changed = True
+    else:
+        if caption_numbers != list(range(1, FIGURE_COUNT + 1)):
+            raise RuntimeError(f"{output.name}: unexpected final caption sequence {caption_numbers}")
+        if sum(p.text == figure_info["caption"] for p in doc.paragraphs) != 1:
+            raise RuntimeError(f"{output.name}: localized Figure 22 caption is missing or duplicated")
+
+    if changed:
+        doc.save(output)
+
+    # Reopen the package to ensure the final serialized publication contains
+    # one of each plate and a consecutive caption sequence.
+    check = Document(output)
+    final_stems = []
+    for shape in check.inline_shapes:
+        relationship_id = shape._inline.graphic.graphicData.pic.blipFill.blip.embed
+        image_part = check.part.related_parts[relationship_id]
+        digest = hashlib.sha256(image_part.blob).hexdigest()
+        stem = hash_to_stem.get(digest)
+        if stem is None or image_part.blob != assets[language][stem].read_bytes():
+            raise RuntimeError(f"{output.name}: embedded image is not localized for {language}")
+        final_stems.append(stem)
+    if len(final_stems) != FIGURE_COUNT or set(final_stems) != set(assets[language]):
+        raise RuntimeError(f"{output.name}: final figure set is incomplete or duplicated: {final_stems}")
+    if sum(paragraph.text == figure_info["map_text"] for paragraph in check.paragraphs) != 1:
+        raise RuntimeError(f"{output.name}: resource-orbit map note is missing or duplicated")
+    final_captions = [
+        int(match.group(1))
+        for paragraph in check.paragraphs
+        if (match := figure_info["caption_pattern"].match(paragraph.text.strip()))
+    ]
+    if final_captions != list(range(1, FIGURE_COUNT + 1)):
+        raise RuntimeError(f"{output.name}: final caption sequence is {final_captions}")
 
 
 def document_number(doc: Document) -> int | None:
@@ -322,6 +521,7 @@ def build_one(files: list[Path], output: Path, language: str) -> None:
     result = Document(output)
     apply_project_spelling(result)
     result.save(str(output))
+    finalize_figures(output, language)
     result = Document(output)
     print(
         f"{output}: {output.stat().st_size / 1024 / 1024:.2f} MB; "

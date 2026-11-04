@@ -109,7 +109,7 @@ code {
   font-size: 1rem;
   white-space: nowrap;
 }
-.nav-mark { width: 26px; height: 26px; color: #fff; opacity: 0.9; }
+.nav-mark { width: 36px; height: 36px; object-fit: contain; flex: 0 0 auto; }
 
 .nav-links {
   display: flex;
@@ -814,6 +814,8 @@ code {
 }
 .edu-content { flex: 1; min-width: 0; }
 .edu-title { font-weight: 800; color: var(--primary-dark); font-size: 1.05rem; margin-bottom: 5px; }
+.edu-title-link { color: inherit; text-decoration: none; }
+.edu-title-link:hover, .edu-title-link:focus-visible { text-decoration: underline; text-underline-offset: 0.18em; }
 .edu-desc { font-size: 0.9rem; color: var(--text-soft); line-height: 1.55; }
 
 /* ================= FOOTER ================= */
