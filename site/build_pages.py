@@ -294,10 +294,7 @@ def pager_html(slug: str) -> str:
     idx = pages.index(current_page)
     prev_page = pages[idx - 1] if idx > 0 else None
     next_page = pages[idx + 1] if idx + 1 < len(pages) else None
-    if slug in ("contacts", "contacts-en"):
-        back_label, next_label = ("Назад", "Вперёд") if lang == "ru" else ("Back", "Forward")
-    else:
-        back_label, next_label = ("Назад", "Дальше") if lang == "ru" else ("Previous", "Next")
+    back_label, next_label = ("Назад", "Дальше") if lang == "ru" else ("Previous", "Next")
 
     left = (
         f'  <a class="pager-prev" href="{prev_page["output"]}" data-page="{prev_page["slug"]}">\n'
