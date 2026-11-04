@@ -88,7 +88,7 @@ python3 tools/format_docs_like_reference.py
 python3 site/build_pages.py
 ```
 
-На главной странице есть кнопка перехода к версии на другом языке; меню и пейджеры полноформатных страниц остаются внутри своего языка. На страницах «Контакты» есть пейджер «Назад / Вперёд» между «Изданием» и «Авторами», общая навигационная шапка и локализованный подвал. Обе галереи содержат все 24 листа; страница «Издание» отражает редакцию 8 и ведёт к одному объединённому DOCX на язык. Меню доступно и без JavaScript.
+На главной странице есть кнопка перехода к версии на другом языке; меню и пейджеры полноформатных страниц остаются внутри своего языка. На страницах «Контакты» есть пейджер «Назад / Дальше» между «Изданием» и «Авторами», общая навигационная шапка и локализованный подвал. Обе галереи содержат все 24 листа; страница «Издание» отражает редакцию 8 и ведёт к одному объединённому DOCX на язык. Меню доступно и без JavaScript.
 
 `ru/title.html` и `site/ru/title.html` — старые файлы сборки, не входящие в текущий набор 14 страниц. Они не пересобираются и не удаляются; написание названия проекта в них также приведено к актуальному варианту.
 
@@ -199,7 +199,7 @@ Website sources are in `site/`. Each published page is a self-contained HTML fil
 python3 site/build_pages.py
 ```
 
-Home pages include a button to switch between Russian and English. Full-page menus and pagers stay within the current language. Contact pages include the shared navigation header, a localized footer, and a Back/Forward pager between Edition and Authors. Both galleries contain all 24 sheets; the Edition page reflects Edition 8 and links to one combined DOCX per language. Navigation remains visible without JavaScript.
+Home pages include a button to switch between Russian and English. Full-page menus and pagers stay within the current language. Contact pages include the shared navigation header and localized footer; the English Previous/Next pager links Edition and Authors, while the Russian «Назад / Дальше» pager links «Издание» and «Авторы». Both galleries contain all 24 sheets; the Edition page reflects Edition 8 and links to one combined DOCX per language. Navigation remains visible without JavaScript.
 
 `ru/title.html` and `site/ru/title.html` are legacy build files outside the current 14-page set. They are not rebuilt or deleted; their displayed project name has also been updated to the current spelling.
 
