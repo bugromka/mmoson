@@ -8,3 +8,4 @@ NIK_*/
 passphrase
 passphrase.*
 __pycache__/
+.venv/

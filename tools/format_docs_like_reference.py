@@ -311,6 +311,51 @@ def _format_paragraphs(document) -> None:
             )
 
 
+def _format_cover(document) -> None:
+    """Position the cover title, project lead and location like the PDF sample."""
+    paragraphs = document.paragraphs
+    if len(paragraphs) < 4:
+        return
+
+    title = paragraphs[0]
+    edition = paragraphs[1]
+    author = next(
+        (p for p in paragraphs[:8] if p.text.startswith(("Руководитель:", "Project lead:"))),
+        None,
+    )
+    city = next(
+        (p for p in paragraphs[:8] if p.text.startswith(("Курск,", "Kursk,"))),
+        None,
+    )
+    marker = next((p for p in paragraphs if _is_component_marker(p.text)), None)
+
+    _set_paragraph_format(
+        title, size_pt=TITLE_PT, bold=True,
+        alignment=WD_ALIGN_PARAGRAPH.CENTER, line_spacing=1.4,
+        before_pt=0, after_pt=0,
+    )
+    _set_paragraph_format(
+        edition, size_pt=11, bold=False,
+        alignment=WD_ALIGN_PARAGRAPH.CENTER, line_spacing=1.1,
+        before_pt=2, after_pt=0,
+    )
+    if author is not None:
+        _set_paragraph_format(
+            author, size_pt=BODY_PT, bold=False,
+            alignment=WD_ALIGN_PARAGRAPH.RIGHT, line_spacing=1.4,
+            before_pt=340, after_pt=0,
+        )
+    if city is not None:
+        _set_paragraph_format(
+            city, size_pt=BODY_PT, bold=False,
+            alignment=WD_ALIGN_PARAGRAPH.CENTER, line_spacing=1.4,
+            before_pt=270, after_pt=0,
+        )
+    if marker is not None:
+        marker.paragraph_format.page_break_before = True
+        marker.paragraph_format.keep_with_next = True
+
+
 def _format_styles(document) -> None:
     for style in document.styles:
         if style.type != WD_STYLE_TYPE.PARAGRAPH:
@@ -357,6 +402,7 @@ def format_document(path: Path) -> None:
     _format_styles(document)
     _format_tables(document)
     _format_paragraphs(document)
+    _format_cover(document)
 
     temporary = path.with_name(path.stem + ".formatting.tmp.docx")
     document.save(temporary)
