@@ -10,7 +10,7 @@ from docx import Document
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_SECTIONS = set(range(1, 35))
 EXPECTED_COMPONENT_STAMPS = 42  # the contents page is not a numbered component
-EXPECTED_FIGURES = 23
+EXPECTED_FIGURES = 24
 
 PUBLICATIONS = {
     "ru": {

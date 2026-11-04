@@ -179,7 +179,7 @@ PAGES = [
         "sub": "",
         "page_head": False,
         "shell": True,
-        "pager": False,
+        "pager": True,
         "wrap_content": True,
         "css": ["css/styles.css", "css/contacts.css"],
         "img": {"max_width": 1200, "quality": 82},
@@ -196,7 +196,7 @@ PAGES = [
         "sub": "",
         "page_head": False,
         "shell": True,
-        "pager": False,
+        "pager": True,
         "wrap_content": True,
         "css": ["css/styles.css", "css/contacts.css"],
         "img": {"max_width": 1200, "quality": 82},
@@ -229,11 +229,7 @@ PAGES = [
     },
 ]
 
-MARK = """<svg class=\"nav-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\">
-        <circle cx=\"24\" cy=\"15\" r=\"8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\"/>
-        <circle cx=\"24\" cy=\"33\" r=\"8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\"/>
-        <line x1=\"24\" y1=\"6\" x2=\"24\" y2=\"42\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-dasharray=\"2 4\" opacity=\".7\"/>
-      </svg>"""
+MARK = '<img class="nav-mark" src="icons/mmoson-logo.png" alt="" aria-hidden="true">'
 
 
 def link(page: dict, active: str) -> tuple[str, str, str]:
@@ -298,7 +294,10 @@ def pager_html(slug: str) -> str:
     idx = pages.index(current_page)
     prev_page = pages[idx - 1] if idx > 0 else None
     next_page = pages[idx + 1] if idx + 1 < len(pages) else None
-    back_label, next_label = ("Назад", "Дальше") if lang == "ru" else ("Previous", "Next")
+    if slug in ("contacts", "contacts-en"):
+        back_label, next_label = ("Назад", "Вперёд") if lang == "ru" else ("Back", "Forward")
+    else:
+        back_label, next_label = ("Назад", "Дальше") if lang == "ru" else ("Previous", "Next")
 
     left = (
         f'  <a class="pager-prev" href="{prev_page["output"]}" data-page="{prev_page["slug"]}">\n'

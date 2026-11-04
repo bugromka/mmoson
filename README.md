@@ -10,8 +10,8 @@
 
 | Файл | Что содержит | Проверка |
 |---|---|---|
-| `sections/MMOSON_combined_document_ru.docx` | Русская версия технической документации, разделы 1–34 | Редакция 8; 69 таблиц; 23 встроенных рисунка |
-| `sections/MMOSON_combined_document_en.docx` | Английская версия технической документации, разделы 1–34 | Edition 8; 67 таблиц; 23 встроенных рисунка |
+| `sections/MMOSON_combined_document_ru.docx` | Русская версия технической документации, разделы 1–34 | Редакция 8; 69 таблиц; 24 встроенных рисунка |
+| `sections/MMOSON_combined_document_en.docx` | Английская версия технической документации, разделы 1–34 | Edition 8; 67 таблиц; 24 встроенных рисунка |
 
 В обоих файлах есть титульная маркировка редакции 8, 42 датированных отметки компонентов и разделы 1–34. Страница содержания русской версии сохраняет исходные двуязычные обозначения; основное содержание собрано по соответствующему языку. Имена существующих файлов и URL репозитория сохранены для совместимости; в содержимом публикации и интерфейсе используется написание MMOSO'N.
 
@@ -47,7 +47,7 @@ python3 src/check_transport_interface.py
 python3 src/edition8_calcs.py
 ```
 
-`check_edition8_docs.py` сверяет видимую маркировку и написание названия проекта в обоих DOCX, 42 отметки компонентов, разделы 1–34, таблицы, подписи и встроенные рисунки. Сквозная сверка и аудит публикации проходят на текущих объединённых документах. Аудит также проверяет целостность PNG внутри DOCX; отдельные исходники `src/fig/` в текущем репозитории не хранятся, поэтому сравнение с ними пропускается с предупреждением.
+`check_edition8_docs.py` сверяет видимую маркировку и написание названия проекта в обоих DOCX, 42 отметки компонентов, разделы 1–34, таблицы, подписи и встроенные рисунки. Сквозная сверка и аудит публикации проходят на текущих объединённых документах. Аудит проверяет целостность PNG внутри DOCX и сверяет 24 встроенные иллюстрации каждой языковой версии с соответствующим набором `site/assets/fig_ru/` или `site/assets/fig_en/`. Отдельные чистые исходники `src/fig/` в текущем репозитории не хранятся.
 
 `check_transport_interface.py` проверяет канал размером 20,80 м при проёме 30,00 м, маршрут 7 430,8 м и расчётную пропускную способность. `edition8_calcs.py` пересчитывает семь областей редакции 8 (A–G) и сохраняет результат в `src/edition8_results.json`.
 
@@ -64,13 +64,21 @@ python3 src/edition8_calcs.py
 
 ### Сборка публикации
 
-`tools/combine_sections.py` собирает языковые DOCX из **43 исходных двуязычных DOCX-компонентов**, сохраняя таблицы и изображения:
+`tools/combine_sections.py` собирает языковые DOCX из **43 исходных двуязычных DOCX-компонентов**, сохраняя таблицы и текст, затем встраивает все 24 иллюстрации из соответствующего набора `site/assets/fig_ru/` или `site/assets/fig_en/`:
 
 ```bash
 python3 tools/combine_sections.py --src /path/to/43-component-docx --out-dir sections --language both
 ```
 
 Исходные компоненты не входят в текущий рабочий каталог; в `sections/` хранятся готовые объединённые документы. Для пересборки нужны сами исходные DOCX. Скрипт не считает уже объединённые файлы исходными компонентами и откажется собирать их повторно как вход.
+
+### Форматирование итоговых DOCX
+
+`tools/format_docs_like_reference.py` применяет к обеим версиям редакции 8 простой макет PDF-образца: A4, поля 3 / 1,5 / 2 / 2 см, Aptos 14 pt для основного текста и 11 pt для таблиц, тонкая чёрная сетка без заливки. Текст, таблицы и встроенные изображения сохраняются.
+
+```bash
+python3 tools/format_docs_like_reference.py
+```
 
 ### Сайт
 
@@ -80,7 +88,7 @@ python3 tools/combine_sections.py --src /path/to/43-component-docx --out-dir sec
 python3 site/build_pages.py
 ```
 
-На главной странице есть кнопка перехода к версии на другом языке; меню и пейджеры полноформатных страниц остаются внутри своего языка. Страницы контактов включают общую навигационную шапку и локализованный подвал, но не пейджер. Обе галереи содержат все 24 листа; страница «Издание» отражает редакцию 8 и ведёт к одному объединённому DOCX на язык. Меню доступно и без JavaScript.
+На главной странице есть кнопка перехода к версии на другом языке; меню и пейджеры полноформатных страниц остаются внутри своего языка. На страницах «Контакты» есть пейджер «Назад / Вперёд» между «Изданием» и «Авторами», общая навигационная шапка и локализованный подвал. Обе галереи содержат все 24 листа; страница «Издание» отражает редакцию 8 и ведёт к одному объединённому DOCX на язык. Меню доступно и без JavaScript.
 
 `ru/title.html` и `site/ru/title.html` — старые файлы сборки, не входящие в текущий набор 14 страниц. Они не пересобираются и не удаляются; написание названия проекта в них также приведено к актуальному варианту.
 
@@ -97,7 +105,7 @@ python3 site/build_pages.py
 
 ### Автор и статус
 
-**Бугаенко Роман Сергеевич** — автор личного проекта ММОСО’Н. В технологическом аспекте партнёром проекта является Молодёжное общественное движение «Межрегиональный картографический Я-кластер» (сокр. МХ «КРЯК»). Публикация является концептуальным исследованием, а не рабочей конструкторской документацией и не готовым к полёту проектом.
+**Бугаенко Роман Сергеевич** — автор личного проекта ММОСО’Н. Молодёжное общественное движение «Межрегиональный картографический Я-кластер» (МХ «КРЯК») — технологический партнёр проекта и может предоставить устройства, использующие микроконтроллеры ESP32. Публикация является концептуальным исследованием, а не рабочей конструкторской документацией и не готовым к полёту проектом.
 
 Материалы распространяются по условию **«Все права защищены / All rights reserved»**. Публичное чтение разрешено; иное использование требует предварительного письменного согласия автора.
 
@@ -113,8 +121,8 @@ The current publication is **Edition 8, dated 31 October 2026**. It contains 43 
 
 | File | Contents | Verified structure |
 |---|---|---|
-| `sections/MMOSON_combined_document_ru.docx` | Russian technical-documentation edition, sections 1–34 | Edition 8; 69 tables; 23 embedded figures |
-| `sections/MMOSON_combined_document_en.docx` | English technical-documentation edition, sections 1–34 | Edition 8; 67 tables; 23 embedded figures |
+| `sections/MMOSON_combined_document_ru.docx` | Russian technical-documentation edition, sections 1–34 | Edition 8; 69 tables; 24 embedded figures |
+| `sections/MMOSON_combined_document_en.docx` | English technical-documentation edition, sections 1–34 | Edition 8; 67 tables; 24 embedded figures |
 
 Both files have a visible Edition 8 title, 42 dated component stamps and sections 1–34. The Russian contents page retains its original bilingual labels; the main technical text is assembled by language. Existing file names and repository URLs are retained for compatibility; the displayed project name in the publication and website uses the spelling MMOSO'N.
 
@@ -150,7 +158,7 @@ python3 src/check_transport_interface.py
 python3 src/edition8_calcs.py
 ```
 
-`check_edition8_docs.py` verifies the visible edition labels and project-name spelling in both DOCX files, the 42 component stamps, sections 1–34, tables, captions and embedded figures. The publication cross-check and audit pass on the current combined documents. The audit also checks PNG integrity inside the DOCX files; standalone source images in `src/fig/` are not stored in the current repository, so comparisons against those files are skipped with a note.
+`check_edition8_docs.py` verifies the visible edition labels and project-name spelling in both DOCX files, the 42 component stamps, sections 1–34, tables, captions and embedded figures. The publication cross-check and audit pass on the current combined documents. The audit checks PNG integrity inside each DOCX and matches its 24 embedded illustrations against the corresponding localized set in `site/assets/fig_ru/` or `site/assets/fig_en/`. Clean source images in `src/fig/` are not stored in the current repository.
 
 `check_transport_interface.py` checks the 20.80 m channel against a 30.00 m opening, the 7,430.8 m route and calculated throughput. `edition8_calcs.py` recalculates the seven Edition 8 domains (A–G) and writes `src/edition8_results.json`.
 
@@ -167,13 +175,21 @@ These are model calculations, not station certification or proof of technologica
 
 ### Building the publication
 
-`tools/combine_sections.py` assembles language-specific DOCX files from **43 bilingual source DOCX components**, preserving tables and figures:
+`tools/combine_sections.py` assembles language-specific DOCX files from **43 bilingual source DOCX components**, preserving tables and text, then embeds all 24 figures from the matching `site/assets/fig_ru/` or `site/assets/fig_en/` set:
 
 ```bash
 python3 tools/combine_sections.py --src /path/to/43-component-docx --out-dir sections --language both
 ```
 
 The source components are not in the current working tree; `sections/` contains the final combined documents. Rebuilding requires the source DOCX files. The script rejects the combined outputs as component input.
+
+### Formatting the final DOCX files
+
+`tools/format_docs_like_reference.py` applies the simple layout of the PDF sample to both Edition 8 files: A4, left / right / top / bottom margins of 3 / 1.5 / 2 / 2 cm, Aptos 14 pt for body text and 11 pt for tables, with a thin black grid and no fill. Text, tables and embedded illustrations are preserved.
+
+```bash
+python3 tools/format_docs_like_reference.py
+```
 
 ### Website
 
@@ -183,7 +199,7 @@ Website sources are in `site/`. Each published page is a self-contained HTML fil
 python3 site/build_pages.py
 ```
 
-Home pages include a button to switch between Russian and English. Full-page menus and pagers stay within the current language. Contact pages include the shared navigation header and localized footer, but no pager. Both galleries contain all 24 sheets; the Edition page reflects Edition 8 and links to one combined DOCX per language. Navigation remains visible without JavaScript.
+Home pages include a button to switch between Russian and English. Full-page menus and pagers stay within the current language. Contact pages include the shared navigation header, a localized footer, and a Back/Forward pager between Edition and Authors. Both galleries contain all 24 sheets; the Edition page reflects Edition 8 and links to one combined DOCX per language. Navigation remains visible without JavaScript.
 
 `ru/title.html` and `site/ru/title.html` are legacy build files outside the current 14-page set. They are not rebuilt or deleted; their displayed project name has also been updated to the current spelling.
 
@@ -200,6 +216,6 @@ Home pages include a button to switch between Russian and English. Full-page men
 
 ### Author and status
 
-**Roman Sergeevich Bugaenko** is the author of the personal MMOSO'N project. The project’s partner in the technological aspect is the Youth Public Movement «Interregional Cartographic Ya-Cluster». This is a conceptual research publication, not working design documentation or a flight-ready project.
+**Roman Sergeevich Bugaenko** is the author of the personal MMOSO'N project. The Youth Public Movement «Interregional Cartographic Ya-Cluster» is the project’s technological partner and may provide devices using ESP32 microcontrollers. This is a conceptual research publication, not working design documentation or a flight-ready project.
 
 The materials are provided under an **“All rights reserved / Все права защищены”** notice. Public reading is permitted; other uses require the author’s prior written consent.
