@@ -148,7 +148,7 @@
     const inner = item.querySelector('img');
     const full = item.dataset.full || (inner ? inner.src : '');
     const title = item.dataset.title || (inner ? inner.alt : '');
-    if (!lightbox || !full) return;
+    if (!lightbox || !lightboxImg || !lightboxCaption || !full) return;
     lastFocused = item;
     lightboxImg.src = full;
     lightboxImg.alt = title;
@@ -163,7 +163,8 @@
     if (!lightbox) return;
     lightbox.classList.remove('open');
     lightbox.setAttribute('aria-hidden', 'true');
-    lightboxImg.src = '';
+    if (lightboxImg) lightboxImg.removeAttribute('src');
+    if (lightboxCaption) lightboxCaption.textContent = '';
     document.body.style.overflow = '';
     if (lastFocused) lastFocused.focus();
   }

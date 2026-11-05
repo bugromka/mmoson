@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the generated 14-page site and its language-specific project logos."""
+"""Verify the 14-page site, its language-specific logos, and gallery lightboxes."""
 from __future__ import annotations
 
 import base64
@@ -22,17 +22,28 @@ OUTPUT_DIRS = {
 }
 
 
-class LogoParser(HTMLParser):
+class SitePageParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
         self.logos: list[dict[str, str]] = []
+        self.ids: Counter[str] = Counter()
+        self.gallery_item_count = 0
+        self.lightbox_attrs: dict[str, str] = {}
+        self.lightbox_close_count = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if tag.lower() != "img":
-            return
         attributes = {key: value or "" for key, value in attrs}
-        if "data-site-logo" in attributes:
+        if attributes.get("id"):
+            self.ids[attributes["id"]] += 1
+        classes = set(attributes.get("class", "").split())
+        if tag.lower() == "img" and "data-site-logo" in attributes:
             self.logos.append(attributes)
+        if tag.lower() == "button" and "gallery-item" in classes:
+            self.gallery_item_count += 1
+        if attributes.get("id") == "lightbox":
+            self.lightbox_attrs = attributes
+        if tag.lower() == "button" and "lightbox-close" in classes:
+            self.lightbox_close_count += 1
 
 
 def source_pixel_variants(language: str) -> list[tuple[tuple[int, int], bytes]]:
@@ -133,7 +144,7 @@ def main() -> int:
                 errors.append(f"{path.relative_to(REPO_ROOT)}: cannot read HTML: {exc}")
                 continue
 
-            parser = LogoParser()
+            parser = SitePageParser()
             parser.feed(html)
             roles = Counter(logo.get("data-site-logo", "") for logo in parser.logos)
             expected_roles = Counter({"nav": 1})
@@ -143,6 +154,37 @@ def main() -> int:
                 errors.append(
                     f"{path.relative_to(REPO_ROOT)}: expected logo roles {dict(expected_roles)}, found {dict(roles)}"
                 )
+
+            if page["slug"] == "authors-en":
+                if 'YH «RCIC»' not in html:
+                    errors.append(f"{path.relative_to(REPO_ROOT)}: English partner acronym must be written as YH «RCIC»")
+                if '<strong>RCIC</strong>' in html:
+                    errors.append(f"{path.relative_to(REPO_ROOT)}: English partner acronym must not be bold")
+                if 'alt="YH «RCIC» logo"' not in html:
+                    errors.append(f"{path.relative_to(REPO_ROOT)}: English partner logo must have English alt text")
+                if 'МХ «КРЯК»' in html:
+                    errors.append(f"{path.relative_to(REPO_ROOT)}: Russian partner acronym appears in English page")
+
+            if page["slug"] in {"gallery", "gallery-en"}:
+                for element_id in ("lightbox", "lightbox-img", "lightbox-caption"):
+                    if parser.ids[element_id] != 1:
+                        errors.append(
+                            f"{path.relative_to(REPO_ROOT)}: expected one #{element_id}, found {parser.ids[element_id]}"
+                        )
+                if parser.gallery_item_count != 24:
+                    errors.append(
+                        f"{path.relative_to(REPO_ROOT)}: expected 24 clickable gallery sheets, "
+                        f"found {parser.gallery_item_count}"
+                    )
+                if (
+                    parser.lightbox_attrs.get("role") != "dialog"
+                    or parser.lightbox_attrs.get("aria-modal") != "true"
+                    or parser.lightbox_attrs.get("aria-hidden") != "true"
+                    or not parser.lightbox_attrs.get("aria-label")
+                ):
+                    errors.append(f"{path.relative_to(REPO_ROOT)}: lightbox is missing accessible dialog attributes")
+                if parser.lightbox_close_count != 1:
+                    errors.append(f"{path.relative_to(REPO_ROOT)}: expected one lightbox close button")
 
             for logo in parser.logos:
                 role = logo.get("data-site-logo", "unknown")
@@ -170,7 +212,8 @@ def main() -> int:
 
     print(
         f"PASS: {checked_files} generated/published HTML files; 14 current pages; "
-        "language-matched nav and homepage logos; transparent English logo source."
+        "language-matched nav and homepage logos; 24-sheet RU/EN galleries with accessible lightboxes; "
+        "transparent English logo source."
     )
     return 0
 
