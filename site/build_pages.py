@@ -229,7 +229,11 @@ PAGES = [
     },
 ]
 
-MARK = '<img class="nav-mark" src="icons/mmoson-logo.png" alt="" aria-hidden="true">'
+LOGO_ASSETS = {
+    "ru": "icons/mmoson-logo.png",
+    "en": "icons/mmoson-logo-en.png",
+}
+LOGO_MAX_WIDTH = 512
 
 
 def link(page: dict, active: str) -> tuple[str, str, str]:
@@ -256,7 +260,10 @@ def nav_html(active: str) -> str:
             f'      <li><a href="{href}" data-page="{page["slug"]}"{css_class}{current}>'
             f'{page["nav"]}</a></li>'
         )
-    mark = MARK.replace("\n", "\n        ")
+    mark = (
+        f'<img class="nav-mark" data-site-logo="nav" data-logo-language="{lang}" '
+        f'src="{LOGO_ASSETS[lang]}" alt="" aria-hidden="true">'
+    )
     return (
         '<header class="nav-wrap">\n'
         f'  <nav class="nav" aria-label="{nav_label}">\n'
@@ -446,7 +453,7 @@ def finish(page: dict, body: str, css: str, js: str) -> tuple[str, int]:
     for rel in sorted(set(re.findall(r"icons/[A-Za-z0-9_\-.]+\.(?:png|jpg|jpeg|svg)", html))):
         uri, size = encode_image(
             ROOT / rel,
-            max_width=settings.get("max_width", 1200),
+            max_width=LOGO_MAX_WIDTH if rel in LOGO_ASSETS.values() else settings.get("max_width", 1200),
             quality=settings.get("quality", 80),
         )
         inlined += size

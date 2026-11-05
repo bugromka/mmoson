@@ -16,6 +16,10 @@ ROOT = Path(__file__).resolve().parents[1]
 from corpus import Corpus
 
 DOC = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "sections"
+EXPECTED_TABLES_BY_FILE = {
+    "MMOSON_combined_document_ru.docx": 69,
+    "MMOSON_combined_document_en.docx": 67,
+}
 D = Corpus(DOC)
 paras = [" ".join(p.text.split()) for p in D.paragraphs]
 cells = []
@@ -132,15 +136,26 @@ for needle, label in [
 ]: 
     forbid(needle, label)
 
-# Контроль количества таблиц: набор растёт монотонно с редакциями, поэтому
-# без явного второго аргумента проверяется только нижний прежний порог.
-# Точечное число передаётся аргументом: crosscheck.py <docx> <N>
+# Exact Edition 8 counts are checked for the two published combined DOCX files.
+# A custom total remains available as: crosscheck.py <docx-or-dir> <N>.
 expected = int(sys.argv[2]) if len(sys.argv) > 2 else None
-if expected is None:
-    if len(D.tables) < 56:
+if expected is not None:
+    if len(D.tables) != expected:
+        errors.append(f"ожидалось {expected} таблиц, найдено {len(D.tables)}")
+else:
+    recognized_publications = 0
+    for path, document in zip(D.paths, D.docs):
+        publication_expected = EXPECTED_TABLES_BY_FILE.get(path.name)
+        if publication_expected is None:
+            continue
+        recognized_publications += 1
+        if len(document.tables) != publication_expected:
+            errors.append(
+                f"{path.name}: ожидалось {publication_expected} таблиц редакции 8, "
+                f"найдено {len(document.tables)}"
+            )
+    if recognized_publications == 0 and len(D.tables) < 56:
         errors.append(f"ожидалось не менее 56 таблиц, найдено {len(D.tables)}")
-elif len(D.tables) != expected:
-    errors.append(f"ожидалось {expected} таблиц, найдено {len(D.tables)}")
 
 print("=" * 76)
 print("СКВОЗНАЯ СВЕРКА ММОСО’Н · РЕДАКЦИЯ 8")

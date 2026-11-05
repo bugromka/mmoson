@@ -33,12 +33,30 @@ D = Corpus(DOC)
 # Each localized Edition 8 document contains the complete 24-sheet set.
 CAPTIONS_EXPECTED = 24
 IMAGES_EXPECTED = 2 * CAPTIONS_EXPECTED
+TABLES_EXPECTED = {"ru": 69, "en": 67}
 
 def fail(msg: str) -> None:
     errors.append(msg)
 
 def norm(s: str) -> str:
     return " ".join(s.split())
+
+def document_language(path: Path) -> str | None:
+    if path.stem.endswith("_ru"):
+        return "ru"
+    if path.stem.endswith("_en"):
+        return "en"
+    return None
+
+for path, document in zip(D.paths, D.docs):
+    language = document_language(path)
+    if language is None:
+        fail(f"язык документа не определяется по имени файла: {path.name}")
+    elif len(document.tables) != TABLES_EXPECTED[language]:
+        fail(
+            f"{path.name}: ожидалось {TABLES_EXPECTED[language]} таблиц редакции 8, "
+            f"найдено {len(document.tables)}"
+        )
 
 def find_table(predicate, label: str):
     found = []
@@ -150,7 +168,7 @@ asset_dirs = {
 }
 all_hashes = set()
 for path in D.paths:
-    language = "ru" if path.stem.endswith("_ru") else "en" if path.stem.endswith("_en") else None
+    language = document_language(path)
     if language is None:
         fail(f"язык документа не определяется по имени файла: {path.name}")
         continue
