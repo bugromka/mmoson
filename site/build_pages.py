@@ -318,6 +318,22 @@ def pager_html(slug: str) -> str:
     label = "Переход между страницами" if lang == "ru" else "Page navigation"
     return '<nav class="pager" aria-label="' + label + '">\n' + left + "\n" + right + "\n</nav>"
 
+
+def lightbox_html(language: str) -> str:
+    label = "Просмотр изображения в полном размере" if language == "ru" else "Full-size image viewer"
+    close_label = "Закрыть изображение" if language == "ru" else "Close image"
+    return (
+        f'<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" '
+        f'aria-hidden="true" aria-label="{label}">\n'
+        f'  <button class="lightbox-close" type="button" aria-label="{close_label}">×</button>\n'
+        '  <figure>\n'
+        '    <img id="lightbox-img" alt="">\n'
+        '    <figcaption id="lightbox-caption"></figcaption>\n'
+        '  </figure>\n'
+        '</div>'
+    )
+
+
 def encode_image(path: Path, max_width: int = 1200, quality: int = 80) -> tuple[str, int]:
     raw = path.read_bytes()
     # SVG не конвертируем через PIL — возвращаем как есть (base64)
@@ -365,6 +381,8 @@ def build(page: dict, css: str, js: str) -> tuple[str, int]:
     parts.append("</main>")
     if page.get("pager", True):
         parts.append(pager_html(page["slug"]))
+    if page["slug"] in {"gallery", "gallery-en"}:
+        parts.append(lightbox_html(page["lang"]))
     body = "\n\n".join(parts)
     return finish(page, body, css, js)
 
