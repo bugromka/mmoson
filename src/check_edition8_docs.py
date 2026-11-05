@@ -13,8 +13,20 @@ from docx.oxml.ns import qn
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_SECTIONS = set(range(1, 35))
 EXPECTED_COMPONENT_STAMPS = 42  # the contents page is not a numbered component
+EXPECTED_TABLES = {"ru": 69, "en": 67}
 EXPECTED_FIGURES = 24
 EXPECTED_BIBLIOGRAPHY_ENTRIES = 18
+A4_LAYOUT_CM = {
+    "page_width": 21.0,
+    "page_height": 29.7,
+    "top_margin": 2.0,
+    "bottom_margin": 2.0,
+    "left_margin": 3.0,
+    "right_margin": 1.5,
+}
+BODY_FONT = "Aptos"
+BODY_FONT_PT = 14
+TABLE_FONT_PT = 11
 
 COMPONENT_STAMP = re.compile(
     r"^(?:Редакция 8|Edition 8)\s*·.*?\b(?:документ|document)\s+\d+\s+(?:из|of)\s+43\b",
@@ -111,6 +123,42 @@ def _status_matrix_bullets(paragraphs: list[str], heading: str) -> tuple[int, in
     return len(matches), sum(text.strip().startswith("·") for text in paragraphs[start + 1:end])
 
 
+def _check_reference_layout(doc, language: str) -> list[str]:
+    errors: list[str] = []
+    for section_index, section in enumerate(doc.sections, start=1):
+        for attribute, expected_cm in A4_LAYOUT_CM.items():
+            actual_cm = getattr(section, attribute).cm
+            if abs(actual_cm - expected_cm) > 0.02:
+                errors.append(
+                    f"{language}: section {section_index} {attribute} is {actual_cm:.2f} cm; "
+                    f"expected {expected_cm:.1f} cm"
+                )
+                break
+
+    normal_font = doc.styles["Normal"].font
+    if normal_font.name != BODY_FONT:
+        errors.append(f"{language}: Normal style font is {normal_font.name!r}; expected {BODY_FONT}")
+    if normal_font.size is None or abs(normal_font.size.pt - BODY_FONT_PT) > 0.01:
+        actual_pt = normal_font.size.pt if normal_font.size else None
+        errors.append(f"{language}: Normal style size is {actual_pt}; expected {BODY_FONT_PT} pt")
+
+    for table_index, table in enumerate(doc.tables, start=1):
+        for row in table.rows:
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    for run in paragraph.runs:
+                        if not run.text.strip():
+                            continue
+                        if run.font.name != BODY_FONT or run.font.size is None or abs(run.font.size.pt - TABLE_FONT_PT) > 0.01:
+                            actual_size = run.font.size.pt if run.font.size else None
+                            errors.append(
+                                f"{language}: table {table_index} cell text must use {BODY_FONT} {TABLE_FONT_PT} pt; "
+                                f"found {run.font.name!r} {actual_size} pt"
+                            )
+                            return errors
+    return errors
+
+
 def verify(language: str, spec: dict) -> list[str]:
     path: Path = spec["path"]
     errors: list[str] = []
@@ -118,6 +166,7 @@ def verify(language: str, spec: dict) -> list[str]:
         return [f"{language}: missing {path.relative_to(ROOT)}"]
 
     doc = Document(path)
+    errors.extend(_check_reference_layout(doc, language))
     paragraphs = [paragraph.text.strip() for paragraph in doc.paragraphs]
     table_texts = [
         cell.text.strip()
@@ -178,6 +227,10 @@ def verify(language: str, spec: dict) -> list[str]:
         errors.append(f"{language}: expected figure captions 1–{EXPECTED_FIGURES}, found {captions}")
     if len(doc.inline_shapes) != EXPECTED_FIGURES:
         errors.append(f"{language}: expected {EXPECTED_FIGURES} embedded figures, found {len(doc.inline_shapes)}")
+    if len(doc.tables) != EXPECTED_TABLES[language]:
+        errors.append(
+            f"{language}: expected {EXPECTED_TABLES[language]} Edition 8 tables, found {len(doc.tables)}"
+        )
     if not doc.tables:
         errors.append(f"{language}: no Word tables found")
     else:
@@ -307,7 +360,7 @@ def main() -> int:
         for error in errors:
             print("FAIL:", error)
         return 1
-    print("PASS: covers, localization, one shared bibliography, status notes and Edition 8 sections are verified.")
+    print("PASS: covers, reference layout, localization, Edition 8 table counts, bibliography, status notes and sections are verified.")
     return 0
 
 

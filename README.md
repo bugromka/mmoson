@@ -40,6 +40,8 @@
 ```bash
 python3 -m pip install -r requirements.txt
 python3 -m compileall -q src tools site
+python3 site/build_pages.py
+python3 site/check_site_build.py
 python3 src/check_edition8_docs.py
 python3 src/crosscheck.py sections
 python3 src/audit_tables_figures_v7.py sections
@@ -47,7 +49,7 @@ python3 src/check_transport_interface.py
 python3 src/edition8_calcs.py
 ```
 
-`check_edition8_docs.py` сверяет титульные страницы, язык текста вне общей библиографии, единственный список из 18 источников, сохранность 12 примечаний матрицы статусов, маркировку редакции 8, 42 отметки компонентов, разделы 1–34, таблицы, подписи и встроенные рисунки. Сквозная сверка и аудит публикации проходят на текущих объединённых документах. Аудит проверяет целостность PNG внутри DOCX и сверяет 24 встроенные иллюстрации каждой языковой версии с соответствующим набором `site/assets/fig_ru/` или `site/assets/fig_en/`. Отдельные чистые исходники `src/fig/` в текущем репозитории не хранятся.
+`check_edition8_docs.py` сверяет титульные страницы, макет PDF-образца (A4, поля 3 / 1,5 / 2 / 2 см, Aptos 14 pt для основного стиля и 11 pt для таблиц), язык текста вне общей библиографии, единый список из 18 источников, 12 примечаний матрицы статусов, маркировку редакции 8, 42 отметки компонентов, разделы 1–34 и точное число таблиц: 69 в русском и 67 в английском DOCX. Сквозная сверка проверяет канонические значения и эти числа для опубликованных документов; `audit_tables_figures_v7.py` дополнительно сверяет таблицы, подписи, целостность PNG и полный комплект из 24 локализованных рисунков в каждом языке. Чистые исходники `src/fig/` в текущем репозитории не хранятся.
 
 `check_transport_interface.py` проверяет канал размером 20,80 м при проёме 30,00 м, маршрут 7 430,8 м и расчётную пропускную способность. `edition8_calcs.py` пересчитывает семь областей редакции 8 (A–G) и сохраняет результат в `src/edition8_results.json`.
 
@@ -91,7 +93,7 @@ python3 tools/format_docs_like_reference.py
 python3 site/build_pages.py
 ```
 
-Русская главная страница показывает оригинальный логотип проекта вместо двух видимых текстовых заголовков; доступный для экранных дикторов заголовок сохранён в разметке. На главной странице есть кнопка перехода к версии на другом языке; меню и пейджеры полноформатных страниц остаются внутри своего языка. На страницах «Контакты» есть пейджер «Назад / Дальше» между «Изданием» и «Авторами», общая навигационная шапка и локализованный подвал. Обе галереи содержат все 24 листа; страница «Издание» отражает редакцию 8 и ведёт к одному объединённому DOCX на язык. Меню доступно и без JavaScript.
+На русской и английской главных страницах показаны оригинальные логотипы соответствующих языковых версий вместо видимых текстовых названий; доступные для экранных дикторов заголовки сохранены в разметке. Английский логотип с прозрачным фоном встроен также в навигацию всех английских страниц. На главной странице есть кнопка перехода к версии на другом языке; меню и пейджеры полноформатных страниц остаются внутри своего языка. На страницах «Контакты» есть пейджер «Назад / Дальше» между «Изданием» и «Авторами», общая навигационная шапка и локализованный подвал. Обе галереи содержат все 24 листа; страница «Издание» отражает редакцию 8 и ведёт к одному объединённому DOCX на язык. Меню доступно и без JavaScript. `site/check_site_build.py` проверяет состав 14 страниц, синхронизацию опубликованных копий и правильное встраивание языкового логотипа в навигацию и на обе главные страницы.
 
 `ru/title.html` и `site/ru/title.html` — старые файлы сборки, не входящие в текущий набор 14 страниц. Они не пересобираются и не удаляются; написание названия проекта в них также приведено к актуальному варианту.
 
@@ -99,6 +101,7 @@ python3 site/build_pages.py
 
 - `sections/` — две итоговые объединённые DOCX-версии редакции 8.
 - `favicon.ico` — многоразмерный фавикон, созданный из предоставленной эмблемы; PNG-версия встроена в страницы.
+- `site/icons/mmoson-logo.png` и `site/icons/mmoson-logo-en.png` — оригинальные логотипы для русской и английской версий; английский PNG сохраняет прозрачный фон и используется на английских страницах.
 - `src/` — расчёты и проверки документации.
 - `tools/` — утилиты сборки, работы с иллюстрациями и локальные вспомогательные инструменты.
 - `site/content/`, `site/css/`, `site/js/` — исходники страниц и оформления.
@@ -154,6 +157,8 @@ Install the dependencies from `requirements.txt`, then run from the repository r
 ```bash
 python3 -m pip install -r requirements.txt
 python3 -m compileall -q src tools site
+python3 site/build_pages.py
+python3 site/check_site_build.py
 python3 src/check_edition8_docs.py
 python3 src/crosscheck.py sections
 python3 src/audit_tables_figures_v7.py sections
@@ -161,7 +166,7 @@ python3 src/check_transport_interface.py
 python3 src/edition8_calcs.py
 ```
 
-`check_edition8_docs.py` verifies both title pages, language outside the shared bibliography, the single list of 18 sources, the 12 preserved status-matrix notes, Edition 8 labels, 42 component stamps, sections 1–34, tables, captions and embedded figures. The publication cross-check and audit pass on the current combined documents. The audit checks PNG integrity inside each DOCX and matches its 24 embedded illustrations against the corresponding localized set in `site/assets/fig_ru/` or `site/assets/fig_en/`. Clean source images in `src/fig/` are not stored in the current repository.
+`check_edition8_docs.py` verifies both title pages, the reference layout (A4, 3 / 1.5 / 2 / 2 cm margins, Aptos 14 pt default style and 11 pt tables), localization outside the shared bibliography, the single list of 18 sources, 12 preserved status-matrix notes, Edition 8 labels, 42 component stamps, sections 1–34 and the exact table counts: 69 in the Russian DOCX and 67 in the English DOCX. The publication cross-check verifies canonical values and these counts for the published files; `audit_tables_figures_v7.py` additionally checks tables, captions, PNG integrity and the complete set of 24 localized figures in each language. Clean source images in `src/fig/` are not stored in the current repository.
 
 `check_transport_interface.py` checks the 20.80 m channel against a 30.00 m opening, the 7,430.8 m route and calculated throughput. `edition8_calcs.py` recalculates the seven Edition 8 domains (A–G) and writes `src/edition8_results.json`.
 
@@ -205,7 +210,7 @@ Website sources are in `site/`. Each published page is a self-contained HTML fil
 python3 site/build_pages.py
 ```
 
-The Russian home page displays the original project logo in place of its two visible text headings; an accessible heading remains in the markup. Home pages include a button to switch between Russian and English. Full-page menus and pagers stay within the current language. Contact pages include the shared navigation header and localized footer; the English Previous/Next pager links Edition and Authors, while the Russian «Назад / Дальше» pager links «Издание» and «Авторы». Both galleries contain all 24 sheets; the Edition page reflects Edition 8 and links to one combined DOCX per language. Navigation remains visible without JavaScript.
+The Russian and English home pages display the original language-specific project logos in place of visible text titles; accessible headings remain in the markup. The transparent English logo is also embedded in the navigation on all English pages. Home pages include a button to switch between Russian and English. Full-page menus and pagers stay within the current language. Contact pages include the shared navigation header and localized footer; the English Previous/Next pager links Edition and Authors, while the Russian «Назад / Дальше» pager links «Издание» and «Авторы». Both galleries contain all 24 sheets; the Edition page reflects Edition 8 and links to one combined DOCX per language. Navigation remains visible without JavaScript. `site/check_site_build.py` verifies the 14-page set, synchronization of published copies, and correct embedding of the language-specific logo in navigation and both home pages.
 
 `ru/title.html` and `site/ru/title.html` are legacy build files outside the current 14-page set. They are not rebuilt or deleted; their displayed project name has also been updated to the current spelling.
 
@@ -213,6 +218,7 @@ The Russian home page displays the original project logo in place of its two vis
 
 - `sections/` — the two final combined Edition 8 DOCX files.
 - `favicon.ico` — multi-resolution site favicon derived from the supplied emblem; the PNG rendition is inlined in pages.
+- `site/icons/mmoson-logo.png` and `site/icons/mmoson-logo-en.png` — original Russian and English project logos; the transparent English PNG is used on English pages.
 - `src/` — calculations and documentation checks.
 - `tools/` — document, image and local utility scripts.
 - `site/content/`, `site/css/`, `site/js/` — page sources and styling.

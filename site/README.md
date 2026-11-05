@@ -13,7 +13,7 @@
 | Русский | Главная, Инженерия, Верификация, Иллюстрации, Издание, Контакты, Авторы |
 | English | Home, Engineering, Verification, Gallery, Edition, Contacts, Authors |
 
-Русская главная страница показывает оригинальный логотип проекта вместо двух видимых текстовых заголовков; доступный для экранных дикторов заголовок сохранён в разметке. Главные страницы включают кнопку перехода между русской и английской версиями. Полноформатные страницы получают меню только своего языка и пейджер; страницы «Контакты» дополнительно связывают пейджером «Назад / Дальше» страницы «Издание» и «Авторы». Обе галереи содержат все 24 листа на соответствующем языке: русская — 24 русские иллюстрации, английская — 24 английские. Страница «Издание» указывает редакцию 8 и предлагает по одному объединённому DOCX на язык. Меню доступно без JavaScript; скрипт только улучшает его мобильный режим. На странице «Авторы» Молодёжное общественное движение «Межрегиональный картографический Я-кластер» (МХ «КРЯК») указано только как технологический партнёр проекта, который может предоставить устройства с микроконтроллерами ESP32.
+На обеих главных страницах показан оригинальный логотип соответствующей языковой версии вместо видимого текстового названия; доступный для экранных дикторов заголовок сохранён в разметке. Английский логотип с прозрачным фоном используется на английской главной странице и в шапке всех английских страниц; русские страницы используют русскую версию. Главные страницы включают кнопку перехода между русской и английской версиями. Полноформатные страницы получают меню только своего языка и пейджер; страницы «Контакты» дополнительно связывают пейджером «Назад / Дальше» страницы «Издание» и «Авторы». Обе галереи содержат все 24 листа на соответствующем языке: русская — 24 русские иллюстрации, английская — 24 английские. Страница «Издание» указывает редакцию 8 и предлагает по одному объединённому DOCX на язык. Меню доступно без JavaScript; скрипт только улучшает его мобильный режим. На странице «Авторы» Молодёжное общественное движение «Межрегиональный картографический Я-кластер» (МХ «КРЯК») указано только как технологический партнёр проекта, который может предоставить устройства с микроконтроллерами ESP32.
 
 ### Один HTML на страницу
 
@@ -24,13 +24,14 @@
 ```
 site/
 ├── build_pages.py              сборщик; обновляет site/ru, site/en и корневые ru/, en/
+├── check_site_build.py         проверка 14 страниц и языковых логотипов
 ├── content/*.html              разметка страниц без оболочки
 ├── css/styles.css              общие стили полноформатных страниц
 ├── css/contacts.css            дополнительные стили страницы контактов
 ├── js/app.js                   поведение меню, счётчиков и галереи
 ├── assets/fig_ru/*.png         русские иллюстрации
 ├── assets/fig_en/*.png         английские иллюстрации
-├── icons/                      изображения контактов, авторов и встроенный PNG-фавикон
+├── icons/                      логотипы обоих языков, изображения контактов/авторов и PNG-фавикон
 ├── ru/*.html                   собранные русские страницы
 └── en/*.html                   собранные английские страницы
 ```
@@ -39,9 +40,10 @@ site/
 
 ```bash
 python3 site/build_pages.py
+python3 site/check_site_build.py
 ```
 
-Сборка создаёт 14 страниц, встраивает стили, скрипт и изображения и синхронизирует результаты с корневыми `ru/` и `en/` для GitHub Pages. Файлы `ru/title.html` и `site/ru/title.html` — оставшиеся старые сборки, не входящие в текущий набор; скрипт их не создаёт и не удаляет до отдельного решения.
+Сборка создаёт 14 страниц, встраивает стили, скрипт и изображения и синхронизирует результаты с корневыми `ru/` и `en/` для GitHub Pages. `site/check_site_build.py` проверяет набор страниц, совпадение опубликованных копий, правильные логотипы по языкам и прозрачность английского PNG. Файлы `ru/title.html` и `site/ru/title.html` — оставшиеся старые сборки, не входящие в текущий набор; скрипт их не создаёт и не удаляет до отдельного решения.
 
 ### Локальный просмотр
 
@@ -68,7 +70,7 @@ The builder generates **14 current pages**, seven per language:
 | Русский | Главная, Инженерия, Верификация, Иллюстрации, Издание, Контакты, Авторы |
 | English | Home, Engineering, Verification, Gallery, Edition, Contacts, Authors |
 
-The Russian home page displays the original project logo instead of its two visible text headings; an accessible heading remains in the markup. Home pages include a button to switch between Russian and English. Full pages have a language-specific menu and pager. Contact pages also include localized pagers: the English Previous/Next links Edition and Authors, while the Russian «Назад / Дальше» links «Издание» and «Авторы». Both galleries contain all 24 sheets in their respective languages: the Russian gallery uses 24 Russian illustrations, and the English gallery uses 24 English illustrations. The Edition page identifies Edition 8 and links to one combined DOCX per language. Navigation remains visible without JavaScript; the script only enhances the compact mobile menu. The Authors page identifies the Youth Public Movement «Interregional Cartographic Ya-Cluster» only as the project’s technological partner, which may provide devices using ESP32 microcontrollers.
+Both home pages display the original language-specific project logo instead of a visible text title; an accessible heading remains in the markup. The transparent English logo appears on the English home page and in every English page header, while Russian pages use the Russian logo. Home pages include a button to switch between Russian and English. Full pages have a language-specific menu and pager. Contact pages also include localized pagers: the English Previous/Next links Edition and Authors, while the Russian «Назад / Дальше» links «Издание» and «Авторы». Both galleries contain all 24 sheets in their respective languages: the Russian gallery uses 24 Russian illustrations, and the English gallery uses 24 English illustrations. The Edition page identifies Edition 8 and links to one combined DOCX per language. Navigation remains visible without JavaScript; the script only enhances the compact mobile menu. The Authors page identifies the Youth Public Movement «Interregional Cartographic Ya-Cluster» only as the project’s technological partner, which may provide devices using ESP32 microcontrollers.
 
 ### One HTML file per page
 
@@ -79,13 +81,14 @@ Every built page is a self-contained HTML file with its CSS, JavaScript and requ
 ```
 site/
 ├── build_pages.py              builds site/ru, site/en and root ru/, en/
+├── check_site_build.py         validates 14 pages and localized logos
 ├── content/*.html              page markup without the wrapper
 ├── css/styles.css              shared full-page styles
 ├── css/contacts.css            contact-page-specific styles
 ├── js/app.js                   menu, counters and gallery behavior
 ├── assets/fig_ru/*.png         Russian illustrations
 ├── assets/fig_en/*.png         English illustrations
-├── icons/                      contact/author images and embedded PNG favicon
+├── icons/                      Russian/English project logos, contact/author images and PNG favicon
 ├── ru/*.html                   built Russian pages
 └── en/*.html                   built English pages
 ```
@@ -94,9 +97,10 @@ Final localized illustrations are in `assets/fig_ru/` and `assets/fig_en/`; clea
 
 ```bash
 python3 site/build_pages.py
+python3 site/check_site_build.py
 ```
 
-The build creates 14 pages, inlines styles, scripts and images, then syncs the result to the root `ru/` and `en/` directories for GitHub Pages. `ru/title.html` and `site/ru/title.html` are retained legacy builds outside the current page set; the builder neither generates nor deletes them pending a separate decision.
+The build creates 14 pages, inlines styles, scripts and images, then syncs the result to the root `ru/` and `en/` directories for GitHub Pages. `site/check_site_build.py` verifies the page set, matching published copies, language-specific logos and the transparent English PNG. `ru/title.html` and `site/ru/title.html` are retained legacy builds outside the current page set; the builder neither generates nor deletes them pending a separate decision.
 
 ### Local preview
 
