@@ -13,9 +13,9 @@ from docx.oxml.ns import qn
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_SECTIONS = set(range(1, 35))
 EXPECTED_COMPONENT_STAMPS = 42  # the contents page is not a numbered component
-EXPECTED_TABLES = {"ru": 69, "en": 67}
+EXPECTED_TABLES = {"ru": 72, "en": 70}
 EXPECTED_FIGURES = 24
-EXPECTED_BIBLIOGRAPHY_ENTRIES = 18
+EXPECTED_BIBLIOGRAPHY_ENTRIES = 31
 A4_LAYOUT_CM = {
     "page_width": 21.0,
     "page_height": 29.7,
@@ -24,9 +24,9 @@ A4_LAYOUT_CM = {
     "left_margin": 3.0,
     "right_margin": 1.5,
 }
-BODY_FONT = "Aptos"
+BODY_FONT = "Times New Roman"
 BODY_FONT_PT = 14
-TABLE_FONT_PT = 11
+TABLE_FONT_PT = 12
 
 COMPONENT_STAMP = re.compile(
     r"^(?:Редакция 8|Edition 8)\s*·.*?\b(?:документ|document)\s+\d+\s+(?:из|of)\s+43\b",
@@ -44,7 +44,7 @@ PUBLICATIONS = {
         "project_name": "ММОСО’Н",
         "cover_author": "Руководитель: Бугаенко Роман Сергеевич",
         "cover_city": "Курск, 2026",
-        "stamp": re.compile(r"^Редакция 8 · 31 октября 2026 г\. · документ \d+ из 43$"),
+        "stamp": re.compile(r"^Редакция 8 · 6 ноября 2026 г\. · документ \d+ из 43$"),
         "section_heading": re.compile(r"^(\d{1,2})\."),
         "caption": re.compile(r"^Рисунок\s+(\d+)\s+—"),
         "subtitle": "43 компонента",
@@ -63,7 +63,7 @@ PUBLICATIONS = {
         "project_name": "MMOSO'N",
         "cover_author": "Project lead: Roman Sergeevich Bugaenko",
         "cover_city": "Kursk, 2026",
-        "stamp": re.compile(r"^Edition 8 · 31 October 2026 · document \d+ of 43$"),
+        "stamp": re.compile(r"^Edition 8 · 6 November 2026 · document \d+ of 43$"),
         "section_heading": re.compile(r"^(\d{1,2})\."),
         "caption": re.compile(r"^Figure\s+(\d+)\s+[-–—]"),
         "subtitle": "43 components",
@@ -135,12 +135,19 @@ def _check_reference_layout(doc, language: str) -> list[str]:
                 )
                 break
 
-    normal_font = doc.styles["Normal"].font
+    normal_style = doc.styles["Normal"]
+    normal_font = normal_style.font
     if normal_font.name != BODY_FONT:
         errors.append(f"{language}: Normal style font is {normal_font.name!r}; expected {BODY_FONT}")
     if normal_font.size is None or abs(normal_font.size.pt - BODY_FONT_PT) > 0.01:
         actual_pt = normal_font.size.pt if normal_font.size else None
         errors.append(f"{language}: Normal style size is {actual_pt}; expected {BODY_FONT_PT} pt")
+    if normal_style.paragraph_format.line_spacing != 1.5:
+        errors.append(f"{language}: Normal style line spacing is not 1.5")
+    indent = normal_style.paragraph_format.first_line_indent
+    if indent is None or abs(indent.cm - 1.25) > 0.02:
+        actual_cm = indent.cm if indent is not None else None
+        errors.append(f"{language}: Normal paragraph indent is {actual_cm} cm; expected 1.25 cm")
 
     for table_index, table in enumerate(doc.tables, start=1):
         for row in table.rows:
@@ -156,6 +163,35 @@ def _check_reference_layout(doc, language: str) -> list[str]:
                                 f"found {run.font.name!r} {actual_size} pt"
                             )
                             return errors
+
+    for section_index, section in enumerate(doc.sections, start=1):
+        if not section.different_first_page_header_footer:
+            errors.append(f"{language}: section {section_index} does not suppress the cover-page number")
+        page_fields = " ".join(section.footer._element.xpath(".//w:instrText/text()"))
+        if "PAGE" not in page_fields.upper():
+            errors.append(f"{language}: section {section_index} is missing a page-number field")
+        first_page_fields = section.first_page_footer._element.xpath(".//w:instrText/text()")
+        if any("PAGE" in field.upper() for field in first_page_fields):
+            errors.append(f"{language}: section {section_index} prints a page number on its cover")
+
+    paragraphs = doc.paragraphs
+    break_positions = []
+    for index, paragraph in enumerate(paragraphs):
+        if paragraph.paragraph_format.page_break_before:
+            break_positions.append(index)
+        if paragraph._p.xpath('.//w:br[@w:type="page"]'):
+            break_positions.append(index)
+    for earlier, later in zip(break_positions, break_positions[1:]):
+        if not any(p.text.strip() for p in paragraphs[earlier + 1:later]):
+            errors.append(f"{language}: consecutive page breaks with no content could create a blank page")
+            break
+    for paragraph in paragraphs:
+        if COMPONENT_STAMP.match(paragraph.text.strip()) and not paragraph.paragraph_format.page_break_before:
+            errors.append(f"{language}: a component stamp does not start on a new page")
+            break
+        if paragraph.style.name == "Heading 1" and paragraph.paragraph_format.page_break_before:
+            errors.append(f"{language}: a Heading 1 duplicates the component-stamp page break")
+            break
     return errors
 
 
@@ -294,8 +330,8 @@ def verify(language: str, spec: dict) -> list[str]:
     matrix_heading_count, matrix_bullet_count = _status_matrix_bullets(paragraphs, spec["matrix_heading"])
     if matrix_heading_count != 1:
         errors.append(f"{language}: expected one status/verification matrix, found {matrix_heading_count}")
-    if matrix_bullet_count != 12:
-        errors.append(f"{language}: expected 12 preserved status/verification notes, found {matrix_bullet_count}")
+    if matrix_bullet_count != 15:
+        errors.append(f"{language}: expected 15 status/verification notes (12 preserved plus 3 new scope notes), found {matrix_bullet_count}")
     if spec["matrix_notes_heading"] not in paragraphs:
         errors.append(f"{language}: the status matrix notes are missing their localized heading")
 

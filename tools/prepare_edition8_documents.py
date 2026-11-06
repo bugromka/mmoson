@@ -32,7 +32,7 @@ COVER = {
     "ru": {
         "title": "Модуль моделирования орбитальной станции О’Нилла",
         "short_name": "ММОСО’Н",
-        "edition": "Редакция 8 · 31 октября 2026 г. · 43 компонента · 34 технических раздела",
+        "edition": "Редакция 8 · 6 ноября 2026 г. · 43 компонента · 34 технических раздела",
         "author": "Руководитель: Бугаенко Роман Сергеевич",
         "city": "Курск, 2026",
         "properties_title": "Модуль моделирования орбитальной станции О’Нилла — редакция 8",
@@ -41,7 +41,7 @@ COVER = {
     "en": {
         "title": "O’Neill Orbital Station Modeling Module",
         "short_name": "MMOSO'N",
-        "edition": "Edition 8 · 31 October 2026 · 43 components · 34 technical sections",
+        "edition": "Edition 8 · 6 November 2026 · 43 components · 34 technical sections",
         "author": "Project lead: Roman Sergeevich Bugaenko",
         "city": "Kursk, 2026",
         "properties_title": "O’Neill Orbital Station Modeling Module — Edition 8",

@@ -25,8 +25,8 @@ from docx.oxml.ns import qn
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = ROOT / "sections"
 EXPECTED_COMPONENTS = 43
-EDITION_DATE_RU = "31 октября 2026 г."
-EDITION_DATE_EN = "31 October 2026"
+EDITION_DATE_RU = "6 ноября 2026 г."
+EDITION_DATE_EN = "6 November 2026"
 
 
 def sort_key(path: Path) -> tuple[int, int, str]:
@@ -507,7 +507,7 @@ def build_one(files: list[Path], output: Path, language: str) -> None:
                         paragraph,
                         paragraph.text.replace(
                             "редакция 15 сентября 2026 г.",
-                            "редакция 8 от 31 октября 2026 г.",
+                            "редакция 8 от 6 ноября 2026 г.",
                         ),
                     )
         else:
