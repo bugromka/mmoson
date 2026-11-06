@@ -7,5 +7,7 @@ NIK_*/
 .nik-vault/
 passphrase
 passphrase.*
+# Review-only chart outputs; production assets change only with --apply.
+/build/edition8-chart-preview/
 __pycache__/
 .venv/
