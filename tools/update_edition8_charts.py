@@ -138,12 +138,15 @@ LANG_TEXT = {
         "asteroids": "Ресурсные тела: орбитальные диапазоны",
         "quarantine": "Карантинный контур: четыре потока, три ступени",
         "panel_choice": "Выбор размера панели: швы и масса отливки",
-        "food_calories": "Энергия, трлн ккал/год",
-        "food_protein": "Белок, тыс. т/год",
-        "food_need": "Потребность",
-        "food_reserve": "С резервом",
-        "food_output": "Продукция (нетто)",
-        "crop_total": "Вклад культур, млрд ккал (итого 2 216)",
+        "food_calories": "Калории, трлн ккал/год · совокупные потери 20% — допущение",
+        "food_protein": "Белок, тыс. т/год · совокупные потери 20% — допущение",
+        "food_need": "Годовая потребность",
+        "food_inventory": "Сценарный целевой инвентарь",
+        "food_gross": "Валовой выпуск системы / год",
+        "food_net": "Нетто-выпуск системы / год",
+        "food_net_ratio": "Нетто-выпуск / годовая потребность",
+        "food_ratio_note": "от годовой потребности",
+        "crop_total": "Валовые калории культур, млрд ккал/год (итого 2 216)",
         "land_area": "Площадь, км²",
         "epidemic_attack": "Переболеют без мер, %",
         "epidemic_threshold": "Порог коллективного иммунитета, %",
@@ -173,7 +176,7 @@ LANG_TEXT = {
         "panel_width": "Ширина панели, м",
         "panel_seams": "Длина швов, тыс. км",
         "panel_mass": "Масса панели, тыс. т",
-        "panel_accepted": "Принято 50 × 100 м",
+        "panel_accepted": "Модельный вариант: 50 × 100 м",
         "panel_note": "Кривизна 62 мм · заливка 17 мин · 251 327 панелей/цилиндр",
         "distance": "Расстояние от торца цилиндра, км",
         "temperature": "Температура, °C",
@@ -195,9 +198,9 @@ LANG_TEXT = {
         "material_need": "Потребность, млрд т",
         "table_source": "Источник данных: объединённая документация редакции 8.",
         "total": "ИТОГО",
-        "calorie": "Потребность / запас / продукция, трлн ккал/год",
-        "protein": "Потребность / запас / продукция, тыс. т/год",
-        "crops": "Калорийный выход культур, млрд ккал/год",
+        "calorie": "Годовая потребность / сценарный инвентарь / валовой и нетто-выпуск, трлн ккал/год",
+        "protein": "Годовая потребность / сценарный инвентарь / валовой и нетто-выпуск, тыс. т/год",
+        "crops": "Валовой калорийный выход культур, млрд ккал/год",
         "zone": "Зона",
         "share_in_label": "доля",
         "yield": "Продукция",
@@ -225,12 +228,15 @@ LANG_TEXT = {
         "asteroids": "Resource bodies: orbital distance ranges",
         "quarantine": "Quarantine circuit: four streams, three stages",
         "panel_choice": "Panel-size selection: weld length and casting mass",
-        "food_calories": "Energy, trillion kcal/year",
-        "food_protein": "Protein, thousand tons/year",
-        "food_need": "Need",
-        "food_reserve": "With reserve",
-        "food_output": "Net products",
-        "crop_total": "Crop energy contribution, billion kcal (total 2,216)",
+        "food_calories": "Calories, trillion kcal/year · 20% aggregate loss is an assumption",
+        "food_protein": "Protein, thousand tons/year · 20% aggregate loss is an assumption",
+        "food_need": "Annual need",
+        "food_inventory": "Scenario inventory target",
+        "food_gross": "Gross system output / year",
+        "food_net": "Net system output / year",
+        "food_net_ratio": "Net output / annual need",
+        "food_ratio_note": "of annual need",
+        "crop_total": "Gross crop calories, billion kcal/year (total 2,216)",
         "land_area": "Area, km²",
         "epidemic_attack": "Infected without intervention, %",
         "epidemic_threshold": "Herd-immunity threshold, %",
@@ -260,7 +266,7 @@ LANG_TEXT = {
         "panel_width": "Panel width, m",
         "panel_seams": "Weld length, thousand km",
         "panel_mass": "Panel mass, thousand tons",
-        "panel_accepted": "Selected: 50 × 100 m",
+        "panel_accepted": "Modelled case: 50 × 100 m",
         "panel_note": "62 mm camber · 17 min pour · 251,327 panels/cylinder",
         "distance": "Distance from cylinder end, km",
         "temperature": "Temperature, °C",
@@ -282,9 +288,9 @@ LANG_TEXT = {
         "material_need": "Demand, billion tons",
         "table_source": "Data source: combined Edition 8 documentation.",
         "total": "TOTAL",
-        "calorie": "Need / reserve / output, trillion kcal/year",
-        "protein": "Need / reserve / output, thousand tons/year",
-        "crops": "Crop energy output, billion kcal/year",
+        "calorie": "Annual need / scenario inventory / gross and net output, trillion kcal/year",
+        "protein": "Annual need / scenario inventory / gross and net output, thousand tons/year",
+        "crops": "Gross crop calorie output, billion kcal/year",
         "zone": "Zone",
         "share_in_label": "share",
         "yield": "Output",
@@ -754,10 +760,11 @@ def extract_edition_data(language: str, catalog: TableCatalog) -> dict[str, Any]
     # Figure 17 — food balance and crop output from Tables 5.2 and 5.4.
     food_table = catalog.by_caption("5.2")
     c_indicator = _column(food_table, "Показатель", "Indicator")
-    c_need = _column(food_table, "Потребность", "Need")
-    c_reserve = _column(food_table, "С резервом", "With reserve")
-    c_products = _column(food_table, "Продукция", "Products")
-    c_stock = _column(food_table, "Запас", "Stock")
+    c_need = _column(food_table, "Годовая потребность", "Annual need")
+    c_inventory = _column(food_table, "Сценарный инвентарь", "Scenario inventory")
+    c_gross = _column(food_table, "Валовой выпуск", "Gross output")
+    c_net = _column(food_table, "Нетто-выпуск", "Net output")
+    c_ratio = _column(food_table, "Нетто / годовая потребность", "Net output / annual need")
     food_balance: dict[str, dict[str, float]] = {}
     for row in food_table.rows[1:]:
         indicator = _norm(_cell(row, c_indicator))
@@ -769,9 +776,10 @@ def extract_edition_data(language: str, catalog: TableCatalog) -> dict[str, Any]
         if key:
             food_balance[key] = {
                 "need": _first_number(_cell(row, c_need)),
-                "reserve": _first_number(_cell(row, c_reserve)),
-                "output": _first_number(_cell(row, c_products)),
-                "stock": _first_number(_cell(row, c_stock)),
+                "inventory": _first_number(_cell(row, c_inventory)),
+                "gross": _first_number(_cell(row, c_gross)),
+                "net": _first_number(_cell(row, c_net)),
+                "net_to_need": _first_number(_cell(row, c_ratio)),
             }
     if set(food_balance) != {"calories", "protein"}:
         raise ValueError("Table 5.2 must contain calorie and protein balance rows")
@@ -1143,7 +1151,7 @@ def extract_narrative_figure_data(
     )
     accepted_text = _find_paragraph(
         catalog,
-        "принят размер панели" if is_ru else "accepted panel size",
+        "в предварительной расчётной модели использован размер панели" if is_ru else "preliminary calculation model uses a panel size",
         "251" if is_ru else "251",
     )
     casting_text = _find_paragraph(
@@ -1167,13 +1175,13 @@ def extract_narrative_figure_data(
     aspect_ratio = _parse_token(ratio_match.group(1), comma_mode="decimal")
     accepted_match = re.search(r"(\d+)\s*[×x]\s*(\d+)\s*(?:м|m)", accepted_text, flags=re.IGNORECASE)
     if not accepted_match:
-        raise ValueError("panel-size paragraph is missing the accepted panel dimensions")
+        raise ValueError("panel-size paragraph is missing the modelled reference dimensions")
     accepted_width = float(accepted_match.group(1))
     accepted_length = float(accepted_match.group(2))
     panel_mass = _paragraph_number(
         accepted_text,
         r"(?:масс(?:а|е|ой)|mass)\s*(?:панели\s*)?(?:of\s*)?(?:составляет|is)?\s*([\d ,]+)\s*(?:т(?:онн)?\.?|tons)",
-        "accepted panel mass",
+        "modelled panel mass",
     )
     panel_count = _paragraph_number(
         accepted_text,
@@ -1182,8 +1190,8 @@ def extract_narrative_figure_data(
     )
     seam_total = _paragraph_number(
         accepted_text,
-        r"(?:суммарная длина(?: сварных)? швов|total length of welds)\s*(?:составляет|—|is)?\s*([\d.,]+)",
-        "accepted seam length",
+        r"(?:суммарная длина(?: сварных)? швов|total length of welds|total weld length)\s*(?:составляет|—|is|of)?\s*([\d.,]+)",
+        "modelled seam length",
     )
     camber_50 = _paragraph_number(
         casting_text,
@@ -1279,6 +1287,11 @@ def _validate_language_data(language: str, data: dict[str, Any]) -> None:
         raise ValueError(f"{language}: Table 5.4 crop area must total 807 km²")
     if not math.isclose(food["crop_total_kcal"], sum(row["kcal"] for row in food["crops"]), abs_tol=1e-6):
         raise ValueError(f"{language}: Table 5.4 crop calories do not sum to its total")
+    for nutrient, values in food["balance"].items():
+        if not math.isclose(values["net"] / values["need"], values["net_to_need"], rel_tol=0.006):
+            raise ValueError(f"{language}: Table 5.2 {nutrient} output/need ratio is inconsistent")
+        if not math.isclose(values["gross"] * 0.80, values["net"], abs_tol=0.05):
+            raise ValueError(f"{language}: Table 5.2 {nutrient} net output does not reflect the assumed 20% loss")
     land = data["fig18_land"]
     if not math.isclose(sum(row["area"] for row in land["parts"]), land["total"], abs_tol=1e-6):
         raise ValueError(f"{language}: distinct land-use areas do not sum to total farmland")
@@ -1308,9 +1321,9 @@ def _validate_language_data(language: str, data: dict[str, Any]) -> None:
     if not math.isclose(panel["aspect_ratio"], 2.0, abs_tol=1e-6):
         raise ValueError(f"{language}: panel aspect ratio differs from the documented 1:2 design")
     if not math.isclose(panel["accepted_length"] / panel["accepted_width"], panel["aspect_ratio"], abs_tol=1e-6):
-        raise ValueError(f"{language}: accepted panel dimensions do not match the documented aspect ratio")
+        raise ValueError(f"{language}: modelled panel dimensions do not match the documented aspect ratio")
     if not math.isclose(panel["accepted_mass"], 33575.0, abs_tol=1e-6) or not math.isclose(panel["accepted_seams"], 37.7, abs_tol=1e-6):
-        raise ValueError(f"{language}: accepted panel data differ from the documented 50 × 100 m design")
+        raise ValueError(f"{language}: modelled panel data differ from the documented 50 × 100 m calculation case")
     calculated_seams = (
         (1.0 + 1.0 / panel["aspect_ratio"]) * 2.0 * math.pi
         * panel["cylinder_radius"] * panel["cylinder_length"]
@@ -1994,31 +2007,30 @@ def _draw_food_figure(
     left, top, right, bottom = box
     width, height = right - left, bottom - top
     gap = max(18, round(width * 0.018))
-    top_bottom = top + round(height * 0.34)
+    top_bottom = top + round(height * 0.45)
     middle = (left + right) // 2
     balance = data["balance"]
-    labels = [LANG_TEXT[language]["food_need"], LANG_TEXT[language]["food_reserve"], LANG_TEXT[language]["food_output"]]
-    output_labels = [
-        f"Продукция / потребность ×{_number_label(balance['calories']['stock'], language, 2)}" if language == "ru"
-        else f"Output / need ×{_number_label(balance['calories']['stock'], language, 2)}",
-        f"Продукция / потребность ×{_number_label(balance['protein']['stock'], language, 2)}" if language == "ru"
-        else f"Output / need ×{_number_label(balance['protein']['stock'], language, 2)}",
-    ]
-    calorie_rows = [(labels[0], balance["calories"]["need"], ""),
-                    (labels[1], balance["calories"]["reserve"], ""),
-                    (output_labels[0], balance["calories"]["output"], "")]
-    protein_rows = [(labels[0], balance["protein"]["need"], ""),
-                    (labels[1], balance["protein"]["reserve"], ""),
-                    (output_labels[1], balance["protein"]["output"], "")]
+
+    def balance_rows(key: str) -> list[tuple[str, float, str]]:
+        values = balance[key]
+        ratio = _number_label(values["net_to_need"], language, 2)
+        net_label = f"{LANG_TEXT[language]['food_net']} · ×{ratio} {LANG_TEXT[language]['food_ratio_note']}"
+        return [
+            (LANG_TEXT[language]["food_need"], values["need"], ""),
+            (LANG_TEXT[language]["food_inventory"], values["inventory"], ""),
+            (LANG_TEXT[language]["food_gross"], values["gross"], ""),
+            (net_label, values["net"], ""),
+        ]
+
     _draw_hbars(
         draw, (left, top, middle - gap // 2, top_bottom), LANG_TEXT[language]["food_calories"],
-        calorie_rows, language, "",
-        max_value=2.6, label_ratio=0.43, value_digits=3, min_font=11,
+        balance_rows("calories"), language, "",
+        max_value=2.6, label_ratio=0.46, value_digits=3, min_font=10,
     )
     _draw_hbars(
         draw, (middle + gap // 2, top, right, top_bottom), LANG_TEXT[language]["food_protein"],
-        protein_rows, language, "",
-        max_value=95, label_ratio=0.43, value_digits=1, min_font=11,
+        balance_rows("protein"), language, "",
+        max_value=95, label_ratio=0.46, value_digits=1, min_font=10,
     )
     crops = sorted(data["crops"], key=lambda row: row["kcal"], reverse=True)
     crop_rows = [
@@ -2026,7 +2038,6 @@ def _draw_food_figure(
          else f"{_number_label(row['area'], language, 0)} км²")
         for row in crops
     ]
-    total = _number_label(data["crop_total_kcal"], language, 0)
     area = _number_label(data["crop_total_area"], language, 0)
     crop_title = LANG_TEXT[language]["crop_total"] + (
         f" · {area} km²" if language == "en" else f" · {area} км²"
@@ -2651,7 +2662,7 @@ def _draw_panel_choice_figure(
     note_top = top + round(70 * scale)
     items = (
         [
-            (f"{_number_label(data['accepted_width'], language, 0)} × {_number_label(data['accepted_length'], language, 0)} m", "accepted panel"),
+            (f"{_number_label(data['accepted_width'], language, 0)} × {_number_label(data['accepted_length'], language, 0)} m", "modelled case"),
             (f"{_number_label(data['accepted_mass'], language, 0)} tons", "mass"),
             (f"{_number_label(data['accepted_seams'], language, 1)} thousand km", "weld seams / cylinder"),
             (f"{_number_label(data['camber_50'], language, 0)} mm", "camber at 50 m"),
@@ -2659,7 +2670,7 @@ def _draw_panel_choice_figure(
             (f"{_number_label(data['fill_time_50'], language, 0)} min", "form filling"),
             (f"{_number_label(data['panel_count'], language, 0)}", "panels per cylinder"),
         ] if language == "en" else [
-            (f"{_number_label(data['accepted_width'], language, 0)} × {_number_label(data['accepted_length'], language, 0)} м", "принятая панель"),
+            (f"{_number_label(data['accepted_width'], language, 0)} × {_number_label(data['accepted_length'], language, 0)} м", "модельный вариант"),
             (f"{_number_label(data['accepted_mass'], language, 0)} т", "масса"),
             (f"{_number_label(data['accepted_seams'], language, 1)} тыс. км", "швов на цилиндр"),
             (f"{_number_label(data['camber_50'], language, 0)} мм", "прогиб при 50 м"),

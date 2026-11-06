@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Apply the simple A4/Aptos document style observed in the supplied PDF sample.
+"""Apply a ГОСТ 7.32–2017-aligned scientific-report layout to Edition 8 DOCX.
 
-This is a formatting-only pass: paragraph text, table data, images, and their order
-are preserved.  The script can be rerun on either or both combined Edition 8 DOCX
-files; it does not need the reference PDF at runtime.
+This pass changes formatting only: text, table data, image content and order are
+preserved. It sets A4 and report margins, Times New Roman 14 pt body text, 12 pt
+table text, 1.5 line spacing, paragraph indents, section page starts and page
+numbers. It can be rerun on either or both combined DOCX files.
 """
 
 from __future__ import annotations
@@ -27,10 +28,10 @@ DEFAULT_DOCS = (
     ROOT / "sections/MMOSON_combined_document_en.docx",
 )
 
-FONT = "Aptos"
+FONT = "Times New Roman"
 BLACK = RGBColor(0, 0, 0)
 BODY_PT = 14
-TABLE_PT = 11
+TABLE_PT = 12
 TITLE_PT = 16
 SPECIAL_FONT_NAMES = {"cambria math", "cambrimath", "symbol", "symbolmt"}
 
@@ -159,6 +160,13 @@ def _format_tables(document) -> None:
         _set_table_cell_margins(table)
 
         for row_index, row in enumerate(table.rows):
+            tr_pr = row._tr.get_or_add_trPr()
+            if tr_pr.find(qn("w:cantSplit")) is None:
+                tr_pr.append(OxmlElement("w:cantSplit"))
+            if row_index == 0 and tr_pr.find(qn("w:tblHeader")) is None:
+                repeat = OxmlElement("w:tblHeader")
+                repeat.set(qn("w:val"), "true")
+                tr_pr.append(repeat)
             for cell in row.cells:
                 cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
                 tc_pr = cell._tc.get_or_add_tcPr()
@@ -219,14 +227,15 @@ def _contains_drawing(paragraph) -> bool:
 
 def _set_paragraph_format(paragraph, *, size_pt: float, bold: bool | None,
                           alignment, line_spacing: float,
-                          before_pt: float, after_pt: float) -> None:
+                          before_pt: float, after_pt: float,
+                          first_line_indent_pt: float = 0.0) -> None:
     fmt = paragraph.paragraph_format
     paragraph.alignment = alignment
     fmt.line_spacing = line_spacing
     fmt.space_before = Pt(before_pt)
     fmt.space_after = Pt(after_pt)
-    fmt.first_line_indent = Pt(0)
     if paragraph.style.name not in LIST_STYLES:
+        fmt.first_line_indent = Pt(first_line_indent_pt)
         fmt.left_indent = Pt(0)
         fmt.right_indent = Pt(0)
     for run in _paragraph_runs(paragraph):
@@ -253,6 +262,8 @@ def _format_paragraphs(document) -> None:
                 alignment=WD_ALIGN_PARAGRAPH.LEFT, line_spacing=1.0,
                 before_pt=0, after_pt=2,
             )
+            paragraph.paragraph_format.page_break_before = True
+            paragraph.paragraph_format.keep_with_next = True
         elif _is_toc_note(text):
             _set_paragraph_format(
                 paragraph, size_pt=11, bold=False,
@@ -262,20 +273,25 @@ def _format_paragraphs(document) -> None:
         elif style_name in HEADING_STYLES:
             _set_paragraph_format(
                 paragraph, size_pt=BODY_PT, bold=True,
-                alignment=WD_ALIGN_PARAGRAPH.LEFT, line_spacing=1.4,
+                alignment=WD_ALIGN_PARAGRAPH.LEFT, line_spacing=1.5,
                 before_pt=10, after_pt=8,
             )
             paragraph.paragraph_format.keep_with_next = True
+            if style_name == "Heading 1":
+                # Each component stamp starts its section on a fresh page; keeping
+                # an extra break on the following heading would strand that stamp.
+                paragraph.paragraph_format.page_break_before = False
         elif style_name == "Caption":
             _set_paragraph_format(
                 paragraph, size_pt=TABLE_PT, bold=True,
                 alignment=WD_ALIGN_PARAGRAPH.CENTER, line_spacing=1.0,
                 before_pt=5, after_pt=5,
             )
+            paragraph.paragraph_format.keep_with_next = True
         elif style_name == "Title":
             _set_paragraph_format(
                 paragraph, size_pt=TITLE_PT, bold=True,
-                alignment=WD_ALIGN_PARAGRAPH.CENTER, line_spacing=1.4,
+                alignment=WD_ALIGN_PARAGRAPH.CENTER, line_spacing=1.5,
                 before_pt=0, after_pt=0,
             )
             paragraph.paragraph_format.keep_with_next = True
@@ -295,7 +311,7 @@ def _format_paragraphs(document) -> None:
                 after_pt = 0 if size_pt == TITLE_PT else 5
             _set_paragraph_format(
                 paragraph, size_pt=size_pt, bold=bold,
-                alignment=alignment, line_spacing=1.4,
+                alignment=alignment, line_spacing=1.5,
                 before_pt=0, after_pt=after_pt,
             )
         else:
@@ -306,8 +322,9 @@ def _format_paragraphs(document) -> None:
                 alignment = WD_ALIGN_PARAGRAPH.LEFT
             _set_paragraph_format(
                 paragraph, size_pt=BODY_PT, bold=None,
-                alignment=alignment, line_spacing=1.4,
-                before_pt=0, after_pt=8,
+                alignment=alignment, line_spacing=1.5,
+                before_pt=0, after_pt=0,
+                first_line_indent_pt=Cm(1.25).pt,
             )
 
 
@@ -331,7 +348,7 @@ def _format_cover(document) -> None:
 
     _set_paragraph_format(
         title, size_pt=TITLE_PT, bold=True,
-        alignment=WD_ALIGN_PARAGRAPH.CENTER, line_spacing=1.4,
+        alignment=WD_ALIGN_PARAGRAPH.CENTER, line_spacing=1.5,
         before_pt=0, after_pt=0,
     )
     _set_paragraph_format(
@@ -342,13 +359,13 @@ def _format_cover(document) -> None:
     if author is not None:
         _set_paragraph_format(
             author, size_pt=BODY_PT, bold=False,
-            alignment=WD_ALIGN_PARAGRAPH.RIGHT, line_spacing=1.4,
+            alignment=WD_ALIGN_PARAGRAPH.RIGHT, line_spacing=1.5,
             before_pt=340, after_pt=0,
         )
     if city is not None:
         _set_paragraph_format(
             city, size_pt=BODY_PT, bold=False,
-            alignment=WD_ALIGN_PARAGRAPH.CENTER, line_spacing=1.4,
+            alignment=WD_ALIGN_PARAGRAPH.CENTER, line_spacing=1.5,
             before_pt=270, after_pt=0,
         )
     if marker is not None:
@@ -365,11 +382,16 @@ def _format_styles(document) -> None:
         force_bold = True if name in HEADING_STYLES or name in {"Title", "Caption"} else None
         _set_style_font(style, size, bold=force_bold)
         fmt = style.paragraph_format
-        if name in HEADING_STYLES:
+        if name == "Normal":
+            fmt.line_spacing = 1.5
+            fmt.first_line_indent = Cm(1.25)
+        elif name in HEADING_STYLES:
             fmt.alignment = WD_ALIGN_PARAGRAPH.LEFT
-            fmt.line_spacing = 1.4
+            fmt.line_spacing = 1.5
             fmt.space_before = Pt(10)
             fmt.space_after = Pt(8)
+            fmt.first_line_indent = Pt(0)
+            fmt.page_break_before = False
             fmt.keep_with_next = True
         elif name == "Caption":
             fmt.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -378,15 +400,60 @@ def _format_styles(document) -> None:
             fmt.space_after = Pt(5)
         elif name == "Title":
             fmt.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            fmt.line_spacing = 1.4
+            fmt.line_spacing = 1.5
             fmt.space_before = Pt(0)
             fmt.space_after = Pt(0)
             fmt.keep_with_next = True
         elif name in LIST_STYLES:
-            fmt.line_spacing = 1.4
-            fmt.space_after = Pt(8)
+            fmt.line_spacing = 1.5
+            fmt.space_after = Pt(0)
         elif name in {"Header", "Footer"}:
             fmt.line_spacing = 1.0
+
+
+def _clear_paragraph_content(paragraph) -> None:
+    for child in list(paragraph._p):
+        if child.tag != qn("w:pPr"):
+            paragraph._p.remove(child)
+
+
+def _format_page_numbers(document) -> None:
+    """Add a centered PAGE field; count but do not print the cover-page number."""
+    for section in document.sections:
+        section.different_first_page_header_footer = True
+        first_footer = section.first_page_footer.paragraphs[0]
+        _clear_paragraph_content(first_footer)
+
+        paragraph = section.footer.paragraphs[0]
+        _clear_paragraph_content(paragraph)
+        paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        fmt = paragraph.paragraph_format
+        fmt.line_spacing = 1.0
+        fmt.space_before = Pt(0)
+        fmt.space_after = Pt(0)
+        fmt.first_line_indent = Pt(0)
+        run = paragraph.add_run()
+        _set_run_style(run, 12)
+        begin = OxmlElement("w:fldChar")
+        begin.set(qn("w:fldCharType"), "begin")
+        instruction = OxmlElement("w:instrText")
+        instruction.set(qn("xml:space"), "preserve")
+        instruction.text = " PAGE "
+        separate = OxmlElement("w:fldChar")
+        separate.set(qn("w:fldCharType"), "separate")
+        placeholder = OxmlElement("w:t")
+        placeholder.text = "2"
+        end = OxmlElement("w:fldChar")
+        end.set(qn("w:fldCharType"), "end")
+        for element in (begin, instruction, separate, placeholder, end):
+            run._r.append(element)
+
+    settings = document.settings._element
+    update = settings.find(qn("w:updateFields"))
+    if update is None:
+        update = OxmlElement("w:updateFields")
+        settings.append(update)
+    update.set(qn("w:val"), "true")
 
 
 def format_document(path: Path) -> None:
@@ -403,6 +470,7 @@ def format_document(path: Path) -> None:
     _format_tables(document)
     _format_paragraphs(document)
     _format_cover(document)
+    _format_page_numbers(document)
 
     temporary = path.with_name(path.stem + ".formatting.tmp.docx")
     document.save(temporary)
