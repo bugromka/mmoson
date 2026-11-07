@@ -1,31 +1,29 @@
 # -*- coding: utf-8 -*-
 """
-ММОСО'Н — редакция 8. Расчёты новых областей.
+ММОСО'Н — редакция 8: проверочные расчёты и явно маркированные сценарии.
 
 Области:
-  A. Генетика замкнутой популяции (инбридинг, основатели, правила подбора пар)
-  B. Сельское хозяйство: пересмотр и оптимизация
-  C. Промышленность, добыча, переработка, отходы производства
-  D. Стыковочный модуль: концепция
-  E. Кошки в экосистеме
-  F. Насекомые: опылители, разлагатели, кормовая база
-  G. Города: реальные и виртуальные (Minecraft)
+  A. Генетика замкнутой популяции
+  B. Пищевая потребность, целевой инвентарь и статус сверки потоков
+  C. Промышленность и отходы
+  D. Стыковочный модуль
+  E–F. Экосистемные сценарии, не считающиеся утверждённым кормовым планом
 
-Величины, помеченные [П], взяты из действующей публикации (редакция 7
-с разделами 20–27) и не пересчитываются. Остальное выводится из них.
+Пищевые площади и выпуск не оптимизируются: пока не согласованы состав рациона,
+нутриенты, съедобные доли, кормовые потоки, потери и складская ротация,
+итоговый производственный план вычислять нельзя. Старые сценарные значения
+сохранены только в блоке legacy_scenario и не являются проектными целями.
 """
 import json
 import math
 import os
 
-import numpy as np
-from scipy.optimize import linprog
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                    'edition8_results.json')
 
 # ═════════════════════════════════════════════════════════════
-# Исходные величины публикации  [П]
+# Исходные величины публикации и новые сценарные допущения
 # ═════════════════════════════════════════════════════════════
 R_CYL = 5000.0            # м, радиус цилиндра [П п.2.1]
 L_CYL = 40.0              # км, цилиндрическая часть [П]
@@ -44,22 +42,43 @@ BIRTH_RATE = 2.1          # [П п.11.4]
 AREA_CYL = 1256.6         # км² [П]
 AREA_TOT = AREA_CYL * N_CYL           # 2513,2 км²
 
-FARM_TOT = 1508.0         # км², всего сельхозугодий [П табл.5.5]
-FARM_AGRI = 972.0         # км² [П]
-CROPS = 807.0             # км², посевные площади [П табл.5.4]
-RESERVE_FAST = 150.0      # км² [П]
-FISH_POOLS = 15.0         # км² [П]
+# Старые площади/выпуски сохранены лишь как архивные значения, не как план.
+LEGACY_FARM_TOT = 1508.0       # км², бывшая таблица 5.5
+LEGACY_FARM_AGRI = 972.0       # км², бывшая таблица 5.5
+LEGACY_CROP_AREA = 807.0       # км², бывшая таблица 5.4
+LEGACY_FAST_RESERVE = 150.0    # км², бывшая таблица 5.5
 
-KCAL_DAY = 2800           # ккал/сут [П табл.5.1]
-PROT_DAY = 70.0           # г/сут [П табл.5.1]
-CAL_NEED = 1.022e12       # ккал/год, базовая потребность [П табл.5.2]
-PROT_NEED = 25_600.0      # т/год, базовая потребность [П табл.5.2]
-CAL_GROSS_SYSTEM = 2.338e12   # ккал/год, валовой выпуск всей системы [П табл.5.2]
-PROT_GROSS_SYSTEM = 87_200.0  # т/год, валовой выпуск всей системы [П табл.5.2]
-CAL_NET_SYSTEM = 1.870e12     # ккал/год, нетто-выпуск всей системы [П табл.5.2]
-PROT_NET_SYSTEM = 69_800.0    # т/год, нетто-выпуск всей системы [П табл.5.2]
-AGGREGATE_LOSS = 0.20          # доля потерь, модельное допущение, не измеренная норма
-NET_RETAINED = 1.0 - AGGREGATE_LOSS
+# Явные демографические и активностные допущения по FAO/WHO/UNU [40].
+SEX_WEIGHTS = {"men": 0.5, "women": 0.5}
+AGE_WEIGHTS = {"18-29.9": 0.5, "30-59.9": 0.5}
+BMI = 21.0
+PAL = 1.75
+ENERGY_MALE_18_29 = 2800.0
+ENERGY_MALE_30_59 = 2750.0
+ENERGY_FEMALE_18_29 = 2300.0
+ENERGY_FEMALE_30_59 = 2250.0
+KCAL_DAY = (
+    ((ENERGY_MALE_18_29 + ENERGY_MALE_30_59) / 2) * SEX_WEIGHTS["men"]
+    + ((ENERGY_FEMALE_18_29 + ENERGY_FEMALE_30_59) / 2) * SEX_WEIGHTS["women"]
+)
+CAL_NEED = N_TOT * KCAL_DAY * 365.0
+PROT_DAY = 70.0             # г/(чел.·сут), отдельное планировочное допущение
+PROT_NEED = N_TOT * PROT_DAY * 365.0 / 1e6  # т/год
+CAL_STOCK_MULTIPLIER = 1.5
+PROT_STOCK_MULTIPLIER = 1.3
+CAL_STOCK_TARGET = CAL_NEED * CAL_STOCK_MULTIPLIER
+PROT_STOCK_TARGET = PROT_NEED * PROT_STOCK_MULTIPLIER
+
+# Legacy system/crop totals are kept for traceability and discrepancy reporting.
+LEGACY_CROP_GROSS_KCAL = 2.216e12
+LEGACY_SYSTEM_GROSS_KCAL = 2.338e12
+LEGACY_SYSTEM_NET_KCAL = 1.870e12
+LEGACY_SYSTEM_GROSS_PROTEIN_T = 87_200.0
+LEGACY_SYSTEM_NET_PROTEIN_T = 69_800.0
+LEGACY_AGGREGATE_LOSS = 0.20
+LEGACY_FISH_SECTION3_T = 25_000.0
+LEGACY_FISH_SECTION5_T = 70_000.0
+LEGACY_PROTEIN_DISCREPANCY_T = 2_020.0
 
 M_STATION = 46.70e9       # т [П п.4.3]
 M_STEEL = 22.05e9         # т [П п.4.3]
@@ -171,203 +190,62 @@ RES['A_genetics'] = dict(
 )
 
 # ═════════════════════════════════════════════════════════════
-# B. СЕЛЬСКОЕ ХОЗЯЙСТВО
+# B. ПИЩЕВАЯ ПОТРЕБНОСТЬ И СВЕРКА ПОТОКОВ
 # ═════════════════════════════════════════════════════════════
-# Действующая структура посевов [П табл.5.4] с уточнением состава по массе
-# (свежая vs сухая) — от этого зависит пересчёт в белок.
-# культура, км², кг/м²·год (свежая масса), ккал/кг, доля белка (в этой массе)
-CROPS_TAB = [
-    ('Рис',                 120.0, 1.00, 3600, 0.075),
-    ('Кукуруза',            150.0, 1.20, 3650, 0.090),
-    ('Пшеница',              50.0, 1.00, 3400, 0.110),
-    ('Ячмень',               20.0, 1.00, 3520, 0.100),
-    ('Картофель',           100.0, 4.00,  770, 0.020),
-    ('Батат, таро, маниок',  46.0, 3.00,  900, 0.015),
-    ('Соя',                  10.0, 0.35, 4460, 0.360),
-    ('Прочие бобовые',       36.0, 0.30, 3500, 0.220),
-    ('Овощи',                80.0, 4.00,  250, 0.015),
-    ('Фрукты и ягоды',       60.0, 2.00,  500, 0.008),
-    ('Масличные',            50.0, 0.50, 6000, 0.200),
-    ('Грибы',                30.0, 10.0,  250, 0.031),
-    ('Зелень и пряности',    25.0, 3.00,  200, 0.025),
-    ('Водоросли',            30.0, 2.00,  350, 0.015),
-]
-
-rows = []
-for name, km2, yld, kcal_kg, prot_frac in CROPS_TAB:
-    area = km2 * 1e6
-    prod_t = yld * area / 1e3
-    kcal = prod_t * 1e3 * kcal_kg
-    prot_t = prod_t * prot_frac
-    rows.append(dict(name=name, km2=km2, yld=yld, kcal_kg=kcal_kg,
-                     prot_frac=prot_frac, prod_t=prod_t, kcal=kcal,
-                     prot_t=prot_t,
-                     kcal_m2=kcal / area, prot_g_m2=prot_t * 1e6 / area))
-
-AREA_SUM = sum(r['km2'] for r in rows)
-KCAL_CROPS_GROSS = sum(r['kcal'] for r in rows)  # валовые калории культур, табл. 5.4
-PROT_CROPS_GROSS = sum(r['prot_t'] for r in rows)
-
-ANIMAL = [('Рыба', 70_000.0, 0.18), ('Молоко', 33_750.0, 0.033),
-          ('Мясо наземных', 8_000.0, 0.20), ('Яйца', 5_000.0, 0.125),
-          ('Мёд', 60.0, 0.004)]
-ANIMAL_PROT_GROSS_MODEL = sum(v * f for _, v, f in ANIMAL)
-# Разность между валовым итогом системы (табл. 5.2) и культурами (табл. 5.4)
-# используется только как сценарный калорийный вклад животных продуктов;
-# это остаток для сверки, а не подтверждённый продуктовый баланс.
-ANIMAL_KCAL_GROSS_RESIDUAL = CAL_GROSS_SYSTEM - KCAL_CROPS_GROSS
-PROT_GROSS_MODEL_TOTAL = PROT_CROPS_GROSS + ANIMAL_PROT_GROSS_MODEL
-PROT_GROSS_UNRECONCILED = PROT_GROSS_SYSTEM - PROT_GROSS_MODEL_TOTAL
-
-PROT_ANIMAL_SHARE = ANIMAL_PROT_GROSS_MODEL / PROT_GROSS_MODEL_TOTAL
-KCAL_M2_AVG = KCAL_CROPS_GROSS / (AREA_SUM * 1e6)
-PROT_G_M2_AVG = PROT_GROSS_MODEL_TOTAL * 1e6 / (AREA_SUM * 1e6)
-
-# Сценарий 1: минимум площади при сохранении валового годового калорийного
-# выпуска культур из табл. 5.4. Ограничение по белку здесь не задано; поэтому
-# этот сценарий сам по себе не подтверждает белковый баланс системы.
-n = len(rows)
-c = np.array([r['km2'] for r in rows], dtype=float)          # минимизируем сумму
-KCAL_YIELDS = np.array([r['kcal_m2'] for r in rows])
-PROT_YIELDS = np.array([r['prot_g_m2'] for r in rows])
-A_CAL = -KCAL_YIELDS.reshape(1, -1)
-b_cal_same = np.array([-KCAL_CROPS_GROSS / 1e6])
-bounds = [(r['km2'] * 0.20, r['km2'] * 3.0) for r in rows]
-res = linprog(c, A_ub=A_CAL, b_ub=b_cal_same, bounds=bounds, method='highs')
-assert res.success, res.message
-AREA_OPT = float(res.x.sum())
-KCAL_OPT = float(np.dot(res.x, KCAL_YIELDS) * 1e6)
-PROT_OPT = float(np.dot(res.x, PROT_YIELDS))  # валовый белок культур, т/год
-AREA_FREED = AREA_SUM - AREA_OPT
-KCAL_M2_OPT = KCAL_OPT / (AREA_OPT * 1e6)
-
-# Сценарий 2: нижние уровни годового нетто-выпуска всей системы.
-# Животноводческий выпуск фиксирован; валовые потоки пересчитываются через
-# агрегированное удержание 80 % после модельного вычета потерь 20 %.
-CAL_MARGIN, PROT_MARGIN = 1.15, 1.20
-CAL_NET_TARGET2 = CAL_NEED * CAL_MARGIN
-PROT_NET_TARGET2 = PROT_NEED * PROT_MARGIN
-CAL_CROP_GROSS_TARGET2 = max(
-    0.0, CAL_NET_TARGET2 / NET_RETAINED - ANIMAL_KCAL_GROSS_RESIDUAL
-)
-PROT_CROP_GROSS_TARGET2 = max(
-    0.0, PROT_NET_TARGET2 / NET_RETAINED - ANIMAL_PROT_GROSS_MODEL
-)
-A_ub2 = np.vstack([A_CAL[0], -PROT_YIELDS])
-b_ub2 = np.array([-CAL_CROP_GROSS_TARGET2 / 1e6, -PROT_CROP_GROSS_TARGET2])
-res2 = linprog(c, A_ub=A_ub2, b_ub=b_ub2, bounds=bounds, method='highs')
-assert res2.success, res2.message
-AREA_OPT2 = float(res2.x.sum())
-KCAL_OPT2 = float(np.dot(res2.x, KCAL_YIELDS) * 1e6)
-PROT_OPT2 = float(np.dot(res2.x, PROT_YIELDS))  # валовый белок культур, т/год
-NET_KCAL_OPT2 = NET_RETAINED * (KCAL_OPT2 + ANIMAL_KCAL_GROSS_RESIDUAL)
-NET_PROT_OPT2 = NET_RETAINED * (PROT_OPT2 + ANIMAL_PROT_GROSS_MODEL)
-AREA_FREED2 = AREA_SUM - AREA_OPT2
-KCAL_M2_OPT2 = KCAL_OPT2 / (AREA_OPT2 * 1e6)
-
-# Нижняя граница нетто-белка при калорийной цели: минимум белка культур
-# среди допустимых площадей. Это позволяет проверить, достижим ли точный
-# выход ×1,20, а не только условие «не менее ×1,20».
-res_min_prot = linprog(PROT_YIELDS, A_ub=A_CAL,
-                       b_ub=np.array([-CAL_CROP_GROSS_TARGET2 / 1e6]),
-                       bounds=bounds, method='highs')
-assert res_min_prot.success, res_min_prot.message
-MIN_CROP_PROT_AT_CAL_TARGET = float(res_min_prot.fun)
-MIN_NET_PROT_AT_CAL_TARGET = NET_RETAINED * (
-    MIN_CROP_PROT_AT_CAL_TARGET + ANIMAL_PROT_GROSS_MODEL
-)
-MIN_NET_PROT_RATIO_AT_CAL_TARGET = MIN_NET_PROT_AT_CAL_TARGET / PROT_NEED
-
-# Однонутриентные теоретические нижние границы для целей сценария 2;
-# монокультура и прочие ограничения реального проекта не учитываются.
-BEST_KCAL_M2 = max(r['kcal_m2'] for r in rows)
-AREA_THEOR = CAL_CROP_GROSS_TARGET2 / (BEST_KCAL_M2 * 1e6)
-BEST_PROT_M2 = max(r['prot_g_m2'] for r in rows)
-AREA_THEOR_P = PROT_CROP_GROSS_TARGET2 / BEST_PROT_M2
-
-# ── многоярусное выращивание в холодной зоне ──
-# холодная зона 32–40 км [П §3.4]; в открытом грунте там только
-# морозостойкие многолетники. Сценарии перевода части зоны на ярусное
-# выращивание зелени.
-COLD_KM = 8.0                                   # длина холодной зоны [П §3.4]
-COLD_AREA = COLD_KM * (2 * math.pi * R_CYL / 1e3)   # км²
-GREEN_KCAL_KG = 200.0                           # ккал/кг зелени
-GREEN_YIELD_LAYER = 6.0                         # кг/м²·год на ярус
-GREEN_YIELD_OPEN = 1.0                          # кг/м²·год в открытом грунте
-COLD_SCEN = []
-for share in (0.10, 0.20, 0.30):
-    for layers in (3, 4):
-        area = COLD_AREA * share
-        gain_t = area * 1e6 * (layers * GREEN_YIELD_LAYER - GREEN_YIELD_OPEN) / 1e3
-        COLD_SCEN.append(dict(share=share, layers=layers, area=area,
-                              gain_t=gain_t,
-                              kcal_tln=gain_t * 1e3 * GREEN_KCAL_KG / 1e12,
-                              share_of_need=gain_t * 1e3 * GREEN_KCAL_KG / CAL_NEED))
-COLD_BASE = COLD_SCEN[1]                        # 20 % зоны, 3 яруса
-
-# ── резерв быстрых культур ──
-FAST_CYCLE = 20            # суток, редис/салат/шпинат
-FAST_YIELD = 3.0           # кг/м² за цикл
-FAST_CYCLES_YR = 365 / FAST_CYCLE
-RESERVE_REDUCED = RESERVE_FAST * 0.60   # 6 % угодий вместо 10 %
+assert math.isclose(KCAL_DAY, 2525.0, abs_tol=1e-9)
+assert math.isclose(CAL_NEED, 921_625_000_000.0, abs_tol=0.1)
+assert math.isclose(PROT_NEED, 25_550.0, abs_tol=1e-9)
 
 RES['B_agriculture'] = dict(
-    area_current=AREA_SUM,
-    kcal_crops_gross=KCAL_CROPS_GROSS,
-    protein_crops_gross=PROT_CROPS_GROSS,
-    kcal_system_gross=CAL_GROSS_SYSTEM,
-    protein_system_gross=PROT_GROSS_SYSTEM,
-    kcal_system_net=CAL_NET_SYSTEM,
-    protein_system_net=PROT_NET_SYSTEM,
-    aggregate_loss_fraction=AGGREGATE_LOSS,
-    net_retained_fraction=NET_RETAINED,
-    kcal_net_expected_from_loss=CAL_GROSS_SYSTEM * NET_RETAINED,
-    protein_net_expected_from_loss=PROT_GROSS_SYSTEM * NET_RETAINED,
-    animal_kcal_gross_residual=ANIMAL_KCAL_GROSS_RESIDUAL,
-    animal_protein_gross_model=ANIMAL_PROT_GROSS_MODEL,
-    protein_gross_model_total=PROT_GROSS_MODEL_TOTAL,
-    protein_gross_unreconciled=PROT_GROSS_UNRECONCILED,
-    kcal_need=CAL_NEED, protein_need=PROT_NEED,
-    area_optimised_same_crop_gross_calories=AREA_OPT,
-    crop_gross_kcal_optimised_same_output=KCAL_OPT,
-    crop_gross_protein_optimised=PROT_OPT,
-    area_freed_same_crop_gross_calories=AREA_FREED,
-    area_freed_same_crop_share=AREA_FREED / AREA_SUM,
-    crop_gross_kcal_m2_optimised=KCAL_M2_OPT,
-    cal_margin=CAL_MARGIN, prot_margin=PROT_MARGIN,
-    net_calorie_target_scenario2=CAL_NET_TARGET2,
-    net_protein_target_scenario2=PROT_NET_TARGET2,
-    crop_gross_kcal_target_scenario2=CAL_CROP_GROSS_TARGET2,
-    crop_gross_protein_target_scenario2=PROT_CROP_GROSS_TARGET2,
-    area_optimised_net_targets=AREA_OPT2,
-    crop_gross_kcal_optimised_net_targets=KCAL_OPT2,
-    crop_gross_protein_optimised_net_targets=PROT_OPT2,
-    system_net_kcal_optimised=NET_KCAL_OPT2,
-    system_net_protein_optimised=NET_PROT_OPT2,
-    system_net_protein_ratio_optimised=NET_PROT_OPT2 / PROT_NEED,
-    area_freed_net_targets=AREA_FREED2,
-    area_freed_net_targets_share=AREA_FREED2 / AREA_SUM,
-    crop_gross_kcal_m2_optimised_net_targets=KCAL_M2_OPT2,
-    min_crop_gross_protein_at_calorie_target=MIN_CROP_PROT_AT_CAL_TARGET,
-    min_system_net_protein_at_calorie_target=MIN_NET_PROT_AT_CAL_TARGET,
-    min_system_net_protein_ratio_at_calorie_target=MIN_NET_PROT_RATIO_AT_CAL_TARGET,
-    surplus_calorie_net_output=CAL_NET_SYSTEM / CAL_NEED,
-    surplus_protein_net_output=PROT_NET_SYSTEM / PROT_NEED,
-    best_kcal_m2=BEST_KCAL_M2, best_prot_m2=BEST_PROT_M2,
-    area_theoretical_calorie_only=AREA_THEOR,
-    area_theoretical_protein_only=AREA_THEOR_P,
-    optimised_mix={r['name']: round(float(x), 2) for r, x in zip(rows, res.x)},
-    cold_area=COLD_AREA, cold_scen=COLD_SCEN, cold_base=COLD_BASE,
-    green_yield_layer=GREEN_YIELD_LAYER, green_yield_open=GREEN_YIELD_OPEN,
-    green_kcal_kg=GREEN_KCAL_KG,
-    reserve_current=RESERVE_FAST, reserve_reduced=RESERVE_REDUCED,
-    fast_cycle=FAST_CYCLE, fast_yield=FAST_YIELD,
-    cal_rank=sorted([(r['name'], r['kcal_m2']) for r in rows],
-                    key=lambda t: -t[1])[:5],
-    prot_rank=sorted([(r['name'], r['prot_g_m2']) for r in rows],
-                     key=lambda t: -t[1])[:5],
-    farm_total=FARM_TOT, farm_agri=FARM_AGRI, crops=CROPS,
-    farm_after=FARM_AGRI - AREA_FREED,
+    status="needs and stock references only; production plan not calculated",
+    population=N_TOT,
+    energy_kcal_per_person_day=KCAL_DAY,
+    energy_need_kcal_year=CAL_NEED,
+    energy_assumptions=dict(
+        source="FAO/WHO/UNU Human energy requirements (2004), chapters 5–6 [40]",
+        sex_weights=SEX_WEIGHTS,
+        age_weights=AGE_WEIGHTS,
+        bmi=BMI,
+        pal=PAL,
+        male_kcal_day_by_age={"18-29.9": ENERGY_MALE_18_29, "30-59.9": ENERGY_MALE_30_59},
+        female_kcal_day_by_age={"18-29.9": ENERGY_FEMALE_18_29, "30-59.9": ENERGY_FEMALE_30_59},
+        derivation="equal-weighted mean of the two age groups and sexes",
+    ),
+    protein_g_per_person_day=PROT_DAY,
+    protein_assumption_status="separate provisional assumption; not derived from the energy estimate",
+    protein_need_t_year=PROT_NEED,
+    calorie_inventory_multiplier=CAL_STOCK_MULTIPLIER,
+    calorie_inventory_target_kcal=CAL_STOCK_TARGET,
+    protein_inventory_multiplier=PROT_STOCK_MULTIPLIER,
+    protein_inventory_target_t=PROT_STOCK_TARGET,
+    annual_gross_output_status="unreconciled; not reported as a current value",
+    annual_net_output_status="not calculated until product flows and edible yields are reconciled",
+    loss_fraction=None,
+    loss_status="not validated by product and process stage",
+    final_crop_area_km2=None,
+    final_crop_output_t_year=None,
+    production_plan_approved=False,
+    unresolved_discrepancies=dict(
+        fish_section3_t=LEGACY_FISH_SECTION3_T,
+        fish_section5_t=LEGACY_FISH_SECTION5_T,
+        fish_difference_t=LEGACY_FISH_SECTION5_T-LEGACY_FISH_SECTION3_T,
+        former_protein_discrepancy_t=LEGACY_PROTEIN_DISCREPANCY_T,
+    ),
+    legacy_scenario=dict(
+        status="archived only; not an approved plan, recommendation, or current output",
+        crop_area_km2=LEGACY_CROP_AREA,
+        farmland_total_km2=LEGACY_FARM_TOT,
+        farmland_agricultural_use_km2=LEGACY_FARM_AGRI,
+        crop_gross_kcal_year=LEGACY_CROP_GROSS_KCAL,
+        system_gross_kcal_year=LEGACY_SYSTEM_GROSS_KCAL,
+        system_net_kcal_year=LEGACY_SYSTEM_NET_KCAL,
+        system_gross_protein_t_year=LEGACY_SYSTEM_GROSS_PROTEIN_T,
+        system_net_protein_t_year=LEGACY_SYSTEM_NET_PROTEIN_T,
+        unvalidated_aggregate_loss_fraction=LEGACY_AGGREGATE_LOSS,
+        maize_area_km2=150.0,
+        maize_share_of_former_crop_area=150.0/LEGACY_CROP_AREA,
+        theoretical_areas_and_optimisations="not recalculated; former values are not recommendations",
+    ),
 )
 
 # ═════════════════════════════════════════════════════════════
@@ -408,11 +286,12 @@ SMELT_GJ_T = 20.0
 SMELT_POWER = STEEL_NEED_COATED * SMELT_GJ_T / (365 * 24 * 3600)   # ГВт
 
 RES['C_industry'] = dict(
+    waste_flow_status="scenario partition only; not an approved waste-processing or feed-production plan",
     waste_total=WASTE_TOT, waste_org=WASTE_ORG,
     waste_metglass=WASTE_METGLASS, waste_rest=WASTE_REST,
     sewage=SEWAGE_TOT,
     met_recovered=MET_REC, glass_recovered=GLASS_REC, rest_lost=REST_LOST,
-    compost=COMPOST_T, bsf_feed=BSF_FEED, biogas=BIOGAS,
+    compost=COMPOST_T, bsf_substrate_input_scenario_t=BSF_FEED, biogas=BIOGAS,
     closed=CLOSED, opened=OPENED, closure=CLOSURE,
     corr_open=CORR_OPEN, corr_coated=CORR_COATED,
     open_metal_share=OPEN_METAL_SHARE, open_metal_area=OPEN_METAL_AREA,
@@ -434,10 +313,14 @@ RING_CIRC = 2 * math.pi * RING_R
 STRUT_SECTION = 2.5     # м² на элемент (коробчатый профиль, оценка)
 STRUT_AREA_TOT = N_STRUT * STRUT_SECTION
 
-SETTLE_DAYS = 7.7
+FAST_TRANSFER_DAYS = 7.7  # transport-limit comparison; not the selected settlement flow
 QUAR_DAYS = 40
-SETTLE_RATE = N_PER_CYL / SETTLE_DAYS
-QUAR_PLACES = N_PER_CYL * QUAR_DAYS / SETTLE_DAYS
+ANNUAL_SETTLEMENT_FLOW = 100_000.0
+PLANNED_FLOW_PER_DAY = round(ANNUAL_SETTLEMENT_FLOW / 365.0)
+PLANNED_QUARANTINE_PLACES = round(ANNUAL_SETTLEMENT_FLOW * QUAR_DAYS / 365.25)
+FAST_TRANSFER_RATE_PER_CYL = N_PER_CYL / FAST_TRANSFER_DAYS
+FAST_TRANSFER_QUARANTINE_PLACES = round(N_PER_CYL * QUAR_DAYS / FAST_TRANSFER_DAYS)
+assert PLANNED_QUARANTINE_PLACES == 10_951
 
 DOCK_MASS = 12_000.0
 AIRLOCKS = 3
@@ -453,8 +336,14 @@ V_SHELL_KMH = V_SHELL * 3.6
 RES['D_docking'] = dict(
     ring_d=RING_D, ring_r=RING_R, ring_area=RING_AREA, ring_circ=RING_CIRC,
     n_strut=N_STRUT, strut_section=STRUT_SECTION, strut_area=STRUT_AREA_TOT,
-    settle_days=SETTLE_DAYS, quar_days=QUAR_DAYS, settle_rate=SETTLE_RATE,
-    quar_places=QUAR_PLACES,
+    annual_quarantine_flow_people_year=ANNUAL_SETTLEMENT_FLOW,
+    quarantine_flow_people_day=PLANNED_FLOW_PER_DAY,
+    quarantine_hold_days=QUAR_DAYS,
+    quarantine_places_concurrent=PLANNED_QUARANTINE_PLACES,
+    transport_max_transfer_days=FAST_TRANSFER_DAYS,
+    transport_max_flow_people_day_per_cylinder=FAST_TRANSFER_RATE_PER_CYL,
+    fast_transfer_quarantine_places_counterfactual=FAST_TRANSFER_QUARANTINE_PLACES,
+    fast_transfer_status="overload comparison only; not the selected settlement plan",
     dock_mass=DOCK_MASS, airlocks=AIRLOCKS, airlock_vol=AIRLOCK_VOL,
     airlock_tot=AIRLOCK_TOT, air_mass=AIR_MASS,
     dock_energy_GJ=DOCK_ENERGY_GJ,
@@ -464,147 +353,36 @@ RES['D_docking'] = dict(
 )
 
 # ═════════════════════════════════════════════════════════════
-# E. КОШКИ В ЭКОСИСТЕМЕ
+# E. КОШКИ В ЭКОСИСТЕМЕ — ЧИСЛЕННОСТЬ ТОЛЬКО КАК СЦЕНАРИЙ
 # ═════════════════════════════════════════════════════════════
-GRAIN_T = (120_000 + 180_000 + 50_000 + 20_000) * 0.55   # т в хранилище
-GRAIN_RHO = 0.75                                        # т/м³ насыпного
-GRAIN_VOL = GRAIN_T / GRAIN_RHO
-STACK_H = 6.0
-STORE_AREA = GRAIN_VOL / STACK_H
-
 CAT_PER_1000 = 6.0
 CATS_TOT = N_TOT / 1000 * CAT_PER_1000
 CATS_CYL = CATS_TOT / N_CYL
-
-CAT_MASS = 4.0
-CAT_KCAL_DAY = 60.0 * CAT_MASS ** 0.75      # ~170 ккал/сут
-FOOD_KCAL_KG = 4000.0                       # ккал/кг корма
-CAT_FOOD_T = CATS_TOT * CAT_KCAL_DAY * 365 / FOOD_KCAL_KG / 1e3
-CAT_PROT_T = CAT_FOOD_T * 0.32
-CAT_MEAT_SHARE = 0.65
-CAT_MEAT_T = CAT_FOOD_T * CAT_MEAT_SHARE
-
-FISH_WASTE_SHARE = 0.30
-FISH_WASTE = 70_000 * FISH_WASTE_SHARE
-BSF_MEAL_SHARE = 0.35
-BSF_FOR_CATS = CAT_MEAT_T * BSF_MEAL_SHARE
-
-CAT_PER_STORE_AREA = 1200.0                 # м² хранилища на кота
-CATS_STORE = STORE_AREA / CAT_PER_STORE_AREA
-CATS_PET = CATS_TOT - min(CATS_STORE, CATS_TOT)
-
-TOXO_SHARE = 0.30
-
 RES['E_cats'] = dict(
-    grain_t=GRAIN_T, grain_rho=GRAIN_RHO, grain_vol=GRAIN_VOL,
-    stack_h=STACK_H, store_area=STORE_AREA,
-    cats_per_1000=CAT_PER_1000, cats_total=CATS_TOT, cats_per_cyl=CATS_CYL,
-    cat_mass=CAT_MASS, cat_kcal_day=CAT_KCAL_DAY,
-    food_kcal_kg=FOOD_KCAL_KG, cat_food_t=CAT_FOOD_T, cat_prot_t=CAT_PROT_T,
-    cat_meat_share=CAT_MEAT_SHARE, cat_meat_t=CAT_MEAT_T,
-    fish_waste=FISH_WASTE, bsf_meal_share=BSF_MEAL_SHARE,
-    bsf_for_cats=BSF_FOR_CATS,
-    cat_per_store_area=CAT_PER_STORE_AREA, cats_store=CATS_STORE,
-    cats_pet=CATS_PET, toxo_share=TOXO_SHARE,
-    cats_share_of_population=CATS_TOT / N_TOT,
+    status="illustrative population assumption only; feed and inventory flows not calculated",
+    cats_per_1000=CAT_PER_1000,
+    cats_total=CATS_TOT,
+    cats_per_cyl=CATS_CYL,
+    annual_feed_t=None,
+    feed_energy_kcal=None,
+    food_stock_t=None,
+    feed_flow_status="requires an agreed diet, nutrient basis, edible fractions, and feed allocation",
 )
 
 # ═════════════════════════════════════════════════════════════
-# F. НАСЕКОМЫЕ
+# F. НАСЕКОМЫЕ — КОРМОВЫЕ ПОТОКИ ОСТАЮТСЯ НЕСОГЛАСОВАННЫМИ
 # ═════════════════════════════════════════════════════════════
 BEES_TOT = BEES_PER_CYL * N_CYL
-HONEY_T = 60.0
-HONEY_PER_COLONY_KG = HONEY_T * 1e3 / BEES_TOT
-
-POLLINATED = 60.0 + 50.0 + 10.0 + 36.0
-POLLINATED_SHARE = POLLINATED / CROPS
-
-GREENHOUSE = 80.0
-BUMBLE_PER_M2 = 1 / 250.0
-BUMBLE_COLONIES = GREENHOUSE * 1e6 * BUMBLE_PER_M2
-
-BSF_CONV = 0.20        # доля сырья в сухой личинке
-BSF_PROT = 0.42        # доля белка в сухой личинке
-BSF_LARVA = BSF_FEED * BSF_CONV
-BSF_PROT_T = BSF_LARVA * BSF_PROT
-BSF_LEFT = BSF_LARVA - BSF_FOR_CATS
-
-FISH_FEED = 70_000 * 1.8      # т/год, FCR 1,8
-CHICK_FEED = 5_000 * 2.2      # т/год, FCR 2,2
-FEED_FROM_BSF = min(BSF_LEFT, FISH_FEED * 0.30 + CHICK_FEED * 0.30)
-FEED_SHORTFALL = (FISH_FEED * 0.30 + CHICK_FEED * 0.30) - FEED_FROM_BSF
-
 RES['F_insects'] = dict(
-    bees_total=BEES_TOT, honey_t=HONEY_T, honey_per_colony_kg=HONEY_PER_COLONY_KG,
-    pollinated=POLLINATED, pollinated_share=POLLINATED_SHARE,
-    greenhouse=GREENHOUSE, bumble_colonies=BUMBLE_COLONIES,
-    bsf_feed=BSF_FEED, bsf_conv=BSF_CONV, bsf_prot=BSF_PROT,
-    bsf_larva=BSF_LARVA, bsf_prot_t=BSF_PROT_T,
-    bsf_for_cats=BSF_FOR_CATS, bsf_left=BSF_LEFT,
-    fish_feed=FISH_FEED, chick_feed=CHICK_FEED,
-    feed_from_bsf=FEED_FROM_BSF, feed_shortfall=FEED_SHORTFALL,
-    bsf_feed_per_year_t=BSF_FEED,
+    status="candidate ecological functions; production/feed totals are not a plan",
+    bee_colonies_scenario=BEES_TOT,
+    honey_t_year=None,
+    pollinated_area_km2=None,
+    bumblebee_colonies=None,
+    black_soldier_fly_feed_t_year=None,
+    fish_and_poultry_feed_t_year=None,
+    flow_status="biomass conversion, food-safety, feed demand and nutrient flows require reconciliation",
 )
-
-# ═════════════════════════════════════════════════════════════
-# G. ГОРОДА: РЕАЛЬНЫЕ И ВИРТУАЛЬНЫЕ
-# ═════════════════════════════════════════════════════════════
-DENSITY = N_TOT / AREA_TOT                  # человек/км²
-# Gross urban-planning site allowance; not building floor area or built-up footprint.
-URBAN_SITE_M2_PER_PERSON = 120.0
-URBAN_SITE_AREA = N_TOT * URBAN_SITE_M2_PER_PERSON / 1e6
-URBAN_SITE_SHARE = URBAN_SITE_AREA / AREA_TOT
-OPEN_SPACE_M2_PER_PERSON = 25.0
-OPEN_SPACE_AREA = N_TOT * OPEN_SPACE_M2_PER_PERSON / 1e6
-
-CITY_POP = 50_000
-CITY_SITE_AREA = CITY_POP * URBAN_SITE_M2_PER_PERSON / 1e6
-N_CITIES = N_TOT / CITY_POP
-CITY_EQUIVALENT_RADIUS = math.sqrt(CITY_SITE_AREA / math.pi)
-
-MC_WORLD = 29_999_984
-MC_HEIGHT = 320
-CYL_LEN_M = L_TOT * 1e3
-CYL_DIA_M = 2 * R_CYL
-
-mc = {}
-for sc in (1, 100, 200, 1000, 2000):
-    bl = CYL_LEN_M / sc
-    bd = CYL_DIA_M / sc
-    mc[sc] = dict(blocks_len=bl, blocks_dia=bd, surface=bl * bd,
-                  fits=(bl <= MC_WORLD and bd <= MC_WORLD))
-# 1:1 возможен только при горизонтальной укладке (диаметр в плане)
-mc[1]['fits_height'] = CYL_DIA_M <= MC_HEIGHT
-
-MC_REC = 100
-MC_REC_LEN = CYL_LEN_M / MC_REC
-MC_REC_DIA = CYL_DIA_M / MC_REC
-MC_REC_SURFACE = MC_REC_LEN * MC_REC_DIA
-
-MC_DISTRICT_M = 1000.0
-MC_DISTRICT_SCALE = 100
-MC_DISTRICT_BLOCKS = MC_DISTRICT_M / MC_DISTRICT_SCALE
-
-MC_1TO1_SURFACE = CYL_LEN_M * CYL_DIA_M
-
-RES['G_cities'] = dict(
-    area_cyl=AREA_CYL, area_tot=AREA_TOT, density=DENSITY,
-    urban_site_m2_per_person=URBAN_SITE_M2_PER_PERSON,
-    urban_site_area=URBAN_SITE_AREA, urban_site_share=URBAN_SITE_SHARE,
-    open_space_m2_per_person=OPEN_SPACE_M2_PER_PERSON,
-    open_space_area=OPEN_SPACE_AREA,
-    city_pop=CITY_POP, city_site_area=CITY_SITE_AREA, n_cities=N_CITIES,
-    city_equivalent_radius_km=CITY_EQUIVALENT_RADIUS,
-    mc_world=MC_WORLD, mc_height=MC_HEIGHT,
-    mc=mc, mc_recommended=MC_REC,
-    mc_rec_len=MC_REC_LEN, mc_rec_dia=MC_REC_DIA,
-    mc_rec_surface=MC_REC_SURFACE,
-    mc_district_blocks=MC_DISTRICT_BLOCKS,
-    mc_district_scale=MC_DISTRICT_SCALE,
-    mc_1to1_surface=MC_1TO1_SURFACE,
-    cyl_len_m=CYL_LEN_M, cyl_dia_m=CYL_DIA_M,
-)
-
 
 # ═════════════════════════════════════════════════════════════
 # Отчёт
@@ -641,54 +419,23 @@ if __name__ == '__main__':
     B = RES['B_agriculture']
     print()
     print('=' * 74)
-    print('B. СЕЛЬСКОЕ ХОЗЯЙСТВО')
+    print('B. ПИЩЕВАЯ ПОТРЕБНОСТЬ И СВЕРКА ПОТОКОВ')
     print('=' * 74)
-    print(f"  Табл. 5.2, вся система: потребность {B['kcal_need']/1e12:.3f} трлн ккал / "
-          f"{B['protein_need']:,.0f} т белка в год; валовой выпуск "
-          f"{B['kcal_system_gross']/1e12:.3f} трлн / {B['protein_system_gross']:,.0f} т; "
-          f"нетто-выпуск {B['kcal_system_net']/1e12:.3f} трлн / "
-          f"{B['protein_system_net']:,.0f} т")
-    print(f"  Вычет потерь {B['aggregate_loss_fraction']*100:.0f} % — агрегированное "
-          f"модельное допущение, не проверенная норма по продуктам и этапам")
-    print(f"  Отношения нетто-выпуска к годовой потребности: "
-          f"×{B['surplus_calorie_net_output']:.2f} по калориям и "
-          f"×{B['surplus_protein_net_output']:.2f} по белку; это не складской запас")
-    print(f"  Табл. 5.4, культуры: валовой выпуск {B['kcal_crops_gross']/1e12:.3f} трлн ккал; "
-          f"модельный остаток валовых калорий системы сверх культур "
-          f"{B['animal_kcal_gross_residual']/1e12:.3f} трлн ккал требует сверки")
-    print(f"  Белковая сверка модели: культуры {B['protein_crops_gross']:,.0f} т + "
-          f"животные продукты {B['animal_protein_gross_model']:,.0f} т = "
-          f"{B['protein_gross_model_total']:,.0f} т против {B['protein_system_gross']:,.0f} т "
-          f"в табл. 5.2; невязка {B['protein_gross_unreconciled']:,.0f} т")
-    print(f"  Сценарий сохранения валовых калорий культур: {B['area_optimised_same_crop_gross_calories']:.1f} км² "
-          f"(высвобождение {B['area_freed_same_crop_gross_calories']:.1f} км²); "
-          f"ограничение по белку не задано")
-    print(f"  Сценарий системного нетто-минимума ×{B['cal_margin']:.2f} по калориям и "
-          f"×{B['prot_margin']:.2f} по белку: {B['area_optimised_net_targets']:.1f} км², "
-          f"условное высвобождение {B['area_freed_net_targets']:.1f} км²")
-    print(f"    Фактический модельный нетто-выпуск: "
-          f"{B['system_net_kcal_optimised']/1e12:.3f} трлн ккал / "
-          f"{B['system_net_protein_optimised']:,.0f} т белка "
-          f"(×{B['system_net_protein_ratio_optimised']:.2f} потребности по белку); "
-          f"цель ×1,20 — нижний порог, не точный выпуск")
-    print(f"    Минимум белка при калорийной цели: "
-          f"{B['min_system_net_protein_ratio_at_calorie_target']:.2f}× потребности "
-          f"после потерь и модельного вклада животноводства")
-    print(f"  Однонутриентные нижние границы без разнообразия: "
-          f"{B['area_theoretical_calorie_only']:.1f} км² по калориям, "
-          f"{B['area_theoretical_protein_only']:.1f} км² по белку")
-    print('  Валовая калорийность культур, ккал/м²:', ', '.join(f'{n} {v:.0f}' for n, v in B['cal_rank']))
-    print('  Валовый белок культур, г/м²:', ', '.join(f'{n} {v:.0f}' for n, v in B['prot_rank']))
-    print(f"  Холодная зона {B['cold_area']:.1f} км², сценарии ярусного выращивания:")
-    for sc in B['cold_scen']:
-        print(f"    {sc['share']*100:.0f} % зоны, {sc['layers']} ярусов: "
-              f"+{sc['gain_t']/1e3:.0f} тыс. т зелени, "
-              f"{sc['kcal_tln']:.2f} трлн ккал "
-              f"({sc['share_of_need']*100:.1f} % потребности)")
-    print(f"  Резерв быстрых культур: {B['reserve_current']:.0f} → "
-          f"{B['reserve_reduced']:.0f} км²")
-    print(f"  Сельхозугодия после оптимизации: {B['farm_after']:.0f} км² "
-          f"из {B['farm_total']:.0f} км²")
+    print(f"  Население {B['population']:,}; энергопотребление {B['energy_kcal_per_person_day']:.0f} ккал/(чел.·сут).")
+    print("  Допущения: равные веса полов и возрастов 18–29,9 / 30–59,9 лет; BMI=21; PAL=1,75; FAO/WHO/UNU [40].")
+    print(f"  Годовая потребность: {B['energy_need_kcal_year']/1e12:.6f} трлн ккал; белок {B['protein_need_t_year']:,.0f} т/год (70 г/(чел.·сут), отдельное допущение).")
+    print(f"  Ориентир инвентаря: {B['calorie_inventory_target_kcal']/1e12:.7f} трлн ккал (×{B['calorie_inventory_multiplier']:.1f}); "
+          f"{B['protein_inventory_target_t']:,.0f} т белка (×{B['protein_inventory_multiplier']:.1f}). Это запас, не годовой выпуск.")
+    print("  Годовой валовой/нетто-выпуск, продуктовые потери и итоговые площади/выпуск культур не рассчитываются до сверки потоков.")
+    legacy = B['legacy_scenario']
+    print(f"  Архив прежней модели (не план): {legacy['crop_area_km2']:.0f} км²; "
+          f"культуры {legacy['crop_gross_kcal_year']/1e12:.3f} трлн ккал; "
+          f"системный валовой/нетто-сценарий {legacy['system_gross_kcal_year']/1e12:.3f}/"
+          f"{legacy['system_net_kcal_year']/1e12:.3f} трлн ккал; потери 20 % не проверены.")
+    discrep = B['unresolved_discrepancies']
+    print(f"  Несверенные рыбные строки: {discrep['fish_section3_t']:,.0f} против "
+          f"{discrep['fish_section5_t']:,.0f} т/год (разница {discrep['fish_difference_t']:,.0f}); "
+          f"бывшая белковая невязка {discrep['former_protein_discrepancy_t']:,.0f} т.")
 
     C = RES['C_industry']
     print()
@@ -708,11 +455,12 @@ if __name__ == '__main__':
     print(f"  С покрытиями: {C['steel_need_coated']/1e6:.2f} млн т/год; "
           f"за 200 лет {C['steel_200y_coated']/1e6:.0f} млн т")
     print(f"  Без покрытий: за 200 лет {C['steel_200y_open']/1e6:.0f} млн т")
-    print(f"  Возврат из бытовых отходов: металл {C['met_recovered']/1e3:.0f} тыс. т, "
+    print(f"  Сценарное распределение бытовых отходов: металл {C['met_recovered']/1e3:.0f} тыс. т, "
           f"стекло {C['glass_recovered']/1e3:.0f} тыс. т, компост "
-          f"{C['compost']/1e3:.0f} тыс. т, корм {C['bsf_feed']/1e3:.0f} тыс. т")
-    print(f"  Замыкание бытового контура: {C['closure']*100:.1f} %; "
-          f"незамкнутый остаток {C['opened']/1e3:.0f} тыс. т/год")
+          f"{C['compost']/1e3:.0f} тыс. т, сырьё на переработку насекомыми "
+          f"{C['bsf_substrate_input_scenario_t']/1e3:.0f} тыс. т (не готовый корм).")
+    print(f"  Сценарный коэффициент возврата: {C['closure']*100:.1f} %; "
+          f"незамкнутый остаток {C['opened']/1e3:.0f} тыс. т/год; потоки требуют проверки.")
     print(f"  Астероид {C['ast_diam']/1e3:.0f} км, ρ={C['ast_rho']:.0f} кг/м³: объём "
           f"{C['ast_vol']/1e9:.2f} км³, масса {C['ast_mass_t']/1e9:.1f} млрд т; "
           f"покрывает сталь станции плюс замену за 200 лет в {C['ast_covers']:.1f} раза")
@@ -728,9 +476,13 @@ if __name__ == '__main__':
           f"длина {D['ring_circ']:.0f} м")
     print(f"  {D['n_strut']} радиальных элемента, сечение ~{D['strut_section']:.1f} м² "
           f"каждый, суммарно {D['strut_area']:.0f} м²")
-    print(f"  Заселение: {D['settle_rate']:,.0f} человек/сут на цилиндр; "
-          f"карантин {D['quar_days']:.0f} сут требует "
-          f"{D['quar_places']:,.0f} мест")
+    print(f"  Плановый карантинный поток {D['annual_quarantine_flow_people_year']:,.0f} человек/год "
+          f"(около {D['quarantine_flow_people_day']:,.0f}/сут); выдержка "
+          f"{D['quarantine_hold_days']:.0f} суток требует "
+          f"{D['quarantine_places_concurrent']:,.0f} мест единовременно.")
+    print(f"  Контрфактический предельный трансфер 500 000 человек за "
+          f"{D['transport_max_transfer_days']:.1f} суток на цилиндр потребовал бы "
+          f"{D['fast_transfer_quarantine_places_counterfactual']:,.0f} мест; это не выбранный план.")
     print(f"  Модуль {D['dock_mass']:,.0f} т; {D['airlocks']} шлюза по "
           f"{D['airlock_vol']:.0f} м³ = {D['airlock_tot']:,.0f} м³ "
           f"({D['air_mass']/1e3:.1f} т воздуха)")
@@ -740,70 +492,14 @@ if __name__ == '__main__':
           f"{D['cargo_day']:,.0f} т/сут")
 
     E = RES['E_cats']
-    print()
-    print('=' * 74)
-    print('E. КОШКИ')
-    print('=' * 74)
-    print(f"  Зерно в хранилище {E['grain_t']/1e3:.0f} тыс. т, объём "
-          f"{E['grain_vol']/1e3:.0f} тыс. м³, площадь {E['store_area']/1e6:.3f} км²")
-    print(f"  Поголовье {E['cats_total']:,.0f} голов "
-          f"({E['cats_per_cyl']:,.0f} на цилиндр), {E['cats_share_of_population']*100:.1f} % населения")
-    print(f"  Корм {E['cat_kcal_day']:.0f} ккал/сут → {E['cat_food_t']:.1f} т/год, "
-          f"белка {E['cat_prot_t']:.1f} т/год, животного {E['cat_meat_t']:.1f} т/год")
-    print(f"  Источники: отходы разделки рыбы {E['fish_waste']/1e3:.0f} тыс. т, "
-          f"мука из личинок {E['bsf_for_cats']:.0f} т/год")
-    print(f"  Служебная потребность: {E['cat_per_store_area']} м² хранилища на кота → "
-          f"{E['cats_store']:.0f} голов; остальные {E['cats_pet']:,.0f} — содержание")
-    print(f"  Носители токсоплазмоза {E['toxo_share']*100:.0f} % поголовья")
-
     F = RES['F_insects']
     print()
     print('=' * 74)
-    print('F. НАСЕКОМЫЕ')
+    print('E–F. ЭКОСИСТЕМНЫЕ СЦЕНАРИИ')
     print('=' * 74)
-    print(f"  Пчёлы {F['bees_total']:,} семей, мёда {F['honey_t']:.0f} т/год "
-          f"({F['honey_per_colony_kg']:.1f} кг на семью)")
-    print(f"  Опыляемые площади {F['pollinated']:.0f} км² "
-          f"({F['pollinated_share']*100:.0f} % посевов)")
-    print(f"  Шмели {F['bumble_colonies']:,.0f} семей на {F['greenhouse']:.0f} км²")
-    print(f"  Чёрная львинка: сырьё {F['bsf_feed']/1e3:.0f} тыс. т/год → сухая "
-          f"личинка {F['bsf_larva']/1e3:.1f} тыс. т/год, белка "
-          f"{F['bsf_prot_t']/1e3:.1f} тыс. т/год")
-    print(f"  На кошек уходит {F['bsf_for_cats']:.0f} т/год; остаётся "
-          f"{F['bsf_left']/1e3:.1f} тыс. т/год")
-    print(f"  Потребность в корме: рыба {F['fish_feed']/1e3:.0f} тыс. т/год, "
-          f"птица {F['chick_feed']/1e3:.0f} тыс. т/год")
-    print(f"  Покрытие из личинок: {F['feed_from_bsf']/1e3:.1f} тыс. т/год, "
-          f"недостача {F['feed_shortfall']/1e3:.1f} тыс. т/год")
-
-    G = RES['G_cities']
-    print()
-    print('=' * 74)
-    print('G. ГОРОДА')
-    print('=' * 74)
-    print(f"  Обитаемая площадь {G['area_tot']:,.1f} км²; плотность "
-          f"{G['density']:.0f} человек/км²")
-    print(f"  Валовая планировочная площадь города (допущение) {G['urban_site_area']:.0f} км² "
-          f"({G['urban_site_share']*100:.1f} % боковой поверхности); "
-          f"открытые пространства (отдельное допущение) {G['open_space_area']:.0f} км²")
-    print(f"  Планировочные участки по {G['city_pop']:,} человек: {G['n_cities']:.0f} шт. по "
-          f"{G['city_site_area']:.1f} км² (эквивалентный радиус "
-          f"{G['city_equivalent_radius_km']:.2f} км; не утверждённая форма города)")
-    for sc in (1, 100, 200, 1000, 2000):
-        m = G['mc'][sc]
-        extra = ''
-        if sc == 1:
-            extra = (f"; высота {m['blocks_dia']:.0f} блоков при пределе "
-                     f"{G['mc_height']} → {'помещается' if m.get('fits_height') else 'НЕ помещается'}")
-        print(f"  Minecraft 1:{sc}: {m['blocks_len']:.0f} × {m['blocks_dia']:.0f} блоков, "
-              f"поверхность {m['surface']:,.0f} блоков{extra}")
-    print(f"  Рекомендуемый 1:{G['mc_recommended']}: {G['mc_rec_len']:.0f} × "
-          f"{G['mc_rec_dia']:.0f} блоков, {G['mc_rec_surface']:,.0f} блоков "
-          f"поверхности")
-    print(f"  Район 1 км² при 1:{G['mc_district_scale']}: "
-          f"{G['mc_district_blocks']:.0f} × {G['mc_district_blocks']:.0f} блоков")
-    print(f"  Полный объём при 1:1: {G['mc_1to1_surface']/1e6:.0f} млн блоков "
-          f"поверхности")
+    print(f"  Сценарное допущение численности кошек: {E['cats_total']:,.0f}; рацион, годовой корм и складской запас не рассчитаны.")
+    print(f"  Пчёлы в прежнем сценарии: {F['bee_colonies_scenario']:,} семей; мёд, опылённые площади и личиночный корм не приняты как выпуск.")
+    print("  Кормовая биомасса, конверсия, пищевые потоки и потери требуют отдельной санитарной и нутриентной сверки.")
 
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump(RES, f, ensure_ascii=False, indent=1, default=str)
