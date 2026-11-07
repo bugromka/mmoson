@@ -69,6 +69,15 @@ FIGURE_DIRS = {
     "en": ROOT / "site" / "assets" / "fig_en",
 }
 FIGURE_COUNT = 24
+SOURCE_INVENTORY_HEADERS = {
+    ("документ", "файл", "количество источников"),
+    ("документ", "файл", "источников / sources"),
+    ("документ / document", "файл / file", "источников / sources"),
+    ("document", "file", "number of sources"),
+    ("no.", "document", "file", "number of sources"),
+    ("№", "документ", "файл", "количество источников"),
+    ("№", "документ / document", "файл / file", "источников / sources"),
+}
 
 FIGURE_TEXT = {
     "ru": {
@@ -446,6 +455,23 @@ def add_english_contents(master: Document, files: list[Path]) -> None:
         cells[1].text = component_title(path, "en")
 
 
+def remove_source_inventory_tables(document: Document) -> int:
+    """Drop only the legacy document/file/source-count registry table."""
+    removed = 0
+    for table in list(document.tables):
+        if not table.rows:
+            continue
+        headers = tuple(" ".join(cell.text.split()).casefold() for cell in table.rows[0].cells)
+        if headers not in SOURCE_INVENTORY_HEADERS:
+            continue
+        table_element = table._tbl
+        parent = table_element.getparent()
+        if parent is not None:
+            parent.remove(table_element)
+            removed += 1
+    return removed
+
+
 def iter_container_paragraphs(container):
     """Yield paragraphs from a document part, including nested table cells."""
     yield from container.paragraphs
@@ -499,8 +525,12 @@ def build_one(files: list[Path], output: Path, language: str) -> None:
         source = Document(path)
         number = document_number(source)
         if language == "ru" and path.stem == "00_ОГЛАВЛЕНИЕ":
-            # The publication's contents page is deliberately bilingual.
+            # Keep the Russian front matter, but not its legacy file/source-count
+            # inventory. The English contents table is generated separately.
             filtered = source
+            removed_registry_tables = remove_source_inventory_tables(filtered)
+            if removed_registry_tables:
+                print(f"Removed {removed_registry_tables} administrative registry table(s) from {path.name}.")
             for paragraph in filtered.paragraphs:
                 if "Статус документа: концептуальный проект; редакция 15 сентября 2026 г.;" in paragraph.text:
                     set_paragraph_text(
