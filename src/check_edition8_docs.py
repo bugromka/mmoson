@@ -13,9 +13,26 @@ from docx.oxml.ns import qn
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_SECTIONS = set(range(1, 35))
 EXPECTED_COMPONENT_STAMPS = 42  # the contents page is not a numbered component
-EXPECTED_TABLES = {"ru": 72, "en": 70}
+EXPECTED_TABLES = {"ru": 71, "en": 70}
 EXPECTED_FIGURES = 24
-EXPECTED_BIBLIOGRAPHY_ENTRIES = 31
+EXPECTED_BIBLIOGRAPHY_ENTRIES = 41
+SOURCE_INVENTORY_HEADERS = {
+    ("документ", "файл", "количество источников"),
+    ("документ", "файл", "источников / sources"),
+    ("документ / document", "файл / file", "источников / sources"),
+    ("document", "file", "number of sources"),
+    ("no.", "document", "file", "number of sources"),
+    ("№", "документ", "файл", "количество источников"),
+    ("№", "документ / document", "файл / file", "источников / sources"),
+}
+OPERATIONAL_SECTION_HEADINGS = {
+    "ru": "11.17. Уроки эксплуатации МКС, «Салют», «Мир» и транспортных систем",
+    "en": "11.17. Lessons from ISS, Salyut, Mir and crew-transport systems",
+}
+WATER_SCOPE_TERMS = {
+    "ru": ("американского сегмента МКС", "сценарное допущение", "не доказательство работоспособности"),
+    "en": ("U.S. segment", "scenario assumption", "not proof that the full water loop can operate"),
+}
 A4_LAYOUT_CM = {
     "page_width": 21.0,
     "page_height": 29.7,
@@ -210,6 +227,18 @@ def verify(language: str, spec: dict) -> list[str]:
         for row in table.rows
         for cell in row.cells
     ]
+    obsolete_registries = []
+    for table_index, table in enumerate(doc.tables, start=1):
+        if not table.rows:
+            continue
+        headers = tuple(" ".join(cell.text.split()).casefold() for cell in table.rows[0].cells)
+        if headers in SOURCE_INVENTORY_HEADERS:
+            obsolete_registries.append(table_index)
+    if obsolete_registries:
+        errors.append(
+            f"{language}: obsolete document/file/source-count registry table remains "
+            f"(table indices {obsolete_registries})"
+        )
     all_text = "\n".join(paragraphs + table_texts)
     title = doc.core_properties.title or ""
     metadata = " ".join((title, doc.core_properties.subject or "", doc.core_properties.keywords or ""))
@@ -246,13 +275,28 @@ def verify(language: str, spec: dict) -> list[str]:
 
     sections = {
         int(match.group(1))
-        for text in paragraphs
-        if (match := spec["section_heading"].match(text))
+        for paragraph in doc.paragraphs
+        if paragraph.style.name in {"Heading 1", "Heading 2"}
+        if (match := spec["section_heading"].match(paragraph.text.strip()))
     }
     if sections != EXPECTED_SECTIONS:
         missing = sorted(EXPECTED_SECTIONS - sections)
         extra = sorted(sections - EXPECTED_SECTIONS)
         errors.append(f"{language}: numbered section set mismatch; missing={missing}, extra={extra}")
+
+    if paragraphs.count(OPERATIONAL_SECTION_HEADINGS[language]) != 1:
+        errors.append(f"{language}: the source-based Section 11.17 is missing or duplicated")
+    water_heading = "11.8. Замкнутый оборот воды" if language == "ru" else "11.8. Closed water circulation"
+    next_water_heading = "11.9. Стоимость и правовой статус" if language == "ru" else "11.9. Cost and legal status"
+    water_start = next((i for i, text in enumerate(paragraphs) if text == water_heading), None)
+    water_end = next((i for i, text in enumerate(paragraphs) if text == next_water_heading), None)
+    if water_start is None or water_end is None:
+        errors.append(f"{language}: Section 11.8 water-scope qualification is missing")
+    else:
+        water_text = "\n".join(paragraphs[water_start:water_end])
+        missing_water_terms = [term for term in WATER_SCOPE_TERMS[language] if term.casefold() not in water_text.casefold()]
+        if missing_water_terms:
+            errors.append(f"{language}: Section 11.8 lost its water-recovery scope caveats: {missing_water_terms}")
 
     captions = [
         int(match.group(1))

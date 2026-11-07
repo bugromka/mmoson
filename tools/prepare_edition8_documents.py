@@ -3,8 +3,9 @@
 
 The source components are not present in this repository, so this script works
 on the two already-combined final documents. It is safe to rerun: cover lines
-are updated in place, repeated section-level reference blocks are removed, and
-the one common bibliography plus the status matrix are retained.
+are updated in place, the obsolete document/file/source-count registry is
+removed, repeated section-level reference blocks are removed, and the one
+common bibliography plus the status matrix are retained.
 """
 from __future__ import annotations
 
@@ -27,6 +28,15 @@ LOCAL_REFERENCE_RE = re.compile(
     r"^(?:СПИСОК ЛИТЕРАТУРЫ РАЗДЕЛА|REFERENCES OF THIS SECTION)$",
     re.IGNORECASE,
 )
+SOURCE_INVENTORY_HEADERS = {
+    ("документ", "файл", "количество источников"),
+    ("документ", "файл", "источников / sources"),
+    ("документ / document", "файл / file", "источников / sources"),
+    ("document", "file", "number of sources"),
+    ("no.", "document", "file", "number of sources"),
+    ("№", "документ", "файл", "количество источников"),
+    ("№", "документ / document", "файл / file", "источников / sources"),
+}
 
 COVER = {
     "ru": {
@@ -59,6 +69,23 @@ def _set_cover_title(paragraph, title: str, short_name: str) -> None:
     paragraph.add_run(title)
     paragraph.add_run().add_break(WD_BREAK.LINE)
     paragraph.add_run(f"({short_name})")
+
+
+def _remove_source_inventory_tables(document) -> int:
+    """Remove only the administrative inventory, never a contents table."""
+    removed = 0
+    for table in list(document.tables):
+        if not table.rows:
+            continue
+        headers = tuple(" ".join(cell.text.split()).casefold() for cell in table.rows[0].cells)
+        if headers not in SOURCE_INVENTORY_HEADERS:
+            continue
+        table_element = table._tbl
+        parent = table_element.getparent()
+        if parent is not None:
+            parent.remove(table_element)
+            removed += 1
+    return removed
 
 
 def _first_component_marker(document):
@@ -230,9 +257,6 @@ def _translate_ru_labels_and_phrases(document) -> int:
                             run.text = updated
                             changed += 1
                     table_labels = {
-                        "Документ / Document": "Документ",
-                        "Файл / File": "Файл",
-                        "Источников / Sources": "Количество источников",
                         "Рисунок / Figure": "Рисунок",
                     }
                     value = paragraph.text.strip()
@@ -334,6 +358,7 @@ def prepare_document(language: str, path: Path) -> None:
     document = Document(path)
     _ensure_cover(document, language)
     changed = _update_shared_text(document, language)
+    removed_registries = _remove_source_inventory_tables(document)
     if language == "ru":
         changed += _translate_ru_labels_and_phrases(document)
     else:
@@ -345,6 +370,7 @@ def prepare_document(language: str, path: Path) -> None:
     temporary.replace(path)
     print(
         f"Prepared {path.relative_to(ROOT)}: {changed} text updates, "
+        f"{removed_registries} administrative registry tables removed, "
         f"{removed} paragraphs removed from repeated section bibliographies."
     )
 

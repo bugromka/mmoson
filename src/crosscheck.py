@@ -17,7 +17,7 @@ from corpus import Corpus
 
 DOC = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "sections"
 EXPECTED_TABLES_BY_FILE = {
-    "MMOSON_combined_document_ru.docx": 72,
+    "MMOSON_combined_document_ru.docx": 71,
     "MMOSON_combined_document_en.docx": 70,
 }
 D = Corpus(DOC)

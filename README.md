@@ -10,7 +10,7 @@
 
 | Файл | Что содержит | Проверка |
 |---|---|---|
-| `sections/MMOSON_combined_document_ru.docx` | Русская версия технической документации, разделы 1–34 | Редакция 8; 72 таблицы; 24 встроенных рисунка |
+| `sections/MMOSON_combined_document_ru.docx` | Русская версия технической документации, разделы 1–34 | Редакция 8; 71 таблица; 24 встроенных рисунка |
 | `sections/MMOSON_combined_document_en.docx` | Английская версия технической документации, разделы 1–34 | Edition 8; 70 таблиц; 24 встроенных рисунка |
 
 Оба файла имеют титульные страницы с отдельными строками автора и места/года, 42 датированные отметки компонентов и разделы 1–34. В русской версии вне единого общего списка литературы используются русские формулировки; названия источников в общей библиографии сохраняют оригинальное написание. Списки литературы по разделам удалены, а примечания матрицы статусов сохранены. Имена существующих файлов и URL репозитория сохранены для совместимости; в содержимом публикации и интерфейсе используется написание MMOSO'N.
@@ -49,7 +49,7 @@ python3 src/check_transport_interface.py
 python3 src/edition8_calcs.py
 ```
 
-`check_edition8_docs.py` сверяет титульные страницы и оформление по ГОСТ 7.32–2017 (A4, поля 3 / 1,5 / 2 / 2 см, Times New Roman 14 pt для основного текста, интервал 1,5, отступ первой строки 1,25 см, Times New Roman 12 pt для таблиц), языковую локализацию вне общей библиографии, единый список из 31 источника, 15 примечаний матрицы статусов, маркировку редакции 8 от 6 ноября 2026 г., 42 отметки компонентов, разделы 1–34 и точное число таблиц: 72 в русском и 70 в английском DOCX. Сквозная сверка проверяет канонические значения и эти числа для опубликованных документов; `audit_tables_figures_v7.py` дополнительно сверяет таблицы, подписи, целостность PNG и полный комплект из 24 локализованных рисунков в каждом языке. Чистые исходники `src/fig/` в текущем репозитории не хранятся.
+`check_edition8_docs.py` сверяет титульные страницы и оформление по ГОСТ 7.32–2017 (A4, поля 3 / 1,5 / 2 / 2 см, Times New Roman 14 pt для основного текста, интервал 1,5, отступ первой строки 1,25 см, Times New Roman 12 pt для таблиц), языковую локализацию вне общей библиографии, единый список из 41 источника, 15 примечаний матрицы статусов, маркировку редакции 8 от 6 ноября 2026 г., 42 отметки компонентов, разделы 1–34 и точное число таблиц: 71 в русском и 70 в английском DOCX. Сквозная сверка проверяет канонические значения и эти числа для опубликованных документов; `audit_tables_figures_v7.py` дополнительно сверяет таблицы, подписи, целостность PNG и полный комплект из 24 локализованных рисунков в каждом языке. Чистые исходники `src/fig/` в текущем репозитории не хранятся.
 
 `check_transport_interface.py` проверяет канал размером 20,80 м при проёме 30,00 м, маршрут 7 430,8 м и расчётную пропускную способность. `edition8_calcs.py` пересчитывает семь областей редакции 8 (A–G) и сохраняет результат в `src/edition8_results.json`.
 
@@ -66,7 +66,7 @@ python3 src/edition8_calcs.py
 
 ### Сборка публикации
 
-`tools/combine_sections.py` собирает языковые DOCX из **43 исходных двуязычных DOCX-компонентов**, сохраняя таблицы и текст, затем встраивает все 24 иллюстрации из соответствующего набора `site/assets/fig_ru/` или `site/assets/fig_en/`:
+`tools/combine_sections.py` собирает языковые DOCX из **43 исходных двуязычных DOCX-компонентов**, сохраняя технические таблицы и текст, затем встраивает все 24 иллюстрации из соответствующего набора `site/assets/fig_ru/` или `site/assets/fig_en/`. Устаревший русскоязычный реестр «Документ / Файл / Количество источников» при сборке удаляется; английское содержание создаётся отдельно:
 
 ```bash
 python3 tools/combine_sections.py --src /path/to/43-component-docx --out-dir sections --language both
@@ -76,7 +76,7 @@ python3 tools/combine_sections.py --src /path/to/43-component-docx --out-dir sec
 
 ### Подготовка и форматирование итоговых DOCX
 
-`tools/prepare_edition8_documents.py` оформляет раздельные строки титульного листа, приводит русские вводные материалы к одному языку, удаляет дублирующиеся списки литературы по разделам и сохраняет единую библиографию из 31 позиции и примечания матрицы статусов. Также текст иллюстраций приводится к комплекту из 24 рисунков редакции 8.
+`tools/prepare_edition8_documents.py` оформляет раздельные строки титульного листа, приводит русские вводные материалы к одному языку, удаляет административный реестр «Документ / Файл / Количество источников» и дублирующиеся списки литературы по разделам, сохраняя единую библиографию из 41 позиции и примечания матрицы статусов. Также текст иллюстраций приводится к комплекту из 24 рисунков редакции 8.
 
 `tools/format_docs_like_reference.py` применяет к обеим версиям редакции 8 оформление научно-технического отчёта по ГОСТ 7.32–2017: титул с автором и городом/годом, A4, поля 3 / 1,5 / 2 / 2 см, Times New Roman 14 pt для основного текста, интервал 1,5, отступ первой строки 1,25 см и 12 pt для таблиц; заголовки повторяются на новых страницах, строки таблиц не разрываются.
 
@@ -127,7 +127,7 @@ The current publication is **Edition 8, dated 6 November 2026**. It contains one
 
 | File | Contents | Verified structure |
 |---|---|---|
-| `sections/MMOSON_combined_document_ru.docx` | Russian technical-documentation edition, sections 1–34 | Edition 8; 72 tables; 24 embedded figures |
+| `sections/MMOSON_combined_document_ru.docx` | Russian technical-documentation edition, sections 1–34 | Edition 8; 71 tables; 24 embedded figures |
 | `sections/MMOSON_combined_document_en.docx` | English technical-documentation edition, sections 1–34 | Edition 8; 70 tables; 24 embedded figures |
 
 Both files have title pages with separate project-lead and place/year lines, 42 dated component stamps and sections 1–34. The Russian version uses Russian wording outside its single shared bibliography; source titles in that list retain their original spelling. Section-level reference lists have been removed, while the status-matrix notes remain. Existing file names and repository URLs are retained for compatibility; the displayed project name in the publication and website uses the spelling MMOSO'N.
@@ -166,7 +166,7 @@ python3 src/check_transport_interface.py
 python3 src/edition8_calcs.py
 ```
 
-`check_edition8_docs.py` verifies both title pages and the GOST 7.32–2017-oriented layout (A4, 3 / 1.5 / 2 / 2 cm margins, Times New Roman 14 pt body text, 1.5 line spacing, a 1.25 cm first-line indent and Times New Roman 12 pt tables), localization outside the shared bibliography, the single list of 31 sources, 15 status-matrix notes, Edition 8 labels dated 6 November 2026, 42 component stamps, sections 1–34 and the exact table counts: 72 in the Russian DOCX and 70 in the English DOCX. The publication cross-check verifies canonical values and these counts for the published files; `audit_tables_figures_v7.py` additionally checks tables, captions, PNG integrity and the complete set of 24 localized figures in each language. Clean source images in `src/fig/` are not stored in the current repository.
+`check_edition8_docs.py` verifies both title pages and the GOST 7.32–2017-oriented layout (A4, 3 / 1.5 / 2 / 2 cm margins, Times New Roman 14 pt body text, 1.5 line spacing, a 1.25 cm first-line indent and Times New Roman 12 pt tables), localization outside the shared bibliography, the single list of 41 sources (including operational station and transport-system references), 15 status-matrix notes, Edition 8 labels dated 6 November 2026, 42 component stamps, sections 1–34 and the exact table counts: 71 in the Russian DOCX and 70 in the English DOCX. The publication cross-check verifies canonical values and these counts for the published files; `audit_tables_figures_v7.py` additionally checks tables, captions, PNG integrity and the complete set of 24 localized figures in each language. Clean source images in `src/fig/` are not stored in the current repository.
 
 `check_transport_interface.py` checks the 20.80 m channel against a 30.00 m opening, the 7,430.8 m route and calculated throughput. `edition8_calcs.py` recalculates the seven Edition 8 domains (A–G) and writes `src/edition8_results.json`.
 
@@ -183,7 +183,7 @@ These are model calculations, not station certification or proof of technologica
 
 ### Building the publication
 
-`tools/combine_sections.py` assembles language-specific DOCX files from **43 bilingual source DOCX components**, preserving tables and text, then embeds all 24 figures from the matching `site/assets/fig_ru/` or `site/assets/fig_en/` set:
+`tools/combine_sections.py` assembles language-specific DOCX files from **43 bilingual source DOCX components**, preserving technical tables and text, then embeds all 24 figures from the matching `site/assets/fig_ru/` or `site/assets/fig_en/` set. It removes the obsolete Russian “Document / File / Number of sources” registry; the English contents list is generated separately:
 
 ```bash
 python3 tools/combine_sections.py --src /path/to/43-component-docx --out-dir sections --language both
@@ -193,7 +193,7 @@ The source components are not in the current working tree; `sections/` contains 
 
 ### Preparing and formatting the final DOCX files
 
-`tools/prepare_edition8_documents.py` creates separate cover lines, localizes the Russian front matter, removes duplicated section-level reference lists, and keeps the single 31-item bibliography and the status-matrix notes. It also updates illustration notes to the 24-sheet Edition 8 set.
+`tools/prepare_edition8_documents.py` creates separate cover lines, localizes the Russian front matter, removes the obsolete “Document / File / Number of sources” registry and duplicated section-level reference lists, and keeps the single 41-item bibliography and the status-matrix notes. It also updates illustration notes to the 24-sheet Edition 8 set.
 
 `tools/format_docs_like_reference.py` applies a GOST 7.32–2017-oriented scientific-report layout to both Edition 8 files: title page with project lead and place/year, A4, left / right / top / bottom margins of 3 / 1.5 / 2 / 2 cm, Times New Roman 14 pt body text, 1.5 line spacing, a 1.25 cm first-line indent and 12 pt table text; table headers repeat across pages and rows do not split.
 

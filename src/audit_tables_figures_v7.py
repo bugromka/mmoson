@@ -33,7 +33,7 @@ D = Corpus(DOC)
 # Each localized Edition 8 document contains the complete 24-sheet set.
 CAPTIONS_EXPECTED = 24
 IMAGES_EXPECTED = 2 * CAPTIONS_EXPECTED
-TABLES_EXPECTED = {"ru": 72, "en": 70}
+TABLES_EXPECTED = {"ru": 71, "en": 70}
 
 def fail(msg: str) -> None:
     errors.append(msg)
