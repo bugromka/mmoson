@@ -17,8 +17,8 @@ from corpus import Corpus
 
 DOC = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "sections"
 EXPECTED_TABLES_BY_FILE = {
-    "MMOSON_combined_document_ru.docx": 71,
-    "MMOSON_combined_document_en.docx": 70,
+    "MMOSON_combined_document_ru.docx": 74,
+    "MMOSON_combined_document_en.docx": 74,
 }
 D = Corpus(DOC)
 paras = [" ".join(p.text.split()) for p in D.paragraphs]
@@ -110,6 +110,33 @@ table_require_anchor("Материал", "Разработана на конце
 table_require_anchor("Величина", "15,4 суток на цилиндр; 7,7 суток на станцию", "срок транспортного заселения")
 
 # ── Активные формулировки, которые не имеют права вернуться ──────────────
+for path, document in zip(D.paths, D.docs):
+    language = "ru" if path.stem.endswith("_ru") else "en" if path.stem.endswith("_en") else None
+    if language is None:
+        continue
+    document_text = "\n".join([p.text for p in document.paragraphs] + [
+        cell.text for table in document.tables for row in table.rows for cell in row.cells
+    ])
+    food_terms = {
+        "ru": (
+            "0,921625 трлн ккал/год", "1,3824375 трлн ккал", "33 215 т",
+            "Потребители и направления продукции", "производственный план не рассчитан",
+            "100 000 человек в год", "10 951 место единовременно",
+            "25 000 / 70 000 т/год", "45 000 т",
+        ),
+        "en": (
+            "0.921625 trillion kcal/year", "1.3824375 trillion kcal", "33,215 t",
+            "Consumers and product destinations", "no production plan calculated",
+            "100,000 people per year", "10,951 places at a time",
+            "25,000 / 70,000 t/year", "45,000 t",
+        ),
+    }[language]
+    for needle in food_terms:
+        if needle.casefold() not in document_text.casefold():
+            errors.append(f"{path.name}: current food-flow criterion is missing: {needle}")
+    if re.search(r"(?i)(?:minecraft|virtual (?:city|cities|twin)|виртуальн\w*\s+город\w*)", document_text):
+        errors.append(f"{path.name}: virtual-city content must not remain")
+
 for needle, label in [
     ("треугольная точка либрации, устойчивая", "L4/L5-описание места"),
     ("близостью к лунным ресурсам", "лунные ресурсы как причина L1"),

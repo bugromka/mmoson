@@ -47,185 +47,70 @@
   "people_per_generation": 140000.0
  },
  "B_agriculture": {
-  "area_current": 807.0,
-  "kcal_crops_gross": 2216010000000.0,
-  "protein_crops_gross": 69241.0,
-  "kcal_system_gross": 2338000000000.0,
-  "protein_system_gross": 87200.0,
-  "kcal_system_net": 1870000000000.0,
-  "protein_system_net": 69800.0,
-  "aggregate_loss_fraction": 0.2,
-  "net_retained_fraction": 0.8,
-  "kcal_net_expected_from_loss": 1870400000000.0,
-  "protein_net_expected_from_loss": 69760.0,
-  "animal_kcal_gross_residual": 121990000000.0,
-  "animal_protein_gross_model": 15938.99,
-  "protein_gross_model_total": 85179.99,
-  "protein_gross_unreconciled": 2020.0099999999948,
-  "kcal_need": 1022000000000.0,
-  "protein_need": 25600.0,
-  "area_optimised_same_crop_gross_calories": 763.5961038961038,
-  "crop_gross_kcal_optimised_same_output": 2216010000000.0,
-  "crop_gross_protein_optimised": 86243.88831168831,
-  "area_freed_same_crop_gross_calories": 43.40389610389616,
-  "area_freed_same_crop_share": 0.05378425787347727,
-  "crop_gross_kcal_m2_optimised": 2902.07085747718,
-  "cal_margin": 1.15,
-  "prot_margin": 1.2,
-  "net_calorie_target_scenario2": 1175300000000.0,
-  "net_protein_target_scenario2": 30720.0,
-  "crop_gross_kcal_target_scenario2": 1347135000000.0,
-  "crop_gross_protein_target_scenario2": 22461.010000000002,
-  "area_optimised_net_targets": 462.6661764705882,
-  "crop_gross_kcal_optimised_net_targets": 1347135000000.0,
-  "crop_gross_protein_optimised_net_targets": 63675.4794117647,
-  "system_net_kcal_optimised": 1175300000000.0,
-  "system_net_protein_optimised": 63691.57552941176,
-  "system_net_protein_ratio_optimised": 2.487952169117647,
-  "area_freed_net_targets": 344.3338235294118,
-  "area_freed_net_targets_share": 0.426683796195058,
-  "crop_gross_kcal_m2_optimised_net_targets": 2911.678156973806,
-  "min_crop_gross_protein_at_calorie_target": 30419.1375,
-  "min_system_net_protein_at_calorie_target": 37086.502,
-  "min_system_net_protein_ratio_at_calorie_target": 1.448691484375,
-  "surplus_calorie_net_output": 1.8297455968688845,
-  "surplus_protein_net_output": 2.7265625,
-  "best_kcal_m2": 4380.0,
-  "best_prot_m2": 310.0,
-  "area_theoretical_calorie_only": 307.5650684931507,
-  "area_theoretical_protein_only": 72.45487096774194,
-  "optimised_mix": {
-   "Рис": 24.0,
-   "Кукуруза": 30.0,
-   "Пшеница": 150.0,
-   "Ячмень": 60.0,
-   "Картофель": 45.4,
-   "Батат, таро, маниок": 138.0,
-   "Соя": 30.0,
-   "Прочие бобовые": 7.2,
-   "Овощи": 16.0,
-   "Фрукты и ягоды": 12.0,
-   "Масличные": 150.0,
-   "Грибы": 90.0,
-   "Зелень и пряности": 5.0,
-   "Водоросли": 6.0
+  "status": "needs and stock references only; production plan not calculated",
+  "population": 1000000,
+  "energy_kcal_per_person_day": 2525.0,
+  "energy_need_kcal_year": 921625000000.0,
+  "energy_assumptions": {
+   "source": "FAO/WHO/UNU Human energy requirements (2004), chapters 5–6 [40]",
+   "sex_weights": {
+    "men": 0.5,
+    "women": 0.5
+   },
+   "age_weights": {
+    "18-29.9": 0.5,
+    "30-59.9": 0.5
+   },
+   "bmi": 21.0,
+   "pal": 1.75,
+   "male_kcal_day_by_age": {
+    "18-29.9": 2800.0,
+    "30-59.9": 2750.0
+   },
+   "female_kcal_day_by_age": {
+    "18-29.9": 2300.0,
+    "30-59.9": 2250.0
+   },
+   "derivation": "equal-weighted mean of the two age groups and sexes"
   },
-  "cold_area": 251.32741228718345,
-  "cold_scen": [
-   {
-    "share": 0.1,
-    "layers": 3,
-    "area": 25.132741228718345,
-    "gain_t": 427256.60088821186,
-    "kcal_tln": 0.08545132017764237,
-    "share_of_need": 0.08361185927362266
-   },
-   {
-    "share": 0.1,
-    "layers": 4,
-    "area": 25.132741228718345,
-    "gain_t": 578053.0482605218,
-    "kcal_tln": 0.11561060965210437,
-    "share_of_need": 0.11312192725254831
-   },
-   {
-    "share": 0.2,
-    "layers": 3,
-    "area": 50.26548245743669,
-    "gain_t": 854513.2017764237,
-    "kcal_tln": 0.17090264035528474,
-    "share_of_need": 0.16722371854724533
-   },
-   {
-    "share": 0.2,
-    "layers": 4,
-    "area": 50.26548245743669,
-    "gain_t": 1156106.0965210437,
-    "kcal_tln": 0.23122121930420875,
-    "share_of_need": 0.22624385450509663
-   },
-   {
-    "share": 0.3,
-    "layers": 3,
-    "area": 75.39822368615503,
-    "gain_t": 1281769.8026646357,
-    "kcal_tln": 0.25635396053292714,
-    "share_of_need": 0.250835577820868
-   },
-   {
-    "share": 0.3,
-    "layers": 4,
-    "area": 75.39822368615503,
-    "gain_t": 1734159.144781566,
-    "kcal_tln": 0.34683182895631315,
-    "share_of_need": 0.339365781757645
-   }
-  ],
-  "cold_base": {
-   "share": 0.1,
-   "layers": 4,
-   "area": 25.132741228718345,
-   "gain_t": 578053.0482605218,
-   "kcal_tln": 0.11561060965210437,
-   "share_of_need": 0.11312192725254831
+  "protein_g_per_person_day": 70.0,
+  "protein_assumption_status": "separate provisional assumption; not derived from the energy estimate",
+  "protein_need_t_year": 25550.0,
+  "calorie_inventory_multiplier": 1.5,
+  "calorie_inventory_target_kcal": 1382437500000.0,
+  "protein_inventory_multiplier": 1.3,
+  "protein_inventory_target_t": 33215.0,
+  "annual_gross_output_status": "unreconciled; not reported as a current value",
+  "annual_net_output_status": "not calculated until product flows and edible yields are reconciled",
+  "loss_fraction": null,
+  "loss_status": "not validated by product and process stage",
+  "final_crop_area_km2": null,
+  "final_crop_output_t_year": null,
+  "production_plan_approved": false,
+  "unresolved_discrepancies": {
+   "fish_section3_t": 25000.0,
+   "fish_section5_t": 70000.0,
+   "fish_difference_t": 45000.0,
+   "former_protein_discrepancy_t": 2020.0
   },
-  "green_yield_layer": 6.0,
-  "green_yield_open": 1.0,
-  "green_kcal_kg": 200.0,
-  "reserve_current": 150.0,
-  "reserve_reduced": 90.0,
-  "fast_cycle": 20,
-  "fast_yield": 3.0,
-  "cal_rank": [
-   [
-    "Кукуруза",
-    4380.0
-   ],
-   [
-    "Рис",
-    3600.0
-   ],
-   [
-    "Ячмень",
-    3520.0
-   ],
-   [
-    "Пшеница",
-    3400.0
-   ],
-   [
-    "Картофель",
-    3080.0
-   ]
-  ],
-  "prot_rank": [
-   [
-    "Грибы",
-    310.0
-   ],
-   [
-    "Соя",
-    126.0
-   ],
-   [
-    "Пшеница",
-    110.0
-   ],
-   [
-    "Кукуруза",
-    108.0
-   ],
-   [
-    "Ячмень",
-    100.0
-   ]
-  ],
-  "farm_total": 1508.0,
-  "farm_agri": 972.0,
-  "crops": 807.0,
-  "farm_after": 928.5961038961038
+  "legacy_scenario": {
+   "status": "archived only; not an approved plan, recommendation, or current output",
+   "crop_area_km2": 807.0,
+   "farmland_total_km2": 1508.0,
+   "farmland_agricultural_use_km2": 972.0,
+   "crop_gross_kcal_year": 2216000000000.0,
+   "system_gross_kcal_year": 2338000000000.0,
+   "system_net_kcal_year": 1870000000000.0,
+   "system_gross_protein_t_year": 87200.0,
+   "system_net_protein_t_year": 69800.0,
+   "unvalidated_aggregate_loss_fraction": 0.2,
+   "maize_area_km2": 150.0,
+   "maize_share_of_former_crop_area": 0.18587360594795538,
+   "theoretical_areas_and_optimisations": "not recalculated; former values are not recommendations"
+  }
  },
  "C_industry": {
+  "waste_flow_status": "scenario partition only; not an approved waste-processing or feed-production plan",
   "waste_total": 547500.0,
   "waste_org": 328500.0,
   "waste_metglass": 136875.0,
@@ -235,7 +120,7 @@
   "glass_recovered": 52354.6875,
   "rest_lost": 13003.125,
   "compost": 180675.00000000003,
-  "bsf_feed": 114974.99999999999,
+  "bsf_substrate_input_scenario_t": 114974.99999999999,
   "biogas": 32850.0,
   "closed": 419521.875,
   "opened": 127978.125,
@@ -272,10 +157,14 @@
   "n_strut": 24,
   "strut_section": 2.5,
   "strut_area": 60.0,
-  "settle_days": 7.7,
-  "quar_days": 40,
-  "settle_rate": 64935.06493506493,
-  "quar_places": 2597402.5974025973,
+  "annual_quarantine_flow_people_year": 100000.0,
+  "quarantine_flow_people_day": 274,
+  "quarantine_hold_days": 40,
+  "quarantine_places_concurrent": 10951,
+  "transport_max_transfer_days": 7.7,
+  "transport_max_flow_people_day_per_cylinder": 64935.06493506493,
+  "fast_transfer_quarantine_places_counterfactual": 2597403,
+  "fast_transfer_status": "overload comparison only; not the selected settlement plan",
   "dock_mass": 12000.0,
   "airlocks": 3,
   "airlock_vol": 850.0,
@@ -290,107 +179,23 @@
   "d_axis": 21.0
  },
  "E_cats": {
-  "grain_t": 203500.00000000003,
-  "grain_rho": 0.75,
-  "grain_vol": 271333.3333333334,
-  "stack_h": 6.0,
-  "store_area": 45222.222222222226,
+  "status": "illustrative population assumption only; feed and inventory flows not calculated",
   "cats_per_1000": 6.0,
   "cats_total": 6000.0,
   "cats_per_cyl": 3000.0,
-  "cat_mass": 4.0,
-  "cat_kcal_day": 169.7056274847714,
-  "food_kcal_kg": 4000.0,
-  "cat_food_t": 92.91383104791235,
-  "cat_prot_t": 29.732425935331953,
-  "cat_meat_share": 0.65,
-  "cat_meat_t": 60.39399018114303,
-  "fish_waste": 21000.0,
-  "bsf_meal_share": 0.35,
-  "bsf_for_cats": 21.13789656340006,
-  "cat_per_store_area": 1200.0,
-  "cats_store": 37.68518518518519,
-  "cats_pet": 5962.314814814815,
-  "toxo_share": 0.3,
-  "cats_share_of_population": 0.006
+  "annual_feed_t": null,
+  "feed_energy_kcal": null,
+  "food_stock_t": null,
+  "feed_flow_status": "requires an agreed diet, nutrient basis, edible fractions, and feed allocation"
  },
  "F_insects": {
-  "bees_total": 4000,
-  "honey_t": 60.0,
-  "honey_per_colony_kg": 15.0,
-  "pollinated": 156.0,
-  "pollinated_share": 0.19330855018587362,
-  "greenhouse": 80.0,
-  "bumble_colonies": 320000.0,
-  "bsf_feed": 114974.99999999999,
-  "bsf_conv": 0.2,
-  "bsf_prot": 0.42,
-  "bsf_larva": 22995.0,
-  "bsf_prot_t": 9657.9,
-  "bsf_for_cats": 21.13789656340006,
-  "bsf_left": 22973.8621034366,
-  "fish_feed": 126000.0,
-  "chick_feed": 11000.0,
-  "feed_from_bsf": 22973.8621034366,
-  "feed_shortfall": 18126.1378965634,
-  "bsf_feed_per_year_t": 114974.99999999999
- },
- "G_cities": {
-  "area_cyl": 1256.6,
-  "area_tot": 2513.2,
-  "density": 397.8990927900685,
-  "urban_site_m2_per_person": 120.0,
-  "urban_site_area": 120.0,
-  "urban_site_share": 0.047747891134808214,
-  "open_space_m2_per_person": 25.0,
-  "open_space_area": 25.0,
-  "city_pop": 50000,
-  "city_site_area": 6.0,
-  "n_cities": 20.0,
-  "city_equivalent_radius_km": 1.381976597885342,
-  "mc_world": 29999984,
-  "mc_height": 320,
-  "mc": {
-   "1": {
-    "blocks_len": 49000.0,
-    "blocks_dia": 10000.0,
-    "surface": 490000000.0,
-    "fits": true,
-    "fits_height": false
-   },
-   "100": {
-    "blocks_len": 490.0,
-    "blocks_dia": 100.0,
-    "surface": 49000.0,
-    "fits": true
-   },
-   "200": {
-    "blocks_len": 245.0,
-    "blocks_dia": 50.0,
-    "surface": 12250.0,
-    "fits": true
-   },
-   "1000": {
-    "blocks_len": 49.0,
-    "blocks_dia": 10.0,
-    "surface": 490.0,
-    "fits": true
-   },
-   "2000": {
-    "blocks_len": 24.5,
-    "blocks_dia": 5.0,
-    "surface": 122.5,
-    "fits": true
-   }
-  },
-  "mc_recommended": 100,
-  "mc_rec_len": 490.0,
-  "mc_rec_dia": 100.0,
-  "mc_rec_surface": 49000.0,
-  "mc_district_blocks": 10.0,
-  "mc_district_scale": 100,
-  "mc_1to1_surface": 490000000.0,
-  "cyl_len_m": 49000.0,
-  "cyl_dia_m": 10000.0
+  "status": "candidate ecological functions; production/feed totals are not a plan",
+  "bee_colonies_scenario": 4000,
+  "honey_t_year": null,
+  "pollinated_area_km2": null,
+  "bumblebee_colonies": null,
+  "black_soldier_fly_feed_t_year": null,
+  "fish_and_poultry_feed_t_year": null,
+  "flow_status": "biomass conversion, food-safety, feed demand and nutrient flows require reconciliation"
  }
 }

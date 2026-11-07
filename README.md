@@ -10,8 +10,8 @@
 
 | Файл | Что содержит | Проверка |
 |---|---|---|
-| `sections/MMOSON_combined_document_ru.docx` | Русская версия технической документации, разделы 1–34 | Редакция 8; 71 таблица; 24 встроенных рисунка |
-| `sections/MMOSON_combined_document_en.docx` | Английская версия технической документации, разделы 1–34 | Edition 8; 70 таблиц; 24 встроенных рисунка |
+| `sections/MMOSON_combined_document_ru.docx` | Русская версия технической документации, разделы 1–34 | Редакция 8; 74 таблицы; 24 встроенных рисунка |
+| `sections/MMOSON_combined_document_en.docx` | Английская версия технической документации, разделы 1–34 | Edition 8; 74 таблицы; 24 встроенных рисунка |
 
 Оба файла имеют титульные страницы с отдельными строками автора и места/года, 42 датированные отметки компонентов и разделы 1–34. В русской версии вне единого общего списка литературы используются русские формулировки; названия источников в общей библиографии сохраняют оригинальное написание. Списки литературы по разделам удалены, а примечания матрицы статусов сохранены. Имена существующих файлов и URL репозитория сохранены для совместимости; в содержимом публикации и интерфейсе используется написание MMOSO'N.
 
@@ -49,18 +49,18 @@ python3 src/check_transport_interface.py
 python3 src/edition8_calcs.py
 ```
 
-`check_edition8_docs.py` сверяет титульные страницы и оформление по ГОСТ 7.32–2017 (A4, поля 3 / 1,5 / 2 / 2 см, Times New Roman 14 pt для основного текста, интервал 1,5, отступ первой строки 1,25 см, Times New Roman 12 pt для таблиц), языковую локализацию вне общей библиографии, единый список из 41 источника, 15 примечаний матрицы статусов, маркировку редакции 8 от 6 ноября 2026 г., 42 отметки компонентов, разделы 1–34 и точное число таблиц: 71 в русском и 70 в английском DOCX. Сквозная сверка проверяет канонические значения и эти числа для опубликованных документов; `audit_tables_figures_v7.py` дополнительно сверяет таблицы, подписи, целостность PNG и полный комплект из 24 локализованных рисунков в каждом языке. Чистые исходники `src/fig/` в текущем репозитории не хранятся.
+`check_edition8_docs.py` сверяет титульные страницы и оформление по ГОСТ 7.32–2017 (A4, поля 3 / 1,5 / 2 / 2 см, Times New Roman 14 pt для основного текста, интервал 1,5, отступ первой строки 1,25 см, Times New Roman 12 pt для таблиц), языковую локализацию вне общей библиографии, единый список из 61 источника, 15 примечаний матрицы статусов, маркировку редакции 8 от 6 ноября 2026 г., 42 отметки компонентов, разделы 1–34 и 74 таблицы в каждом DOCX. Сквозная сверка проверяет канонические значения и структуру; `audit_tables_figures_v7.py` дополнительно сверяет ключевые табличные значения, подписи, целостность PNG и полный комплект из 24 локализованных рисунков в каждой версии. Чистые исходники `src/fig/` в текущем репозитории не хранятся.
 
-`check_transport_interface.py` проверяет канал размером 20,80 м при проёме 30,00 м, маршрут 7 430,8 м и расчётную пропускную способность. `edition8_calcs.py` пересчитывает семь областей редакции 8 (A–G) и сохраняет результат в `src/edition8_results.json`.
+`check_transport_interface.py` проверяет канал размером 20,80 м при проёме 30,00 м, маршрут 7 430,8 м и расчётную пропускную способность. `edition8_calcs.py` пересчитывает области A–F и сохраняет результат в `src/edition8_results.json`; пищевые площади и выпуск намеренно не оптимизируются до сверки рациона, нутриентов, съедобных долей, кормовых потоков и потерь.
 
 **Результаты редакции 8, влияющие на модель:**
 
 - генетика: не менее 5 000 основателей и 200 несвязанных семейных линий; обмен родителями между цилиндрами — не менее 1 % за поколение; банк гамет — от 10 000 доноров;
-- сельское хозяйство: таблица 5.2 раздельно показывает годовую потребность, сценарный инвентарь и валовой/нетто-выпуск; совокупные потери 20 % — модельное допущение. ×1,83 и ×2,73 — отношения годового нетто-выпуска к годовой потребности, а не складские запасы. Таблица 5.4 содержит 2,216 трлн ккал валового выпуска культур против 2,338 трлн ккал валового итога системы; остаток 0,122 трлн ккал и белковая невязка 2 020 т требуют сверки по животноводству и аквакультуре. Предварительный сценарий ×1,15 по калориям и ×1,20 по белку даёт 462,7 км² посевов и условное высвобождение 344,3 км², но белковый выпуск в минимальном решении остаётся около ×2,49 потребности, а точное снижение до ×1,20 не достигается. Это не утверждённый план выпуска или землепользования; холодная зона остаётся ресурсом для проверки многоярусного выращивания;
-- промышленность: при 5 % открытого металла коррозионный поток составляет 12,17 млн т стали и связывает 5,23 млн т кислорода в год; покрытия снижают оценку скорости коррозии в десять раз;
-- стыковка: при заданном карантине лимитирует необходимая вместимость карантинного контура;
-- экосистема: расчётные популяции кошек — 6 000; для тепличного опыления отдельно учитываются 320 000 семей шмелей;
-- города: рассматриваются двадцать городов по 50 000 человек и виртуальный двойник в масштабе 1:100.
+- сельское хозяйство: при населении 1 млн человек, равных весах полов и возрастных групп 18–29,9 / 30–59,9 лет, ИМТ 21 и PAL 1,75 оценка FAO/WHO/UNU составляет 2 525 ккал/(чел.·сут), или 0,921625 трлн ккал/год. Белок задан отдельно как предварительное допущение 70 г/(чел.·сут) — 25 550 т/год. Ориентир запаса ×1,5 по энергии равен 1,3824375 трлн ккал, ×1,3 по белку — 33 215 т; это не выпуск и не согласованная складская спецификация. Окончательные площади и выпуск культур не рассчитаны до согласования рациона, нутриентов, съедобных долей, кормовых потоков, потерь и ротации запасов (`production_plan_approved=false`). Старые числа сохранены только для прослеживаемости: 807 км² посевов, 2,216 трлн ккал культур, 2,338/1,870 трлн ккал системного валового/нетто-сценария, 87 200/69 800 т белка и непроверенный вычет 20 %. Кукурузные 150 км² объяснялись прежним расчётом 4 380 ккал/(м²·год) и ролью крахмалистого сырья, но не задают новый план. Рыбные строки 25 000/70 000 т расходятся на 45 000 т/год; прежняя белковая невязка — 2 020 т. Ни одно из этих архивных значений не является утверждённым планом.
+- промышленность: при 5 % открытого металла коррозионный поток составляет 12,17 млн т стали и связывает 5,23 млн т кислорода в год; покрытия снижают оценку скорости коррозии в десять раз. Бытовой поток 547 500 т/год и распределение по долям 60/25/15 остаются сценарными допущениями, а не утверждённой схемой замыкания; 115 тыс. т/год — субстрат для испытаний переработки насекомыми, не готовый корм. Маршруты, потери и возврат питательных веществ требуют проверки;
+- стыковка: для планового потока 100 000 человек/год и выдержки 40 суток расчётная вместимость составляет 10 951 место единовременно; более быстрый сценарий заселения требует миллионы мест и не принят как план;
+- экосистема: 6 000 кошек и 320 000 семей шмелей сохраняются только как прежние сценарные числа; рационы, кормовые потоки, потребность в опылителях и объёмы выпуска не утверждены.
+- города: сопоставляются реальные города и их площади; административные территории не приравниваются без оговорок к фактической застройке.
 
 Это результаты расчётной модели, а не сертификация станции или доказательство технологической готовности.
 
@@ -76,14 +76,15 @@ python3 tools/combine_sections.py --src /path/to/43-component-docx --out-dir sec
 
 ### Подготовка и форматирование итоговых DOCX
 
-`tools/prepare_edition8_documents.py` оформляет раздельные строки титульного листа, приводит русские вводные материалы к одному языку, удаляет административный реестр «Документ / Файл / Количество источников» и дублирующиеся списки литературы по разделам, сохраняя единую библиографию из 41 позиции и примечания матрицы статусов. Также текст иллюстраций приводится к комплекту из 24 рисунков редакции 8.
+`tools/prepare_edition8_documents.py` — исторический проход подготовки объединённых DOCX: оформляет титульные строки, локализует русские вводные материалы и удаляет административный реестр и повторы библиографий; в текущих файлах сохранены единый список из 61 источника, статусная матрица и 24 рисунка. Этот скрипт не пересобирает отсутствующие исходные компоненты и не сверяет новые пищевые данные или графики; перед повторным запуском проверьте изменения на копии документа.
 
 `tools/format_docs_like_reference.py` применяет к обеим версиям редакции 8 оформление научно-технического отчёта по ГОСТ 7.32–2017: титул с автором и городом/годом, A4, поля 3 / 1,5 / 2 / 2 см, Times New Roman 14 pt для основного текста, интервал 1,5, отступ первой строки 1,25 см и 12 pt для таблиц; заголовки повторяются на новых страницах, строки таблиц не разрываются.
 
 ```bash
-python3 tools/prepare_edition8_documents.py
 python3 tools/format_docs_like_reference.py
 ```
+
+Подготовительный скрипт не запускайте поверх актуальных финальных DOCX без отдельной проверки и резервной копии; он не заменяет пересборку из исходных компонентов.
 
 ### Сайт
 
@@ -127,8 +128,8 @@ The current publication is **Edition 8, dated 6 November 2026**. It contains one
 
 | File | Contents | Verified structure |
 |---|---|---|
-| `sections/MMOSON_combined_document_ru.docx` | Russian technical-documentation edition, sections 1–34 | Edition 8; 71 tables; 24 embedded figures |
-| `sections/MMOSON_combined_document_en.docx` | English technical-documentation edition, sections 1–34 | Edition 8; 70 tables; 24 embedded figures |
+| `sections/MMOSON_combined_document_ru.docx` | Russian technical-documentation edition, sections 1–34 | Edition 8; 74 tables; 24 embedded figures |
+| `sections/MMOSON_combined_document_en.docx` | English technical-documentation edition, sections 1–34 | Edition 8; 74 tables; 24 embedded figures |
 
 Both files have title pages with separate project-lead and place/year lines, 42 dated component stamps and sections 1–34. The Russian version uses Russian wording outside its single shared bibliography; source titles in that list retain their original spelling. Section-level reference lists have been removed, while the status-matrix notes remain. Existing file names and repository URLs are retained for compatibility; the displayed project name in the publication and website uses the spelling MMOSO'N.
 
@@ -166,18 +167,18 @@ python3 src/check_transport_interface.py
 python3 src/edition8_calcs.py
 ```
 
-`check_edition8_docs.py` verifies both title pages and the GOST 7.32–2017-oriented layout (A4, 3 / 1.5 / 2 / 2 cm margins, Times New Roman 14 pt body text, 1.5 line spacing, a 1.25 cm first-line indent and Times New Roman 12 pt tables), localization outside the shared bibliography, the single list of 41 sources (including operational station and transport-system references), 15 status-matrix notes, Edition 8 labels dated 6 November 2026, 42 component stamps, sections 1–34 and the exact table counts: 71 in the Russian DOCX and 70 in the English DOCX. The publication cross-check verifies canonical values and these counts for the published files; `audit_tables_figures_v7.py` additionally checks tables, captions, PNG integrity and the complete set of 24 localized figures in each language. Clean source images in `src/fig/` are not stored in the current repository.
+`check_edition8_docs.py` verifies both title pages and the GOST 7.32–2017-oriented layout (A4, 3 / 1.5 / 2 / 2 cm margins, Times New Roman 14 pt body text, 1.5 line spacing, a 1.25 cm first-line indent and Times New Roman 12 pt tables), localization outside the shared bibliography, the single list of 61 sources, 15 status-matrix notes, Edition 8 labels dated 6 November 2026, 42 component stamps, sections 1–34 and 74 tables in each DOCX. The publication cross-check verifies canonical values and structure; `audit_tables_figures_v7.py` additionally checks key table values, captions, PNG integrity and the complete set of 24 localized figures in each language. Clean source images in `src/fig/` are not stored in the current repository.
 
-`check_transport_interface.py` checks the 20.80 m channel against a 30.00 m opening, the 7,430.8 m route and calculated throughput. `edition8_calcs.py` recalculates the seven Edition 8 domains (A–G) and writes `src/edition8_results.json`.
+`check_transport_interface.py` checks the 20.80 m channel against a 30.00 m opening, the 7,430.8 m route and calculated throughput. `edition8_calcs.py` recalculates domains A–F and writes `src/edition8_results.json`; crop areas and output are deliberately not optimized until the diet, nutrients, edible fractions, feed flows and losses are reconciled.
 
 **Edition 8 results that affect the model:**
 
 - genetics: at least 5,000 founders and 200 unrelated family lines; parent exchange between cylinders of at least 1 % per generation; a gamete bank with at least 10,000 donors;
-- agriculture: Table 5.2 separates annual need, scenario inventory and gross/net output; the aggregate 20% loss is a modelling assumption. ×1.83 and ×2.73 are annual net-output-to-annual-need ratios, not stock sizes. Table 5.4 reports 2.216 trillion kcal of gross crop output versus 2.338 trillion kcal of whole-system gross output; the 0.122-trillion-kcal residual and a 2,020-ton protein discrepancy require reconciliation against livestock and aquaculture. The preliminary ×1.15-calorie/×1.20-protein scenario gives 462.7 km² of cropland and a conditional 344.3 km² release, but protein output in the minimum-area solution remains about ×2.49 of need and cannot be reduced exactly to ×1.20 under current constraints. This is not an approved production or land-use plan; the cold zone remains a resource for evaluating multilayer cultivation;
-- industry: with 5 % exposed metal, the corrosion stream is estimated at 12.17 million tonnes of steel and 5.23 million tonnes of oxygen per year; coatings reduce the corrosion-rate estimate tenfold;
-- docking: under the stated quarantine model, required quarantine capacity is the limiting factor;
-- ecosystem: the model uses 6,000 cats and separately accounts for 320,000 bumblebee colonies for greenhouse pollination;
-- cities: twenty cities of 50,000 people are considered, together with a 1:100 virtual twin.
+- agriculture: for a population of 1,000,000, equal sex and age-group weights (18–29.9 / 30–59.9 years), BMI 21 and PAL 1.75, the FAO/WHO/UNU estimate is 2,525 kcal/person/day, or 0.921625 trillion kcal/year. Protein is a separate provisional assumption of 70 g/person/day, or 25,550 t/year. The ×1.5 energy-stock reference is 1.3824375 trillion kcal; the ×1.3 protein reference is 33,215 t. These are stock references, not annual output or an approved inventory specification. Final crop area and output are not calculated until the diet, nutrients, edible fractions, feed flows, losses and stock rotation are reconciled (`production_plan_approved=false`). Former values are retained only for traceability: 807 km² of crops, 2.216 trillion kcal from crops, 2.338/1.870 trillion kcal gross/net system scenario, 87,200/69,800 t of protein and an unverified 20% deduction. The former 150 km² maize allocation reflected an assumed 4,380 kcal/m²/year and a starch-feedstock role; it does not define a new plan. Fish-flow entries of 25,000 and 70,000 t/year differ by 45,000 t; the former protein discrepancy is 2,020 t. None of these archived values is an approved plan;
+- industry: with 5 % exposed metal, the corrosion stream is estimated at 12.17 million tonnes of steel and 5.23 million tonnes of oxygen per year; coatings reduce the corrosion-rate estimate tenfold. The 547,500 t/year domestic-waste flow and its 60/25/15 partition remain scenario assumptions, not an approved closed-loop system; 115 thousand t/year is substrate for insect-processing trials, not formulated feed. Routes, losses and nutrient return require validation;
+- docking: a planned flow of 100,000 people/year and a 40-day holding period require 10,951 concurrent places; the faster transfer scenario would require millions of places and is not adopted as a plan;
+- ecosystem: 6,000 cats and 320,000 bumblebee colonies are retained only as former scenario assumptions; diets, feed flows, pollinator demand and production outputs are not approved.
+- cities: comparisons use real cities and their areas; administrative boundaries are not treated without qualification as actual built-up footprints.
 
 These are model calculations, not station certification or proof of technological readiness.
 
@@ -193,14 +194,15 @@ The source components are not in the current working tree; `sections/` contains 
 
 ### Preparing and formatting the final DOCX files
 
-`tools/prepare_edition8_documents.py` creates separate cover lines, localizes the Russian front matter, removes the obsolete “Document / File / Number of sources” registry and duplicated section-level reference lists, and keeps the single 41-item bibliography and the status-matrix notes. It also updates illustration notes to the 24-sheet Edition 8 set.
+`tools/prepare_edition8_documents.py` is a historical preparation pass for combined DOCX files: it formats the cover, localizes Russian front matter, and removes the obsolete registry and repeated section references; the current files retain one 61-item bibliography, the status matrix and 24 figures. It does not rebuild the missing source components or reconcile the new food data and charts; review changes on a document copy before re-running it.
 
 `tools/format_docs_like_reference.py` applies a GOST 7.32–2017-oriented scientific-report layout to both Edition 8 files: title page with project lead and place/year, A4, left / right / top / bottom margins of 3 / 1.5 / 2 / 2 cm, Times New Roman 14 pt body text, 1.5 line spacing, a 1.25 cm first-line indent and 12 pt table text; table headers repeat across pages and rows do not split.
 
 ```bash
-python3 tools/prepare_edition8_documents.py
 python3 tools/format_docs_like_reference.py
 ```
+
+Do not run the historical preparation pass over the current final DOCX files without a separate review and backup; it does not replace a rebuild from source components.
 
 ### Website
 

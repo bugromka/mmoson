@@ -47,7 +47,7 @@ SECTION_TITLES = {
     "31_Стыковочный_модуль_концепция": "Docking Module Concept",
     "32_Кошки_в_экосистеме": "Cats in the Ecosystem",
     "33_Насекомые_опылители_разлагатели_кормовая_база": "Insects, Pollinators, Decomposers, Feed Base",
-    "34_Города_реальные_и_виртуальные": "Real and Virtual Cities",
+    "34_Города_реальные_и_виртуальные": "Cities and Urban Planning",
     "ЛИЦЕНЗИЯ": "LICENCE",
     "ПРИЛОЖЕНИЕ_Б_Обоснование_расчётов": "Appendix B. Calculation Substantiation",
     "ПРИЛОЖЕНИЕ_В_Перечень_сокращений_и_обозначений": "Appendix C. List of Abbreviations and Symbols",

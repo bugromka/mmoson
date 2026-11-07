@@ -43,6 +43,8 @@ python3 site/build_pages.py
 python3 site/check_site_build.py
 ```
 
+Если меняются данные таблиц 5.2/5.4, RU/EN графики 17–24 следует пересоздать через `tools/update_edition8_charts.py`, просмотреть все превью и только затем применить `--apply --sync-docx`, чтобы синхронно обновить сайт и встроенные рисунки обоих DOCX.
+
 Сборка создаёт 14 страниц, встраивает стили, скрипт и изображения и синхронизирует результаты с корневыми `ru/` и `en/` для GitHub Pages. `site/check_site_build.py` проверяет набор страниц, совпадение опубликованных копий, правильные логотипы по языкам и прозрачность английского PNG. Файлы `ru/title.html` и `site/ru/title.html` — оставшиеся старые сборки, не входящие в текущий набор; скрипт их не создаёт и не удаляет до отдельного решения.
 
 ### Локальный просмотр
@@ -99,6 +101,8 @@ Final localized illustrations are in `assets/fig_ru/` and `assets/fig_en/`; clea
 python3 site/build_pages.py
 python3 site/check_site_build.py
 ```
+
+When Table 5.2/5.4 data change, regenerate bilingual Figures 17–24 with `tools/update_edition8_charts.py`, inspect every preview, then use `--apply --sync-docx` to update both site asset sets and the corresponding embedded artwork in both DOCX files together.
 
 The build creates 14 pages, inlines styles, scripts and images, then syncs the result to the root `ru/` and `en/` directories for GitHub Pages. `site/check_site_build.py` verifies the page set, matching published copies, language-specific logos and the transparent English PNG. `ru/title.html` and `site/ru/title.html` are retained legacy builds outside the current page set; the builder neither generates nor deletes them pending a separate decision.
 

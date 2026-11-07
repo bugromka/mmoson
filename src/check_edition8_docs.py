@@ -13,9 +13,10 @@ from docx.oxml.ns import qn
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_SECTIONS = set(range(1, 35))
 EXPECTED_COMPONENT_STAMPS = 42  # the contents page is not a numbered component
-EXPECTED_TABLES = {"ru": 71, "en": 70}
+EXPECTED_TABLES = {"ru": 74, "en": 74}
 EXPECTED_FIGURES = 24
-EXPECTED_BIBLIOGRAPHY_ENTRIES = 41
+EXPECTED_BIBLIOGRAPHY_ENTRIES = 61
+EXPECTED_ABBREVIATIONS = 29
 SOURCE_INVENTORY_HEADERS = {
     ("документ", "файл", "количество источников"),
     ("документ", "файл", "источников / sources"),
@@ -24,6 +25,14 @@ SOURCE_INVENTORY_HEADERS = {
     ("no.", "document", "file", "number of sources"),
     ("№", "документ", "файл", "количество источников"),
     ("№", "документ / document", "файл / file", "источников / sources"),
+}
+FIGURE_REGISTRY_HEADERS = {
+    ("№", "рисунок", "подпись"),
+    ("№", "рисунок", "раздел"),
+    ("no.", "figure", "caption"),
+    ("no.", "figure", "section"),
+    ("№", "рисунок / figure", "подпись / caption"),
+    ("no.", "figure", "caption / section"),
 }
 OPERATIONAL_SECTION_HEADINGS = {
     "ru": "11.17. Уроки эксплуатации МКС, «Салют», «Мир» и транспортных систем",
@@ -105,6 +114,42 @@ ENGLISH_STOPWORDS = re.compile(
     re.IGNORECASE,
 )
 RUSSIAN_WORD = re.compile(r"[А-Яа-яЁё]{3,}")
+FOOD_REQUIREMENTS = {
+    "ru": (
+        "0,921625 трлн ккал/год",
+        "1,3824375 трлн ккал",
+        "33 215 т",
+        "Потребители и направления продукции",
+        "производственный план не рассчитан",
+        "100 000 человек в год",
+        "10 951 место единовременно",
+    ),
+    "en": (
+        "0.921625 trillion kcal/year",
+        "1.3824375 trillion kcal",
+        "33,215 t",
+        "Consumers and product destinations",
+        "no production plan calculated",
+        "100,000 people per year",
+        "10,951 places at a time",
+    ),
+}
+SCENARIO_SCOPE_TERMS = {
+    "ru": ("прежнего сценария для одного цилиндра", "производственный план", "пищевых и кормовых потоков"),
+    "en": ("former one-cylinder scenario", "production plan", "food and feed flows"),
+}
+CULTIVAR_TERMS = {
+    "ru": ("Кандидатные сорта культур", "IR64", "ФОРМУЛА 1", "НЕВСКИЙ", "СИ ФЕНОМЕН", "6,6 растения/м²"),
+    "en": ("Candidate crop cultivars", "IR64", "FORMULA 1", "NEVSKY", "SI FENOMEN", "6.6 plants/m²"),
+}
+EDIBLE_FISH_TERMS = {
+    "ru": ("Белый амур (Ctenopharyngodon idella)", "Роху (Labeo rohita)", "Серебристый барбус (Barbonymus gonionotus)", "не называть строго травоядным"),
+    "en": ("Grass carp (Ctenopharyngodon idella)", "Rohu (Labeo rohita)", "Silver barb (Barbonymus gonionotus)", "Not strictly herbivorous"),
+}
+WASTE_FLOW_TERMS = {
+    "ru": ("сценарный субстрат", "не готовый корм", "не измеренный состав отходов", "не утверждённый контур переработки"),
+    "en": ("scenario substrate", "not formulated feed", "not a measured waste composition", "not an approved processing circuit"),
+}
 
 
 def _bibliography_bounds(paragraphs: list[str], heading: str) -> tuple[int | None, int | None]:
@@ -239,14 +284,43 @@ def verify(language: str, spec: dict) -> list[str]:
             f"{language}: obsolete document/file/source-count registry table remains "
             f"(table indices {obsolete_registries})"
         )
+    obsolete_figure_registries = []
+    for table_index, table in enumerate(doc.tables, start=1):
+        if not table.rows:
+            continue
+        headers = tuple(" ".join(cell.text.split()).casefold() for cell in table.rows[0].cells)
+        if headers in FIGURE_REGISTRY_HEADERS:
+            obsolete_figure_registries.append(table_index)
+    if obsolete_figure_registries:
+        errors.append(
+            f"{language}: figure-register table remains instead of standalone captions "
+            f"(table indices {obsolete_figure_registries})"
+        )
     all_text = "\n".join(paragraphs + table_texts)
+    for required_term in FOOD_REQUIREMENTS[language]:
+        if required_term.casefold() not in all_text.casefold():
+            errors.append(f"{language}: missing current food-flow requirement or status: {required_term}")
+    for required_term in SCENARIO_SCOPE_TERMS[language]:
+        if required_term.casefold() not in all_text.casefold():
+            errors.append(f"{language}: missing archived-scenario qualification: {required_term}")
+    for required_term in CULTIVAR_TERMS[language] + EDIBLE_FISH_TERMS[language]:
+        if required_term.casefold() not in all_text.casefold():
+            errors.append(f"{language}: missing cultivar, density or edible-fish reference: {required_term}")
+    for required_term in WASTE_FLOW_TERMS[language]:
+        if required_term.casefold() not in all_text.casefold():
+            errors.append(f"{language}: waste-flow status/caveat is missing: {required_term}")
+    if re.search(r"(?i)(?:virtual cities|minecraft|виртуальн\w*\s+город)", all_text):
+        errors.append(f"{language}: obsolete virtual-city content remains")
     title = doc.core_properties.title or ""
     metadata = " ".join((title, doc.core_properties.subject or "", doc.core_properties.keywords or ""))
 
     if spec["project_name"] not in " ".join(paragraphs[:5]):
         errors.append(f"{language}: requested project spelling is missing from the visible cover")
-    if "mmoson" in (all_text + "\n" + metadata).casefold():
-        errors.append(f"{language}: obsolete MMOSON spelling remains in the document text or metadata")
+    legacy_name_check = re.sub(
+        r"(?i)(?:https?://)?(?:www\.)?mmoson\.space\b", "", all_text + "\n" + metadata
+    )
+    if re.search(r"(?i)\bmmoson\b", legacy_name_check):
+        errors.append(f"{language}: obsolete MMOSON spelling remains outside the proposed domain reference")
     if language == "ru" and "MMOSO'N" in metadata:
         errors.append("ru: English project wording remains in DOCX metadata outside the shared bibliography")
     if spec["cover_author"] not in paragraphs[:5]:
@@ -305,12 +379,37 @@ def verify(language: str, spec: dict) -> list[str]:
     ]
     if captions != list(range(1, EXPECTED_FIGURES + 1)):
         errors.append(f"{language}: expected figure captions 1–{EXPECTED_FIGURES}, found {captions}")
+    figure24 = next((
+        text for text in paragraphs
+        if (match := spec["caption"].match(text)) and int(match.group(1)) == 24
+    ), "")
+    figure24_caveat = "не рабочий проект" if language == "ru" else "not a working design"
+    if figure24_caveat.casefold() not in figure24.casefold():
+        errors.append(f"{language}: Figure 24 caption lacks its illustrative/non-design caveat")
     if len(doc.inline_shapes) != EXPECTED_FIGURES:
         errors.append(f"{language}: expected {EXPECTED_FIGURES} embedded figures, found {len(doc.inline_shapes)}")
     if len(doc.tables) != EXPECTED_TABLES[language]:
         errors.append(
             f"{language}: expected {EXPECTED_TABLES[language]} Edition 8 tables, found {len(doc.tables)}"
         )
+    abbreviation_header = "Сокращение" if language == "ru" else "Abbreviation"
+    abbreviation_tables = [
+        table for table in doc.tables
+        if table.rows and table.rows[0].cells
+        and " ".join(table.rows[0].cells[0].text.split()) == abbreviation_header
+    ]
+    if len(abbreviation_tables) != 1:
+        errors.append(f"{language}: expected one localized abbreviations table, found {len(abbreviation_tables)}")
+    else:
+        abbreviations = [" ".join(row.cells[0].text.split()) for row in abbreviation_tables[0].rows[1:]]
+        if len(abbreviations) != EXPECTED_ABBREVIATIONS:
+            errors.append(f"{language}: expected {EXPECTED_ABBREVIATIONS} abbreviations, found {len(abbreviations)}")
+        if abbreviations != sorted(abbreviations, key=str.casefold):
+            errors.append(f"{language}: abbreviation table is not alphabetically sorted")
+        required_abbreviations = ("ИМТ", "Isp", "L1", "ppm") if language == "ru" else ("BMI", "HSDCI", "LSS", "RCIC")
+        for abbreviation in required_abbreviations:
+            if abbreviation not in abbreviations:
+                errors.append(f"{language}: abbreviation table is missing {abbreviation}")
     if not doc.tables:
         errors.append(f"{language}: no Word tables found")
     else:

@@ -130,24 +130,24 @@ LANG_TEXT = {
         "coriolis": "Ускорение Кориолиса при переходе «ось — обод» · таблица 4.10",
         "climb": "Работа подъёма по участкам · таблица 4.9",
         "resources": "Потребность в материалах · таблица 4.14",
-        "food": "Продовольственный баланс и вклад культур · таблицы 5.2 и 5.4",
-        "land": "Баланс землепользования · таблица 5.5",
+        "food": "Потребность, ориентир запаса и архивный сценарий культур · таблицы 5.2/5.4",
+        "land": "Архивный сценарий землепользования (не утверждён) · таблица 5.5",
         "epidemic": "Эпидемия и коллективный иммунитет · модель SIR",
         "acoustics": "Собственные частоты станции и слышимый диапазон",
         "volatiles": "Сырьё для воды и атмосферных газов",
         "asteroids": "Ресурсные тела: орбитальные диапазоны",
         "quarantine": "Карантинный контур: четыре потока, три ступени",
-        "panel_choice": "Выбор размера панели: швы и масса отливки",
-        "food_calories": "Калории, трлн ккал/год · совокупные потери 20% — допущение",
-        "food_protein": "Белок, тыс. т/год · совокупные потери 20% — допущение",
+        "panel_choice": "Иллюстративное сравнение размера панели · не рабочий проект",
+        "food_calories": "Энергия · потребность и запас",
+        "food_protein": "Белок · потребность и запас",
         "food_need": "Годовая потребность",
-        "food_inventory": "Сценарный целевой инвентарь",
-        "food_gross": "Валовой выпуск системы / год",
-        "food_net": "Нетто-выпуск системы / год",
-        "food_net_ratio": "Нетто-выпуск / годовая потребность",
+        "food_inventory": "Ориентир запаса",
+        "food_gross": "Валовой выпуск не согласован",
+        "food_net": "Нетто-выпуск не рассчитан",
+        "food_net_ratio": "Выпуск / годовая потребность",
         "food_ratio_note": "от годовой потребности",
-        "crop_total": "Валовые калории культур, млрд ккал/год (итого 2 216)",
-        "land_area": "Площадь, км²",
+        "crop_total": "Архивный валовой выпуск культур (не утверждён)",
+        "land_area": "Архивный сценарий землепользования · площадь, км²",
         "epidemic_attack": "Переболеют без мер, %",
         "epidemic_threshold": "Порог коллективного иммунитета, %",
         "epidemic_r0": "Базовое репродуктивное число R₀",
@@ -176,8 +176,8 @@ LANG_TEXT = {
         "panel_width": "Ширина панели, м",
         "panel_seams": "Длина швов, тыс. км",
         "panel_mass": "Масса панели, тыс. т",
-        "panel_accepted": "Модельный вариант: 50 × 100 м",
-        "panel_note": "Кривизна 62 мм · заливка 17 мин · 251 327 панелей/цилиндр",
+        "panel_accepted": "Иллюстративный вариант, не рабочий проект: 50 × 100 м",
+        "panel_note": "Условная геометрия: 62 мм · 17 мин · 251 327 панелей/цилиндр; нужна проверка",
         "distance": "Расстояние от торца цилиндра, км",
         "temperature": "Температура, °C",
         "steel_strength": "Предел прочности, МПа",
@@ -198,9 +198,9 @@ LANG_TEXT = {
         "material_need": "Потребность, млрд т",
         "table_source": "Источник данных: объединённая документация редакции 8.",
         "total": "ИТОГО",
-        "calorie": "Годовая потребность / сценарный инвентарь / валовой и нетто-выпуск, трлн ккал/год",
-        "protein": "Годовая потребность / сценарный инвентарь / валовой и нетто-выпуск, тыс. т/год",
-        "crops": "Валовой калорийный выход культур, млрд ккал/год",
+        "calorie": "Годовая потребность / ориентир запаса; текущий выпуск не согласован, трлн ккал/год",
+        "protein": "Годовая потребность / ориентир запаса; текущий выпуск не согласован, тыс. т/год",
+        "crops": "Архивный валовой калорийный выход культур, млрд ккал/год; не план",
         "zone": "Зона",
         "share_in_label": "доля",
         "yield": "Продукция",
@@ -220,24 +220,24 @@ LANG_TEXT = {
         "coriolis": "Coriolis acceleration during axis-to-rim transit · Table 4.10",
         "climb": "Lifting work by route segment · Table 4.9",
         "resources": "Material requirements · Table 4.14",
-        "food": "Food balance and crop contributions · Tables 5.2 and 5.4",
-        "land": "Land-use balance · Table 5.5",
+        "food": "Need, stock reference and archived crop scenario · Tables 5.2/5.4",
+        "land": "Archived land-use scenario (not approved) · Table 5.5",
         "epidemic": "Epidemic spread and herd immunity · SIR model",
         "acoustics": "Station natural frequencies and audible range",
         "volatiles": "Feedstock for water and atmospheric gases",
         "asteroids": "Resource bodies: orbital distance ranges",
         "quarantine": "Quarantine circuit: four streams, three stages",
-        "panel_choice": "Panel-size selection: weld length and casting mass",
-        "food_calories": "Calories, trillion kcal/year · 20% aggregate loss is an assumption",
-        "food_protein": "Protein, thousand tons/year · 20% aggregate loss is an assumption",
+        "panel_choice": "Illustrative panel-size comparison · not a working design",
+        "food_calories": "Energy · need and stock reference",
+        "food_protein": "Protein · need and stock reference",
         "food_need": "Annual need",
-        "food_inventory": "Scenario inventory target",
-        "food_gross": "Gross system output / year",
-        "food_net": "Net system output / year",
-        "food_net_ratio": "Net output / annual need",
+        "food_inventory": "Stock reference",
+        "food_gross": "Gross output unreconciled",
+        "food_net": "Net output not calculated",
+        "food_net_ratio": "Output / annual need",
         "food_ratio_note": "of annual need",
-        "crop_total": "Gross crop calories, billion kcal/year (total 2,216)",
-        "land_area": "Area, km²",
+        "crop_total": "Archived gross crop output (not approved)",
+        "land_area": "Archived land-use scenario · area, km²",
         "epidemic_attack": "Infected without intervention, %",
         "epidemic_threshold": "Herd-immunity threshold, %",
         "epidemic_r0": "Basic reproduction number R₀",
@@ -266,8 +266,8 @@ LANG_TEXT = {
         "panel_width": "Panel width, m",
         "panel_seams": "Weld length, thousand km",
         "panel_mass": "Panel mass, thousand tons",
-        "panel_accepted": "Modelled case: 50 × 100 m",
-        "panel_note": "62 mm camber · 17 min pour · 251,327 panels/cylinder",
+        "panel_accepted": "Illustrative case only, not a working design: 50 × 100 m",
+        "panel_note": "Assumed geometry: 62 mm · 17 min · 251,327 panels/cylinder; validation required",
         "distance": "Distance from cylinder end, km",
         "temperature": "Temperature, °C",
         "steel_strength": "Tensile strength, MPa",
@@ -288,9 +288,9 @@ LANG_TEXT = {
         "material_need": "Demand, billion tons",
         "table_source": "Data source: combined Edition 8 documentation.",
         "total": "TOTAL",
-        "calorie": "Annual need / scenario inventory / gross and net output, trillion kcal/year",
-        "protein": "Annual need / scenario inventory / gross and net output, thousand tons/year",
-        "crops": "Gross crop calorie output, billion kcal/year",
+        "calorie": "Annual need / stock reference; current output unreconciled, trillion kcal/year",
+        "protein": "Annual need / stock reference; current output unreconciled, thousand t/year",
+        "crops": "Archived gross crop calorie output, billion kcal/year; not a plan",
         "zone": "Zone",
         "share_in_label": "share",
         "yield": "Output",
@@ -376,7 +376,8 @@ class TableCatalog:
 
 
 def _norm(text: str) -> str:
-    return " ".join(text.casefold().replace("ё", "е").split())
+    subscript_map = str.maketrans("₀₁₂₃₄₅₆₇₈₉ₐₑₒₓₗₜ", "0123456789aeoxlt")
+    return " ".join(text.translate(subscript_map).casefold().replace("ё", "е").split())
 
 
 def _column(table: TableRecord, *aliases: str) -> int:
@@ -418,6 +419,13 @@ def _first_number(text: str, comma_mode: str = "decimal") -> float:
     if not match:
         raise ValueError(f"no number in cell {text!r}")
     return _parse_token(match.group(0), comma_mode)
+
+
+def _maybe_first_number(text: str, comma_mode: str = "decimal") -> float | None:
+    """Return None for documentary statuses such as 'not calculated'."""
+    if not _NUMBER_RE.search(text.replace("−", "-")):
+        return None
+    return _first_number(text, comma_mode)
 
 
 def _unsigned_numbers(text: str) -> list[float]:
@@ -764,7 +772,7 @@ def extract_edition_data(language: str, catalog: TableCatalog) -> dict[str, Any]
     c_inventory = _column(food_table, "Сценарный инвентарь", "Scenario inventory")
     c_gross = _column(food_table, "Валовой выпуск", "Gross output")
     c_net = _column(food_table, "Нетто-выпуск", "Net output")
-    c_ratio = _column(food_table, "Нетто / годовая потребность", "Net output / annual need")
+    c_ratio = _column(food_table, "Нетто / годовая потребность", "Net output / annual need", "Net / annual need")
     food_balance: dict[str, dict[str, float]] = {}
     for row in food_table.rows[1:]:
         indicator = _norm(_cell(row, c_indicator))
@@ -774,12 +782,18 @@ def extract_edition_data(language: str, catalog: TableCatalog) -> dict[str, Any]
             "protein" if ("белок" in indicator or "protein" in indicator) else None
         )
         if key:
+            gross_text = _cell(row, c_gross)
+            net_text = _cell(row, c_net)
+            ratio_text = _cell(row, c_ratio)
             food_balance[key] = {
                 "need": _first_number(_cell(row, c_need)),
                 "inventory": _first_number(_cell(row, c_inventory)),
-                "gross": _first_number(_cell(row, c_gross)),
-                "net": _first_number(_cell(row, c_net)),
-                "net_to_need": _first_number(_cell(row, c_ratio)),
+                "gross": _maybe_first_number(gross_text),
+                "net": _maybe_first_number(net_text),
+                "net_to_need": _maybe_first_number(ratio_text),
+                "gross_status": gross_text,
+                "net_status": net_text,
+                "ratio_status": ratio_text,
             }
     if set(food_balance) != {"calories", "protein"}:
         raise ValueError("Table 5.2 must contain calorie and protein balance rows")
@@ -813,6 +827,7 @@ def extract_edition_data(language: str, catalog: TableCatalog) -> dict[str, Any]
         "crops": crops,
         "crop_total_area": crop_total_area,
         "crop_total_kcal": crop_total_kcal,
+        "crop_caption": crop_table.caption,
     }
 
     # Figure 18 — distinct land-use categories; subtotal/total rows are retained as checks.
@@ -845,6 +860,7 @@ def extract_edition_data(language: str, catalog: TableCatalog) -> dict[str, Any]
         "parts": land_parts,
         "agricultural_total": agricultural_total,
         "total": farmland_total,
+        "caption": land_table.caption,
     }
 
     data.update(extract_narrative_figure_data(language, catalog, data))
@@ -1283,16 +1299,33 @@ def _validate_language_data(language: str, data: dict[str, Any]) -> None:
     if not math.isclose(data["fig10_energy"]["total"], 721.4, abs_tol=0.2):
         raise ValueError(f"{language}: electric power differs from the Edition 8 reference (721.4 GW)")
     food = data["fig17_food"]
-    if not math.isclose(food["crop_total_area"], 807.0, abs_tol=1e-6):
-        raise ValueError(f"{language}: Table 5.4 crop area must total 807 km²")
-    if not math.isclose(food["crop_total_kcal"], sum(row["kcal"] for row in food["crops"]), abs_tol=1e-6):
-        raise ValueError(f"{language}: Table 5.4 crop calories do not sum to its total")
+    if not math.isclose(food["balance"]["calories"]["need"], 0.922, abs_tol=0.001):
+        raise ValueError(f"{language}: Table 5.2 annual calorie need differs from the revised 0.922-trillion-kcal reference")
+    if not math.isclose(food["balance"]["calories"]["inventory"], 1.382, abs_tol=0.001):
+        raise ValueError(f"{language}: Table 5.2 calorie stock reference differs from the revised 1.382-trillion-kcal value")
+    if not math.isclose(food["balance"]["protein"]["need"], 25.55, abs_tol=0.005):
+        raise ValueError(f"{language}: Table 5.2 protein need differs from 25.55 thousand t/year")
+    if not math.isclose(food["balance"]["protein"]["inventory"], 33.215, abs_tol=0.001):
+        raise ValueError(f"{language}: Table 5.2 protein stock reference differs from 33.215 thousand t")
     for nutrient, values in food["balance"].items():
-        if not math.isclose(values["net"] / values["need"], values["net_to_need"], rel_tol=0.006):
-            raise ValueError(f"{language}: Table 5.2 {nutrient} output/need ratio is inconsistent")
-        if not math.isclose(values["gross"] * 0.80, values["net"], abs_tol=0.05):
-            raise ValueError(f"{language}: Table 5.2 {nutrient} net output does not reflect the assumed 20% loss")
+        if any(values[key] is not None for key in ("gross", "net", "net_to_need")):
+            raise ValueError(f"{language}: Table 5.2 {nutrient} must not present unreconciled output as numeric")
+        if not values["gross_status"] or not values["net_status"] or not values["ratio_status"]:
+            raise ValueError(f"{language}: Table 5.2 {nutrient} must state why output/ratio is unavailable")
+    def archived_not_approved(caption: str) -> bool:
+        folded = _norm(caption)
+        archive_marker = ("архив" in folded) if language == "ru" else ("archived" in folded or "former" in folded)
+        approval_marker = ("не утверж" in folded) if language == "ru" else ("not approved" in folded)
+        return archive_marker and approval_marker
+    if not archived_not_approved(food["crop_caption"]):
+        raise ValueError(f"{language}: Table 5.4 must label the crop data as archived and not approved")
+    if not math.isclose(food["crop_total_area"], 807.0, abs_tol=1e-6):
+        raise ValueError(f"{language}: archived Table 5.4 crop area must total 807 km²")
+    if not math.isclose(food["crop_total_kcal"], sum(row["kcal"] for row in food["crops"]), abs_tol=1e-6):
+        raise ValueError(f"{language}: archived Table 5.4 crop calories do not sum to its total")
     land = data["fig18_land"]
+    if not archived_not_approved(land["caption"]):
+        raise ValueError(f"{language}: Table 5.5 must label land values as an archived, unapproved scenario")
     if not math.isclose(sum(row["area"] for row in land["parts"]), land["total"], abs_tol=1e-6):
         raise ValueError(f"{language}: distinct land-use areas do not sum to total farmland")
     if not math.isclose(sum(row["share"] for row in land["parts"]), 100.0, abs_tol=1e-6):
@@ -1771,7 +1804,7 @@ def render_figure(figure: str, language: str, data: dict[str, Any], size: tuple[
         _draw_hbars(
             draw,
             (content_left, content_top, split - gap // 2, content_bottom),
-            f"{lang['load_components']} · qtotal = {_number_label(info['total'], language, 1)} "
+            f"{lang['load_components']} · qₜₒₜₐₗ = {_number_label(info['total'], language, 1)} "
             + ("kPa" if language == "en" else "кПа"),
             [(row["label"], row["value"], "") for row in info["parts"]],
             language,
@@ -2013,13 +2046,18 @@ def _draw_food_figure(
 
     def balance_rows(key: str) -> list[tuple[str, float, str]]:
         values = balance[key]
-        ratio = _number_label(values["net_to_need"], language, 2)
-        net_label = f"{LANG_TEXT[language]['food_net']} · ×{ratio} {LANG_TEXT[language]['food_ratio_note']}"
+        if key == "calories":
+            annual_unit = "трлн ккал/год" if language == "ru" else "trillion kcal/year"
+            stock_unit = "трлн ккал" if language == "ru" else "trillion kcal"
+        else:
+            annual_unit = "тыс. т/год" if language == "ru" else "thousand t/year"
+            stock_unit = "тыс. т" if language == "ru" else "thousand t"
+        annual_label = f"{LANG_TEXT[language]['food_need']} ({annual_unit})"
+        stock_suffix = "не выпуск" if language == "ru" else "not output"
+        stock_label = f"{LANG_TEXT[language]['food_inventory']} ({stock_unit}; {stock_suffix})"
         return [
-            (LANG_TEXT[language]["food_need"], values["need"], ""),
-            (LANG_TEXT[language]["food_inventory"], values["inventory"], ""),
-            (LANG_TEXT[language]["food_gross"], values["gross"], ""),
-            (net_label, values["net"], ""),
+            (annual_label, values["need"], ""),
+            (stock_label, values["inventory"], ""),
         ]
 
     _draw_hbars(
@@ -2030,7 +2068,7 @@ def _draw_food_figure(
     _draw_hbars(
         draw, (middle + gap // 2, top, right, top_bottom), LANG_TEXT[language]["food_protein"],
         balance_rows("protein"), language, "",
-        max_value=95, label_ratio=0.46, value_digits=1, min_font=10,
+        max_value=95, label_ratio=0.46, value_digits=3, min_font=10,
     )
     crops = sorted(data["crops"], key=lambda row: row["kcal"], reverse=True)
     crop_rows = [
@@ -2039,8 +2077,10 @@ def _draw_food_figure(
         for row in crops
     ]
     area = _number_label(data["crop_total_area"], language, 0)
+    crop_kcal = _number_label(data["crop_total_kcal"], language, 0)
     crop_title = LANG_TEXT[language]["crop_total"] + (
-        f" · {area} km²" if language == "en" else f" · {area} км²"
+        f" · {area} km² · {crop_kcal} billion kcal/year" if language == "en"
+        else f" · {area} км² · {crop_kcal} млрд ккал/год"
     )
     _draw_hbars(
         draw, (left, top_bottom + gap, right, bottom), crop_title,
@@ -2548,11 +2588,13 @@ def _draw_quarantine_figure(
     draw.rounded_rectangle((left, footer_y, right, bottom), radius=max(4, round(8 * scale)),
                            fill=(240, 244, 247), outline=(215, 220, 224), width=1)
     flow_rate = round(data["annual_flow"] / 365.0)
+    flow_number = "100,000" if language == "en" else _number_label(data["annual_flow"], language, 0)
+    place_number = "10,951" if language == "en" else _number_label(data["places"], language, 0)
     footer_lines = (
         [
-            f"Flow: {_number_label(data['annual_flow'], language, 0)} people/year · "
+            f"Flow: {flow_number} people/year · "
             f"{_number_label(flow_rate, language, 0)} people/day · {_number_label(data['hold_days'], language, 0)} days · "
-            f"{_number_label(data['places'], language, 0)} concurrent places · "
+            f"{place_number} concurrent places · "
             f"{_number_label(data['cycles'], language, 2)} cycles/year",
             f"Isolation block: {_number_label(data['block_area'], language, 0)} m² · {_number_label(data['block_boxes'], language, 0)} boxes",
             f"Shared clean channel Ø {_number_label(data['channel_diameter'], language, 1)} m · sealed bulkhead · separate ventilation to the inhabited zone",
@@ -2599,7 +2641,7 @@ def _draw_panel_choice_figure(
     def y_mass(value: float) -> int:
         return plot_bottom - round(value / mass_max * (plot_bottom - plot_top))
 
-    # The 40–60 m range is the documented working window.
+    # The 40–60 m band is a former illustrative comparison range, not an approved design window.
     draw.rectangle((x_pos(40), plot_top, x_pos(60), plot_bottom), fill=(233, 243, 236))
     for tick in range(0, 201, 50):
         y = y_seam(float(tick))
@@ -2662,7 +2704,7 @@ def _draw_panel_choice_figure(
     note_top = top + round(70 * scale)
     items = (
         [
-            (f"{_number_label(data['accepted_width'], language, 0)} × {_number_label(data['accepted_length'], language, 0)} m", "modelled case"),
+            (f"{_number_label(data['accepted_width'], language, 0)} × {_number_label(data['accepted_length'], language, 0)} m", "illustrative only · not approved"),
             (f"{_number_label(data['accepted_mass'], language, 0)} tons", "mass"),
             (f"{_number_label(data['accepted_seams'], language, 1)} thousand km", "weld seams / cylinder"),
             (f"{_number_label(data['camber_50'], language, 0)} mm", "camber at 50 m"),
@@ -2670,7 +2712,7 @@ def _draw_panel_choice_figure(
             (f"{_number_label(data['fill_time_50'], language, 0)} min", "form filling"),
             (f"{_number_label(data['panel_count'], language, 0)}", "panels per cylinder"),
         ] if language == "en" else [
-            (f"{_number_label(data['accepted_width'], language, 0)} × {_number_label(data['accepted_length'], language, 0)} м", "модельный вариант"),
+            (f"{_number_label(data['accepted_width'], language, 0)} × {_number_label(data['accepted_length'], language, 0)} м", "иллюстративно · не утверждено"),
             (f"{_number_label(data['accepted_mass'], language, 0)} т", "масса"),
             (f"{_number_label(data['accepted_seams'], language, 1)} тыс. км", "швов на цилиндр"),
             (f"{_number_label(data['camber_50'], language, 0)} мм", "прогиб при 50 м"),
@@ -2686,9 +2728,9 @@ def _draw_panel_choice_figure(
         draw.text((note_left, cursor_y), label, font=body_font, fill=COLORS["muted"])
         cursor_y += round(43 * scale)
     window = (
-        "Working width window: 40–60 m; seam length ∝ 1/width, panel mass ∝ width²."
+        "Illustrative comparison range: 40–60 m; derived curves are not an approved structural design."
         if language == "en" else
-        "Рабочее окно: 40–60 м; длина швов ∝ 1/ширине, масса панели ∝ ширине²."
+        "Диапазон иллюстративного сравнения: 40–60 м; кривые не являются утверждённым расчётом конструкции."
     )
     footer_y = bottom - footer_height
     draw.rounded_rectangle((left, footer_y, right, bottom), radius=max(4, round(8 * scale)),
@@ -2696,9 +2738,9 @@ def _draw_panel_choice_figure(
     draw.text((left + round(14 * scale), footer_y + round(17 * scale)), window,
               font=body_font, fill=COLORS["navy"])
     draw.text((left + round(14 * scale), footer_y + round(53 * scale)),
-              f"Cylinder: R = {_number_label(data['cylinder_radius'] / 1000, language, 0)} km · L = {_number_label(data['cylinder_length'] / 1000, language, 0)} km"
+              f"Not a working design · modelled cylinder: R = {_number_label(data['cylinder_radius'] / 1000, language, 0)} km · L = {_number_label(data['cylinder_length'] / 1000, language, 0)} km"
               if language == "en" else
-              f"Цилиндр: R = {_number_label(data['cylinder_radius'] / 1000, language, 0)} км · L = {_number_label(data['cylinder_length'] / 1000, language, 0)} км",
+              f"Не рабочий проект · модельный цилиндр: R = {_number_label(data['cylinder_radius'] / 1000, language, 0)} км · L = {_number_label(data['cylinder_length'] / 1000, language, 0)} км",
               font=tick_font, fill=COLORS["muted"])
 
 

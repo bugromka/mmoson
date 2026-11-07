@@ -33,7 +33,7 @@ D = Corpus(DOC)
 # Each localized Edition 8 document contains the complete 24-sheet set.
 CAPTIONS_EXPECTED = 24
 IMAGES_EXPECTED = 2 * CAPTIONS_EXPECTED
-TABLES_EXPECTED = {"ru": 71, "en": 70}
+TABLES_EXPECTED = {"ru": 74, "en": 74}
 
 def fail(msg: str) -> None:
     errors.append(msg)
@@ -52,11 +52,33 @@ for path, document in zip(D.paths, D.docs):
     language = document_language(path)
     if language is None:
         fail(f"язык документа не определяется по имени файла: {path.name}")
-    elif len(document.tables) != TABLES_EXPECTED[language]:
+        continue
+    if len(document.tables) != TABLES_EXPECTED[language]:
         fail(
             f"{path.name}: ожидалось {TABLES_EXPECTED[language]} таблиц редакции 8, "
             f"найдено {len(document.tables)}"
         )
+    document_text = "\n".join(
+        [p.text for p in document.paragraphs]
+        + [cell.text for table in document.tables for row in table.rows for cell in row.cells]
+    )
+    food_terms = {
+        "ru": (
+            "0,921625 трлн ккал/год", "1,3824375 трлн ккал", "33 215 т",
+            "Потребители и направления продукции", "производственный план не рассчитан",
+            "100 000 человек в год", "10 951 место единовременно",
+        ),
+        "en": (
+            "0.921625 trillion kcal/year", "1.3824375 trillion kcal", "33,215 t",
+            "Consumers and product destinations", "no production plan calculated",
+            "100,000 people per year", "10,951 places at a time",
+        ),
+    }[language]
+    for needle in food_terms:
+        if needle.casefold() not in document_text.casefold():
+            fail(f"{path.name}: missing current food-flow value or status: {needle}")
+    if re.search(r"(?i)(?:minecraft|virtual (?:city|cities|twin)|виртуальн\w*\s+город\w*)", document_text):
+        fail(f"{path.name}: virtual-city content must not remain")
 
 def find_table(predicate, label: str):
     found = []
